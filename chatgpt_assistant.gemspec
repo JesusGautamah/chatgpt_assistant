@@ -8,8 +8,12 @@ Gem::Specification.new do |spec|
   spec.authors = ["JesusGautamah"]
   spec.email = ["lima.jesuscc@gmail.com"]
 
-  spec.summary = "Easy way chatbot with GPT-3.5-turbo, Telegram bot, Discord bot, Audio Transcription and IBM Cloud Text to Speech."
-  spec.description = "This gem has the intention to facilitate the creation of chatbots with GPT-3.5-turbo, Telegram bot, Discord bot, Audio Transcription and IBM Cloud Text to Speech in docker containers."
+  spec.summary = "Easy way chatbot with GPT-3.5-turbo, Telegram bot, Discord bot,
+  Audio Transcription and IBM Cloud Text to Speech."
+
+  spec.description = "This gem has the intention to facilitate the creation of chatbots with GPT-3.5-turbo,
+  Telegram bot, Discord bot, Audio Transcription and IBM Cloud Text to Speech in docker containers."
+
   spec.homepage = "https://github.com/JesusGautamah/chatgpt_assistant"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 2.6.0"
@@ -17,8 +21,8 @@ Gem::Specification.new do |spec|
   spec.metadata["allowed_push_host"] = "https://rubygems.org"
 
   spec.metadata["homepage_uri"] = spec.homepage
-  spec.metadata["source_code_uri"] = spec.homepage + ".git"
-  spec.metadata["changelog_uri"] = spec.homepage + "/blob/master/CHANGELOG.md"
+  spec.metadata["source_code_uri"] = "#{spec.homepage}.git"
+  spec.metadata["changelog_uri"] = "#{spec.homepage}/blob/master/CHANGELOG.md"
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.

@@ -11,3 +11,16 @@ Style/StringLiteralsInInterpolation:
 
 Layout/LineLength:
   Max: 120
+
+# remove code length limit
+Metrics/MethodLength:
+  Max: 200
+
+# Metrics/BlockLength:
+#   Enabled: false
+
+Metrics/ClassLength:
+  Enabled: false
+
+Metrics/AbcSize:
+  Max: 30
