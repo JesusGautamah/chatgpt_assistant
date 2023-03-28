@@ -16,7 +16,7 @@ gem_dir = Gem::Specification.find_by_name('chatgpt_assistant').gem_dir
 
 `mkdir -p #{path}/exe`
 
-`cp #{gem_dir}/exe/bot #{path}/exe`
+`cp #{gem_dir}/exe/chatgpt_bot #{path}/exe`
 
 `mkdir -p #{path}/logs`
 
