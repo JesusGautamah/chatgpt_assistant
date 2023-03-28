@@ -4,6 +4,8 @@
 path = ARGV[0]
 raise 'Please specify the path to copy files to' if path.nil?
 
+raise 'Path must be empty' unless Dir.empty?(path)
+
 puts "Creating new chatgpt assistant at #{path}"
 
 `mkdir -p #{path}`
