@@ -12,11 +12,17 @@ raise 'Path must be empty' unless Dir.empty?(path)
 
 gem_dir = Gem::Specification.find_by_name('chatgpt_assistant').gem_dir
 
-%w[bin docs lib logs spec voice sig].each do |dir|
-  `cp -r #{gem_dir}/#{dir} #{path}`
-end
+`cp -r #{gem_dir}/lib #{path}`
 
-%w[Gemfile Gemfile.lock README.md Rakefile .env_sample .gitignore .rubocop.yml .rspec].each do |file|
+`mkdir -p #{path}/exe`
+
+`cp #{gem_dir}/exe/bot #{path}/exe`
+
+`mkdir -p #{path}/logs`
+
+`mkdir -p #{path}/voice`
+
+%w[Gemfile Gemfile.lock README.md Rakefile .env_sample .rubocop.yml .rspec].each do |file|
   `cp #{gem_dir}/#{file} #{path}`
 end
 
@@ -24,3 +30,4 @@ end
   `cp #{gem_dir}/#{file} #{path}`
 end
 
+`cp #{gem_dir}/.gitignore_sample #{path}/.gitignore`

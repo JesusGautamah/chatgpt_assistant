@@ -1,0 +1,18 @@
+/.bundle/
+/.yardoc
+/_yardoc/
+/coverage/
+/doc/
+/pkg/
+/spec/reports/
+/tmp/
+/db_data
+/db_data/*
+
+# rspec failure tracking
+.rspec_status
+.env
+/logs/telegram_chatgpt.log
+/voice/audio*
+/voice/ibm*
+/voice/polly*
