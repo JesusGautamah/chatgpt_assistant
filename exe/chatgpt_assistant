@@ -4,20 +4,23 @@
 path = ARGV[0]
 raise 'Please specify the path to copy files to' if path.nil?
 
-raise 'Path must be empty' unless Dir.empty?(path)
-
 puts "Creating new chatgpt assistant at #{path}"
 
 `mkdir -p #{path}`
 
-%w[bin docs lib logs spec voice sig].each do |folder|
-  `cp -r #{folder} #{path}`
+raise 'Path must be empty' unless Dir.empty?(path)
+
+gem_dir = Gem::Specification.find_by_name('chatgpt_assistant').gem_dir
+
+%w[bin docs lib logs spec voice sig].each do |dir|
+  `cp -r #{gem_dir}/#{dir} #{path}`
 end
 
 %w[Gemfile Gemfile.lock README.md Rakefile .env_sample .gitignore .rubocop.yml .rspec].each do |file|
-  `cp #{file} #{path}`
+  `cp #{gem_dir}/#{file} #{path}`
 end
 
 %w[docker-compose.yml docker-compose.prod.yml Dockerfile LICENSE LICENSE.txt].each do |file|
-  `cp #{file} #{path}`
+  `cp #{gem_dir}/#{file} #{path}`
 end
+

@@ -1,6 +1,11 @@
 # Chatgpt Assistant
 
-This ruby gem is an way to easy initialize an client of Telegram and Discord bots with the ChatGPT API, Audio Transcription and IBM CLoud Text to Speech API, creating an assistant that can answer questions in text and voice, speak the answers, and have a conversation with the user.
+This ruby gem is an way to easy initialize an client of Telegram and Discord bots with the ChatGPT API, Audio Transcription, IBM CLoud Text to Speech and AWS Polly, creating an assistant that can answer questions in text and voice, speak the answers, and have a conversation with the user.
+
+## Requirements
+  - Ruby > 2.6.0
+  - Docker
+  - Docker Compose
 
 # Installation
 You can install this as a gem, and use the cli to copy the files to desired folder, or you can just clone/fork this repo and use it as you want.
@@ -20,7 +25,20 @@ Run in your terminal:
 ## Environment variables
 You have to rename the .env_sample file to .env and fill the variables with your own data.
 
+## Build the bot
+Run in your terminal inside the project folder:
 
+      rake compose:build
+
+## Run the bot
+
+      rake compose:up
+
+## Tail the logs
+
+      rake compose_logs:tail_all
+
+## More commands at https://github.com/JesusGautamah/lucy_dockerunner
 
 ## Contributing
 
