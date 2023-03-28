@@ -34,7 +34,6 @@ module ChatgptAssistant
 
     def init_log
       logger.log("REQUESTING OPENAI API COMPLETION")
-      logger.log("Message: #{message}")
     end
 
     def error_log
@@ -58,14 +57,18 @@ module ChatgptAssistant
     end
 
     def request_params(message)
-      messages = Message.where(chat_id: chat_id).order(:created_at).limit(15)
+      messages = Message.where(chat_id: chat_id).order(created_at: :asc).limit(10)
       if messages.empty?
         messages = [{ role: "user", content: message }]
       else
         messages = messages.map { |mess| { role: mess.role, content: mess.content } }
         messages += [{ role: "user", content: message }]
       end
-      logger.log("Messages in this conversation: #{messages.count}")
+      logger.log("MESSAGES LOADED IN CONTEXT: #{messages.count}")
+      messages.each do |mess|
+        logger.log("MESSAGE ROLE: #{mess[:role]}")
+        logger.log("MESSAGE CONTENT: #{mess[:content]}")
+      end
       {
         model: "gpt-3.5-turbo",
         messages: messages

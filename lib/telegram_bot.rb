@@ -19,22 +19,14 @@ module ChatgptAssistant
 
     private
 
-    attr_reader :msg
+    attr_accessor :msg
 
     def user
       @user ||= User.find_by(telegram_id: msg.chat.id)
     end
 
-    def chatter
-      @chatter ||= Chatter.new(openai_api_key)
-    end
-
     def telegram_bot
       @telegram_bot ||= Telegram::Bot::Client.new(telegram_token)
-    end
-
-    def audio_recognition
-      @audio_recognition ||= AudioRecognition.new(openai_api_key)
     end
 
     def text_or_audio?
@@ -100,16 +92,28 @@ module ChatgptAssistant
       user.save ? user_created_message : user_not_created_error_message
     end
 
+    def audio
+      msg.audio || msg.voice
+    end
+
+    def audio_info
+      telegram_bot.api.get_file(file_id: audio.file_id)
+    end
+
+    def audio_url
+      "https://api.telegram.org/file/bot#{telegram_token}/#{audio_info["result"]["file_path"]}"
+    end
+
+    def transcribed_text
+      audio_recognition.transcribe_audio(audio_url)
+    end
+    
     def message_audio_process
       logger.log("MESSAGE AUDIO: TRUE")
       chat = Chat.find(user.current_chat_id)
-      audio = msg.audio || msg.voice
-      audio_info = telegram_bot.api.get_file(file_id: audio.file_id)
-      audio_url = "https://api.telegram.org/file/bot#{telegram_token}/#{audio_info["result"]["file_path"]}"
-      transcribe_response = audio_recognition.transcribe_audio(audio_url)
-      Message.create(content: transcribe_response, chat_id: chat.id, role: "user")
-      text = chatter.chat(transcribe_response, chat.id)
-      voice = audio_recognition.synthesize_text(text)
+      message_create(transcribed_text, chat.id, "user")
+      text = chatter.chat(transcribed_text, chat.id)
+      voice = audio_synthesis.synthesize_text(text)
       telegram_bot.api.send_voice(chat_id: msg.chat.id, voice: Faraday::UploadIO.new(voice, "audio/mp3"))
       delete_all_voice_files
     end

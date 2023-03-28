@@ -17,6 +17,8 @@ gem "simplecov", "~> 0.21"
 
 gem "telegram-bot-ruby", "~> 0.16"
 
+gem "discordrb", "~> 3.4"
+
 gem "faraday"
 
 gem "activemodel"
@@ -42,3 +44,5 @@ gem "streamio-ffmpeg"
 gem "lucy_dockerunner"
 
 gem "ibm_watson"
+
+gem "aws-sdk-polly"

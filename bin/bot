@@ -4,7 +4,8 @@
 require_relative "../lib/chatgpt_assistant"
 
 puts "Starting Chatgpt Assistant"
-puts "Mode: #{ARGV[0]}"
+puts "Bot Type: #{ARGV[0]}"
+puts "Mode: #{ENV["MODE"]}"
 case ARGV[0]
 when "telegram"
   ChatgptAssistant::Main.new("telegram").start

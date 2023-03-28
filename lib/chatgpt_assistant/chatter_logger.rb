@@ -12,7 +12,7 @@ module ChatgptAssistant
 
     def log(message)
       log_file.puts(message)
-      system "echo #{message}"
+      system "echo '#{message}'"
     end
   end
 end
