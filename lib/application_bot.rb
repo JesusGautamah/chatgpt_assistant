@@ -9,7 +9,7 @@ module ChatgptAssistant
       @openai_api_key = @config.openai_api_key
       @telegram_token = @config.telegram_token
       @database = @config.db_connection
-      @default_msg = DefaultMessages
+      @default_msg = DefaultMessages.new
       @logger = ChatterLogger.new
       @mode = ENV["MODE"]
     end
