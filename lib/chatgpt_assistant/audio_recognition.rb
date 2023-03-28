@@ -19,31 +19,6 @@ module ChatgptAssistant
       @ibm_url = ENV["IBM_URL"]
     end
 
-    def synthesize_text(text)
-      authenticator = IBMWatson::Authenticators::IamAuthenticator.new(
-        apikey: ibm_api_key
-      )
-
-      text_to_speech = IBMWatson::TextToSpeechV1.new(
-        authenticator: authenticator
-      )
-
-      text_to_speech.service_url = ibm_url
-
-      voice = "pt-BR_IsabelaV3Voice"
-      audio_format = "audio/mp3"
-      audio = text_to_speech.synthesize(
-        text: text,
-        accept: audio_format,
-        voice: voice
-      ).result
-
-      File.open("voice/ibm-#{time}.mp3", "wb") do |audio_file|
-        audio_file.write(audio)
-      end
-      "voice/ibm-#{time}.mp3"
-    end
-
     def download_audio(audio_url)
       logger.log("DOWNLOADING AUDIO FROM TELEGRAM")
       @time = Time.now.to_i

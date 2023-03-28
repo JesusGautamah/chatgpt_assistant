@@ -13,3 +13,6 @@
 .rspec_status
 .env
 /logs/telegram_chatgpt.log
+/voice/audio*
+/voice/ibm*
+/voice/polly*

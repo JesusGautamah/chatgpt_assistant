@@ -42,6 +42,18 @@ GEM
     addressable (2.8.1)
       public_suffix (>= 2.0.2, < 6.0)
     ast (2.4.2)
+    aws-eventstream (1.2.0)
+    aws-partitions (1.735.0)
+    aws-sdk-core (3.171.0)
+      aws-eventstream (~> 1, >= 1.0.2)
+      aws-partitions (~> 1, >= 1.651.0)
+      aws-sigv4 (~> 1.5)
+      jmespath (~> 1, >= 1.6.1)
+    aws-sdk-polly (1.66.0)
+      aws-sdk-core (~> 3, >= 3.165.0)
+      aws-sigv4 (~> 1.1)
+    aws-sigv4 (1.5.2)
+      aws-eventstream (~> 1, >= 1.0.2)
     axiom-types (0.1.1)
       descendants_tracker (~> 0.0.4)
       ice_nine (~> 0.11.0)
@@ -56,6 +68,14 @@ GEM
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
     diff-lcs (1.5.0)
+    discordrb (3.4.0)
+      discordrb-webhooks (~> 3.3.0)
+      ffi (>= 1.9.24)
+      opus-ruby
+      rest-client (>= 2.0.0)
+      websocket-client-simple (>= 0.3.0)
+    discordrb-webhooks (3.3.0)
+      rest-client (>= 2.1.0.rc1)
     docile (1.4.0)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
@@ -63,6 +83,7 @@ GEM
     erubi (1.12.0)
     et-orbi (1.2.7)
       tzinfo
+    event_emitter (0.2.6)
     eventmachine (1.2.7)
     faraday (2.7.4)
       faraday-net_http (>= 2.0, < 3.1)
@@ -87,6 +108,7 @@ GEM
       http-cookie (~> 1.0)
       http-form_data (~> 2.2)
       http-parser (~> 1.2.0)
+    http-accept (1.7.0)
     http-cookie (1.0.5)
       domain_name (~> 0.5)
     http-form_data (2.3.0)
@@ -106,6 +128,7 @@ GEM
       ibm_cloud_sdk_core (~> 1.1.3)
       jwt (~> 2.2.1)
     ice_nine (0.11.2)
+    jmespath (1.6.2)
     json (2.6.3)
     jwt (2.2.3)
     loofah (2.19.1)
@@ -117,6 +140,9 @@ GEM
       net-imap
       net-pop
       net-smtp
+    mime-types (3.4.1)
+      mime-types-data (~> 3.2015)
+    mime-types-data (3.2023.0218.1)
     mini_mime (1.1.2)
     minitest (5.18.0)
     multi_json (1.15.0)
@@ -130,8 +156,11 @@ GEM
       timeout
     net-smtp (0.3.3)
       net-protocol
+    netrc (0.11.0)
     nokogiri (1.14.2-x86_64-linux)
       racc (~> 1.4)
+    opus-ruby (1.0.1)
+      ffi
     parallel (1.22.1)
     parser (3.2.1.0)
       ast (~> 2.4.1)
@@ -154,6 +183,11 @@ GEM
     redis-client (0.14.0)
       connection_pool
     regexp_parser (2.7.0)
+    rest-client (2.1.0)
+      http-accept (>= 1.7.0, < 2.0)
+      http-cookie (>= 1.0.2, < 2.0)
+      mime-types (>= 1.16, < 4.0)
+      netrc (~> 0.8)
     rexml (3.2.5)
     rspec (3.12.0)
       rspec-core (~> 3.12.0)
@@ -224,6 +258,10 @@ GEM
       axiom-types (~> 0.1)
       coercible (~> 1.0)
       descendants_tracker (~> 0.0, >= 0.0.3)
+    websocket (1.2.9)
+    websocket-client-simple (0.6.1)
+      event_emitter
+      websocket
     websocket-driver (0.7.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
@@ -237,6 +275,8 @@ DEPENDENCIES
   activerecord
   activerecord-import
   activesupport
+  aws-sdk-polly
+  discordrb (~> 3.4)
   faraday
   ibm_watson
   lucy_dockerunner
