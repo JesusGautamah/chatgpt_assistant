@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+path = ARGV[0]
+raise 'Please specify the path to copy files to' if path.nil?
+
+puts "Creating new chatgpt assistant at #{path}"
+
+`mkdir -p #{path}`
+
+%w[bin docs lib logs spec voice sig].each do |folder|
+  `cp -r #{folder} #{path}`
+end
+
+%w[Gemfile Gemfile.lock README.md Rakefile .env_sample .gitignore .rubocop.yml .rspec].each do |file|
+  `cp #{file} #{path}`
+end
+
+%w[docker-compose.yml docker-compose.prod.yml Dockerfile LICENSE LICENSE.txt].each do |file|
+  `cp #{file} #{path}`
+end
