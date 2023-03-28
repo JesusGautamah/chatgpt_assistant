@@ -10,7 +10,7 @@ services:
       - .env
   telegram:
     build: .
-    command: bash -c "exe/bot telegram"
+    command: bash -c "exe/chatgpt_bot telegram"
     volumes:
       - .:/telegram_chatgpt
     environment:
