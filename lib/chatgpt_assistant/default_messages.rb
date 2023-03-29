@@ -60,6 +60,7 @@ module ChatgptAssistant
         user_not_logged_in: "Usuário não logado",
         something_went_wrong: "Algo deu errado. Tente novamente mais tarde.",
         message_history_too_long: "O histórico mensagem é muito longo.",
+        text_length: "O texto de resposta é muito longo. Tente diminuir a quantidade de respostas na mesma mensagem.",
         user_not_in_voice_channel: "Você não está em um canal de voz."
       }
     end
@@ -115,6 +116,7 @@ module ChatgptAssistant
         user_not_logged_in: "User not logged in",
         something_went_wrong: "Something went wrong. Try again later.",
         message_history_too_long: "The message history is too long.",
+        text_length: "The response text is too long. Try to reduce the number of answers in the same message.",
         user_not_in_voice_channel: "You are not in a voice channel."
       }
     end

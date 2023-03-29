@@ -211,10 +211,10 @@ module ChatgptAssistant
         end
       end
 
+      
       logger.log('Discord bot started')
       at_exit { bot.stop }
-      
-      bot.run
+      bot.run nil rescue start 
     end
   end
 end
