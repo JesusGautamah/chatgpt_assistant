@@ -10,6 +10,7 @@ module ChatgptAssistant
       @openai_api_key = @config.openai_api_key
       @telegram_token = @config.telegram_token
       @discord_token = @config.discord_token
+      @discord_client_id = @config.discord_client_id
       @database = @config.db_connection
       @mode = @config.mode
     end
@@ -30,6 +31,7 @@ module ChatgptAssistant
       Message.create(content: message, chat_id: chat_id, role: role)
     end
 
-    attr_reader :openai_api_key, :telegram_token, :database, :default_msg, :logger, :mode, :config
+    attr_reader :openai_api_key, :telegram_token, :database, :default_msg,
+                :logger, :mode, :config, :discord_token, :discord_client_id
   end
 end

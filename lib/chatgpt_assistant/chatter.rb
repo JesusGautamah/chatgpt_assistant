@@ -15,15 +15,18 @@ module ChatgptAssistant
     def chat(message, chat_id)
       @chat_id = chat_id
       @message = message
+      init_log
       @response = request(message)
       @json = JSON.parse(response.body)
-      init_log
+      logger.log("RESPONSE FROM OPENAI API: OK")
+      
 
       return error_log if response.status != 200
 
       text = json["choices"][0]["message"]["content"].gsub("```", "`").to_s
 
       Message.create(content: text, role: "assistant", chat_id: chat_id)
+      logger.log("MESSAGE SAVED IN DATABASE")
       text
     end
 

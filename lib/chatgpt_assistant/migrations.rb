@@ -12,7 +12,8 @@ class UserMigration < ActiveRecord::Migration[5.2]
       t.string :email, null: false, limit: 100
       t.string :password, null: false, limit: 4
       t.string :name, null: false, limit: 100
-      t.string :telegram_id, null: false, limit: 100
+      t.string :telegram_id, limit: 100
+      t.string :discord_id, limit: 100
       t.integer :current_chat_id, null: false, default: 0
       t.integer :role, null: false, default: 0
       t.integer :open_chats, null: false, default: 0

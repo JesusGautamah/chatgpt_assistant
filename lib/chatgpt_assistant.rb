@@ -10,6 +10,7 @@ require_relative "chatgpt_assistant/config"
 require_relative "chatgpt_assistant/models"
 require_relative "bots/application_bot"
 require_relative "bots/telegram_bot"
+require_relative "bots/discord_bot"
 require "streamio-ffmpeg"
 require "aws-sdk-polly"
 require "telegram/bot"
@@ -48,6 +49,8 @@ module ChatgptAssistant
       mode == "discord"
     end
 
-    def discord_mode; end
+    def discord_bot
+      DiscordBot.new(config).start
+    end
   end
 end

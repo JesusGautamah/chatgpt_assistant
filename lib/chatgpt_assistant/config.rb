@@ -19,6 +19,7 @@ module ChatgptAssistant
       @openai_api_key = ENV["OPENAI_API_KEY"]
       @telegram_token = ENV["TELEGRAM_TOKEN"]
       @discord_token = ENV["DISCORD_TOKEN"]
+      @discord_client_id = ENV["DISCORD_CLIENT_ID"]
       @ibm_api_key = ENV["IBM_API_KEY"]
       @ibm_url = ENV["IBM_URL"]
       @aws_access_key_id = ENV["AWS_ACCESS_KEY_ID"]
@@ -28,7 +29,7 @@ module ChatgptAssistant
 
     attr_reader :openai_api_key, :telegram_token, :discord_token, :ibm_api_key, :ibm_url,
                 :aws_access_key_id, :aws_secret_access_key, :aws_region, :mode, :language,
-                :env_type
+                :discord_client_id, :discord_public_key, :env_type
 
     def db_connection
       ActiveRecord::Base.establish_connection(

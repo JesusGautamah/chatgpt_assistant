@@ -3,8 +3,8 @@
 module ChatgptAssistant
   # This class is responsible for storing the default messages
   class DefaultMessages
-    def initialize(language = nil)
-      @language = language || 'en'
+    def initialize(language = 'en')
+      @language = language
       load_message_context
     end
 
@@ -21,7 +21,7 @@ module ChatgptAssistant
 
     def commom_messages_pt
       {
-        start: "Olá, eu sou o Chatgpt Assistant, um chatbot que usa a API da OpenAI para responder suas perguntas no Telegram.",
+        start: "Olá, eu sou o Chatgpt Assistant, um chatbot que usa a API da OpenAI para responder suas perguntas no Telegram e Discord.",
         stop: "Até mais!",
         start_helper: "Primeiro, é necessário cadastrar seu usuário no banco de dados.
                        \nPara isso, mande ume mensagem com seu email e senha de acesso de 4 digitos.
@@ -42,6 +42,7 @@ module ChatgptAssistant
         chat_created: "Chat criado com sucesso!",
         chat_selected: "Chat selecionado com sucesso!",
         user_logged_in: "Login realizado com sucesso!",
+        voice_channel_connected: "O bot entrou no canal de voz com sucesso!",
       }
     end
 
@@ -58,7 +59,8 @@ module ChatgptAssistant
         chat_not_found: "Chat não encontrado",
         user_not_logged_in: "Usuário não logado",
         something_went_wrong: "Algo deu errado. Tente novamente mais tarde.",
-        message_history_too_long: "O histórico mensagem é muito longo."
+        message_history_too_long: "O histórico mensagem é muito longo.",
+        user_not_in_voice_channel: "Você não está em um canal de voz."
       }
     end
 
@@ -67,15 +69,15 @@ module ChatgptAssistant
        "Para parar de conversar comigo, digite /stop",
        "Para se registrar no sistema, digite register/email:senha (a senha deve ser um numero de 4 digitos ex: 1234)",
        "Para fazer login no sistema, digite login/email:senha (a senha deve ser um numero de 4 digitos ex: 1234)",
-       "Para criar um novo chat, digite novo_chat/nome do chat",
+       "Para criar um novo chat, digite new_chat/nome do chat",
        "Para selecionar um chat, digite sl_chat/nome do chat",
-       "Para listar os chats que você criou, digite /listar",
-       "Para ver esta mensagem novamente, digite /ajuda"]
+       "Para listar os chats que você criou, digite /list",
+       "Para ver esta mensagem novamente, digite /help"]
     end
 
     def commom_messages_en
       {
-        start: "Hello, I'm the Chatgpt Assistant, a chatbot that uses the OpenAI API to answer your questions on Telegram.",
+        start: "Hello, I'm the Chatgpt Assistant, a chatbot that uses the OpenAI API to answer your questions on Telegram and Discord.",
         stop: "See you later!",
         start_helper: "First, you need to register your user in the database.
                        \nTo do this, send a message with your email and password of 4 digits access.
@@ -112,7 +114,8 @@ module ChatgptAssistant
         chat_not_found: "Chat not found",
         user_not_logged_in: "User not logged in",
         something_went_wrong: "Something went wrong. Try again later.",
-        message_history_too_long: "The message history is too long."
+        message_history_too_long: "The message history is too long.",
+        user_not_in_voice_channel: "You are not in a voice channel."
       }
     end
     
