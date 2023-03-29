@@ -57,17 +57,17 @@ module ChatgptAssistant
     end
 
     def request_params(message)
-      messages = Message.where(chat_id: chat_id).order(created_at: :asc).limit(10)
+      messages = Message.where(chat_id: chat_id).order(id: :asc).last(10)
       if messages.empty?
+        ids = ["unknown"]
         messages = [{ role: "user", content: message }]
       else
+        ids = messages.map(&:id)
         messages = messages.map { |mess| { role: mess.role, content: mess.content } }
-        messages += [{ role: "user", content: message }]
       end
       logger.log("MESSAGES LOADED IN CONTEXT: #{messages.count}")
-      messages.each do |mess|
-        logger.log("MESSAGE ROLE: #{mess[:role]}")
-        logger.log("MESSAGE CONTENT: #{mess[:content]}")
+      messages.each_with_index do |mess, index|
+        logger.log("MESSAGE ROLE: #{mess[:role]}, ID: #{ids[index]}")
       end
       {
         model: "gpt-3.5-turbo",

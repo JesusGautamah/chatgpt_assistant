@@ -1,9 +1,4 @@
 # frozen_string_literal: true
-
-require "faraday"
-require_relative "chatter_logger"
-require "streamio-ffmpeg"
-require "ibm_watson"
 module ChatgptAssistant
   # This is the AudioRecognition class
   class AudioRecognition
@@ -15,8 +10,6 @@ module ChatgptAssistant
       end
       @logger = ChatterLogger.new
       @openai_api_key = openai_api_key
-      @ibm_api_key = ENV["IBM_API_KEY"]
-      @ibm_url = ENV["IBM_URL"]
     end
 
     def download_audio(audio_url)

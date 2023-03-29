@@ -3,32 +3,63 @@
 module ChatgptAssistant
   # This class is responsible for storing the default messages
   class DefaultMessages
-    def initialize
-      @language = ENV['LANGUAGE'] || 'en'
+    def initialize(language = nil)
+      @language = language || 'en'
       load_message_context
     end
 
-    attr_reader :language, :start_messages, :end_messages, :help_messages, :error_messages, :welcome_message, :chat_creation_success_message, :chat_creation_failed_message, :not_logged_in_messages
+    attr_reader :language, :commom_messages, :success_messages, :error_messages, :help_messages
 
     def load_message_context
-      @start_messages = send("start_messages_#{language}")
-      @end_messages = send("end_messages_#{language}")
-      @help_messages = send("help_messages_#{language}")
+      @commom_messages = send("commom_messages_#{language}")
+      @success_messages = send("success_messages_#{language}")
       @error_messages = send("error_messages_#{language}")
-      @welcome_message = send("welcome_message_#{language}")
-      @chat_creation_success_message = send("chat_creation_success_message_#{language}")
-      @chat_creation_failed_message = send("chat_creation_failed_message_#{language}")
-      @not_logged_in_messages = send("not_logged_in_messages_#{language}")
+      @help_messages = send("help_messages_#{language}")
     end
 
-    def start_messages_pt
-      ["Primeiro, é necessário cadastrar seu usuário no banco de dados. Para isso, mande ume mensgem com seu email e senha de acesso de 4 digitos. Exemplo:",
-       "register/email@dousuario.com:1234"]
+    private
+
+    def commom_messages_pt
+      {
+        start: "Olá, eu sou o Chatgpt Assistant, um chatbot que usa a API da OpenAI para responder suas perguntas no Telegram.",
+        stop: "Até mais!",
+        start_helper: "Primeiro, é necessário cadastrar seu usuário no banco de dados.
+                       \nPara isso, mande ume mensagem com seu email e senha de acesso de 4 digitos.
+                       \nExemplo: register/user@email.com:1234",
+        start_sec_helper: "Caso você já tenha um usuário cadastrado, basta fazer login.
+                           \nExemplo: login/user@email.com:3214",
+        register: "Para se registrar no sistema, digite register/email:senha (a senha deve ser um numero de 4 digitos ex: 1234).
+                   \nExemplo de Registro: register/user@email.com:3214",
+        login: "Para fazer login no sistema, digite login/email:senha (a senha deve ser um numero de 4 digitos ex: 1234).
+                \nExemplo de Login: login/user@mail.com:2134",
+        chat_list: "Aqui estão os chats que você criou:",
+      }
     end
 
-    def end_messages_pt
-      ["Até mais!",
-       "Se quiser conversar comigo novamente, basta fazer login"]
+    def success_messages_pt
+      {
+        user_created: "Usuário criado com sucesso!",
+        chat_created: "Chat criado com sucesso!",
+        chat_selected: "Chat selecionado com sucesso!",
+        user_logged_in: "Login realizado com sucesso!",
+      }
+    end
+
+    def error_messages_pt
+      {
+        nil: "Não entendi o que você disse. Tente novamente",
+        email: "O email que você digitou não é válido. Tente novamente",
+        password: "A senha que você digitou não é válida. Tente novamente",
+        user: "O usuário que você digitou não existe. Tente novamente",
+        user_creation: "Erro ao criar usuário. Tente novamente",
+        chat_creation: "Erro ao criar chat. Tente novamente",
+        no_messages_founded: "Nenhuma mensagem encontrada",
+        no_chat_selected: "Nenhum chat selecionado",
+        chat_not_found: "Chat não encontrado",
+        user_not_logged_in: "Usuário não logado",
+        something_went_wrong: "Algo deu errado. Tente novamente mais tarde.",
+        message_history_too_long: "O histórico mensagem é muito longo."
+      }
     end
 
     def help_messages_pt
@@ -42,42 +73,49 @@ module ChatgptAssistant
        "Para ver esta mensagem novamente, digite /ajuda"]
     end
 
-    def error_messages_pt
+    def commom_messages_en
       {
-        nil: "Não entendi o que você disse. Tente novamente",
-        email: "O email que você digitou não é válido. Tente novamente",
-        password: "A senha que você digitou não é válida. Tente novamente",
-        user: "O usuário que você digitou não existe. Tente novamente"
+        start: "Hello, I'm the Chatgpt Assistant, a chatbot that uses the OpenAI API to answer your questions on Telegram.",
+        stop: "See you later!",
+        start_helper: "First, you need to register your user in the database.
+                       \nTo do this, send a message with your email and password of 4 digits access.
+                       \nExample: register/user@mail.com:3421",
+        start_sec_helper: "If you already have a registered user, just log in.
+                           \nExample: login/user@mail.com:5423",
+        register: "To register in the system, type register/email:password (the password must be a 4 digit number ex: 1234).
+                   \nExample of Registration: register/user@mail.com:3241",
+        login: "To log in to the system, type login/email:password (the password must be a 4 digit number ex: 1234).
+                \nExample of Login: login/user@mail.com:2134",
+        chat_list: "Here are the chats you created:",
       }
     end
 
-    def welcome_message_pt
-      "Olá, eu sou o Focus Bot, um chatbot que usa a API da OpenAI para responder suas perguntas no Telegram."
+    def success_messages_en
+      {
+        user_created: "User created successfully!",
+        chat_created: "Chat created successfully!",
+        chat_selected: "Chat selected successfully!",
+        user_logged_in: "Login successfully!",
+      }
     end
 
-    def chat_creation_success_message_pt
-      "Chat criado com sucesso!"
+    def error_messages_en
+      {
+        nil: "I didn't understand what you said. Try again",
+        email: "The email you typed is not valid. Try again",
+        password: "The password you typed is not valid. Try again",
+        user: "The user you typed does not exist. Try again",
+        user_creation: "Error creating user. Try again",
+        chat_creation: "Error creating chat. Try again",
+        no_messages_founded: "No messages found",
+        no_chat_selected: "No chat selected",
+        chat_not_found: "Chat not found",
+        user_not_logged_in: "User not logged in",
+        something_went_wrong: "Something went wrong. Try again later.",
+        message_history_too_long: "The message history is too long."
+      }
     end
-
-    def chat_creation_failed_message_pt
-      "Erro ao criar chat!"
-    end
-
-    def not_logged_in_messages_pt
-      ["Você não está logado no sistema. Para começar mande seu email e senha de acesso de 4 digitos. Exemplo de Login:", "login/user@email.com:1234",
-       "Para se registrar no sistema, digite register/email:senha (a senha deve ser um numero de 4 digitos ex: 1234). Exemplo de Registro:", "register/email@user.com:1234"]
-    end
-
-    def start_messages_en
-      ["First, you need to register your user in the database. To do this, send a message with your email and password of 4 digits access. Example:",
-       "register/user@mail.com:1234"]
-    end
-
-    def end_messages_en
-      ["See you later!",
-       "If you want to talk to me again, just log in"]
-    end
-
+    
     def help_messages_en
       ["To start talking to me, type /start",
        "To stop talking to me, type /stop",
@@ -87,34 +125,6 @@ module ChatgptAssistant
        "To select a chat, type sl_chat/chat name",
        "To list the chats you created, type /list",
        "To see this message again, type /help"]
-    end
-
-    def error_messages_en
-      { 
-        nil: "I didn't understand what you said. Try again",
-        email: "The email you typed is not valid. Try again",
-        password: "The password you typed is not valid. Try again",
-        user: "The user you typed does not exist. Try again"
-      }
-    end
-
-    def welcome_message_en
-      "Hi, I'm the Focus Bot, a chatbot that uses the OpenAI API to answer your questions on Telegram."
-    end
-
-    def chat_creation_success_message_en
-      "Chat created successfully!"
-    end
-
-    def chat_creation_failed_message_en
-      "Error creating chat!"
-    end
-
-    def not_logged_in_messages_en
-      ["You are not logged in to the system. To start send your email and password of 4 digits access. Login Example:", "
-        login/user@mail.com:1234",
-        "To register in the system, type register/email:password (the password must be a 4 digit number ex: 1234). Registration Example:", "
-        register/user@mail.com:1234"]
     end
   end
 end

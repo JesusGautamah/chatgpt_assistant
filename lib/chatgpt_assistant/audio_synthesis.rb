@@ -1,18 +1,12 @@
 # frozen_string_literal: true
 
-require "faraday"
-require_relative "chatter_logger"
-require "streamio-ffmpeg"
-require "ibm_watson"
-require "aws-sdk-polly"
-
 module ChatgptAssistant
   # This class is responsible for synthesize text to speech
   # This class can work with IBM Cloud or AWS Polly for synthesize text into speech
   class AudioSynthesis
-    def initialize(openai_api_key, mode)
-      @mode = mode
-      @openai_api_key = openai_api_key
+    def initialize(config)
+      @config = config
+      @openai_api_key = config.openai_api_key
       @conn = faraday_instance
       @logger = ChatterLogger.new
       classify_mode
@@ -28,7 +22,7 @@ module ChatgptAssistant
 
     private
 
-    attr_reader :openai_api_key, :ibm_api_key, :ibm_url, :aws_access_key_id, :aws_secret_access_key, :aws_region, :mode, :logger
+    attr_reader :openai_api_key, :ibm_api_key, :ibm_url, :aws_access_key_id, :aws_secret_access_key, :aws_region, :config, :logger
 
     def faraday_instance
       Faraday.new(url: "https://api.openai.com/") do |faraday|
@@ -40,12 +34,12 @@ module ChatgptAssistant
 
     def classify_mode
       if ibm_mode?
-        @ibm_api_key = ENV["IBM_API_KEY"]
-        @ibm_url = ENV["IBM_URL"]
+        @ibm_api_key = config.ibm_api_key
+        @ibm_url = config.ibm_url
       elsif aws_mode?
-        @aws_access_key_id = ENV["AWS_ACCESS_KEY_ID"]
-        @aws_secret_access_key = ENV["AWS_SECRET_ACCESS_KEY"]
-        @aws_region = ENV["AWS_REGION"]
+        @aws_access_key_id = config.aws_access_key_id
+        @aws_secret_access_key = config.aws_secret_access_key
+        @aws_region = config.aws_region
       end
     end
 
@@ -99,11 +93,11 @@ module ChatgptAssistant
     end
 
     def ibm_mode?
-      mode == "ibm"
+      config.mode == "ibm"
     end
 
     def aws_mode?
-      mode == "aws"
+      config.mode == "aws"
     end
   end
 end
