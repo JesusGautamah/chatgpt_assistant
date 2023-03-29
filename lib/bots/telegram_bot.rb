@@ -116,6 +116,7 @@ module ChatgptAssistant
 
     def delete_all_voice_files
       Dir.glob("voice/*").each do |file|
+        next if file == ".keep" || file == "voice/.keep"
         File.delete(file)
       end
     end

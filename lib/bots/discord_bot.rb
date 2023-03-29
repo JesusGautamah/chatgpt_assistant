@@ -159,6 +159,7 @@ module ChatgptAssistant
               event.respond default_msg.error_messages[:user_not_in_voice_channel]
             else
               bot.voice_connect(event.user.voice_channel)
+              "Connected to voice channel"
             end
           else
             event.respond default_msg.error_messages[:chat_not_found]
@@ -195,7 +196,13 @@ module ChatgptAssistant
             audio_path = audio_synthesis.synthesize_text(response)
             event.respond response
             event.voice.play_file(audio_path)
-            event.voice.destroy
+            # delete all files in voice folder, this is not a rails project
+            folder = 'voice/'
+            Dir.glob(folder + '*').each do |file|
+              next if file == '.keep' || file == 'voice/.keep'
+              File.delete(file)
+            end
+            "Audio Played Successfully"
           else
             event.respond default_msg.error_messages[:chat_not_found]
           end
@@ -206,6 +213,7 @@ module ChatgptAssistant
 
       logger.log('Discord bot started')
       at_exit { bot.stop }
+      
       bot.run
     end
   end
