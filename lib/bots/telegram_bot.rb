@@ -110,6 +110,7 @@ module ChatgptAssistant
       message_create(transcribed_text, chat.id, "user")
       text = chatter.chat(transcribed_text, chat.id)
       voice = audio_synthesis.synthesize_text(text)
+      telegram_bot.api.send_message(chat_id: msg.chat.id, text: text)
       telegram_bot.api.send_voice(chat_id: msg.chat.id, voice: Faraday::UploadIO.new(voice, "audio/mp3"))
       delete_all_voice_files
     end
