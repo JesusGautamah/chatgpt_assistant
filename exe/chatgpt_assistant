@@ -1,0 +1,36 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+path = ARGV[0]
+raise 'Please specify the path to copy files to' if path.nil?
+
+puts "Creating new chatgpt assistant at #{path}"
+
+`mkdir -p #{path}`
+
+raise 'Path must be empty' unless Dir.empty?(path)
+
+gem_dir = Gem::Specification.find_by_name('chatgpt_assistant').gem_dir
+
+`cp -r #{gem_dir}/lib #{path}`
+
+`mkdir -p #{path}/exe`
+
+`cp #{gem_dir}/exe/chatgpt_bot #{path}/exe`
+
+`mkdir -p #{path}/logs`
+
+`mkdir -p #{path}/voice`
+
+%w[Gemfile Gemfile.lock README.md Rakefile .env_sample .rubocop.yml .rspec].each do |file|
+  `cp #{gem_dir}/#{file} #{path}`
+end
+
+%w[docker-compose.yml docker-compose.prod.yml Dockerfile LICENSE LICENSE.txt].each do |file|
+  `cp #{gem_dir}/#{file} #{path}`
+end
+
+%w[/.bundle/ /.yardoc /_yardoc/ /coverage/ /doc/ /pkg/ /spec/reports/ /tmp/ /db_data /db_data/* 
+   .rspec_status .env /logs/telegram_chatgpt.log /voice/audio* /voice/ibm* /voice/polly* /voice/aws*].each do |file_to_ignore|
+  `echo "#{file_to_ignore}" >> #{path}/.gitignore`
+end

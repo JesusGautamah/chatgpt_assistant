@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "application_bot"
-require "telegram/bot"
-require "faraday"
-
 module ChatgptAssistant
   # This class is responsible for the telegram bot features
   class TelegramBot < ApplicationBot
@@ -34,7 +30,7 @@ module ChatgptAssistant
     end
 
     def chat_actions?
-      msg.text.include?("novo_chat/") || msg.text.include?("sl_chat/")
+      msg.text.include?("new_chat/") || msg.text.include?("sl_chat/")
     end
 
     def valid_for_login_or_register?
@@ -54,9 +50,9 @@ module ChatgptAssistant
       case msg.text
       when "/start"
         run_start
-      when "/ajuda"
+      when "/help"
         run_help
-      when "/listar"
+      when "/list"
         list_chats
       when "/stop"
         run_stop
@@ -71,7 +67,7 @@ module ChatgptAssistant
 
     def operations
       (valid_for_login_or_register? ? login_or_register : chatter_call) unless chat_actions?
-      new_chat if msg.text.include?("novo_chat/")
+      new_chat if msg.text.include?("new_chat/")
       select_chat if msg.text.include?("sl_chat/")
     end
 
@@ -125,13 +121,12 @@ module ChatgptAssistant
     end
 
     def run_start
-      telegram_bot.api.send_message(chat_id: msg.chat.id, text: default_msg.welcome_message)
+      telegram_bot.api.send_message(chat_id: msg.chat.id, text: default_msg.commom_messages[:start])
       default_msg.help_messages.each do |message|
         telegram_bot.api.send_message(chat_id: msg.chat.id, text: message)
       end
-      default_msg.start_messages.each do |message|
-        telegram_bot.api.send_message(chat_id: msg.chat.id, text: message)
-      end
+      telegram_bot.api.send_message(chat_id: msg.chat.id, text: default_msg.commom_messages[:start_helper])
+      telegram_bot.api.send_message(chat_id: msg.chat.id, text: default_msg.commom_messages[:start_sec_helper])
     end
 
     def run_hist
@@ -139,10 +134,8 @@ module ChatgptAssistant
 
       chat = Chat.find(user.current_chat_id)
       if chat
-        if chat.messages.count.zero?
-          return telegram_bot.api.send_message(chat_id: msg.chat.id,
-                                               text: "Nenhuma mensagem foi enviada nesta conversa ainda!")
-        end
+        return telegram_bot.api.send_message(chat_id: msg.chat.id,
+                                             text: default_msg.error_messages[:no_messages_founded]) if chat.messages.count.zero?
 
         response = chat.messages.last(4).map do |mess|
           "#{mess.role}: #{mess.content}\n at: #{mess.created_at}\n\n"
@@ -152,7 +145,7 @@ module ChatgptAssistant
 
         telegram_bot.api.send_message(chat_id: msg.chat.id, text: response)
       else
-        telegram_bot.api.send_message(chat_id: msg.chat.id, text: "Nenhuma conversa foi selecionada ainda!")
+        telegram_bot.api.send_message(chat_id: msg.chat.id, text: default_msg.error_messages[:no_chat_selected])
       end
     end
 
@@ -163,7 +156,7 @@ module ChatgptAssistant
         chat = Chat.find_by(user: user, title: msg.text.split("/").last)
         if chat
           user.update(current_chat_id: chat.id)
-          telegram_bot.api.send_message(chat_id: msg.chat.id, text: "Chat selecionado com sucesso!")
+          telegram_bot.api.send_message(chat_id: msg.chat.id, text: default_msg.success_messages[:chat_selected])
         else
           chat_not_found_message
         end
@@ -199,7 +192,7 @@ module ChatgptAssistant
 
     def chat_if_exists
       chat = Chat.find_by(user_id: user.id, id: user.current_chat_id)
-      chat ? chat_success(chat.id) : chat_failed
+      chat ? chat_success(chat.id) : no_chat_selected
     end
 
     def chat_success(chat_id)
@@ -214,9 +207,7 @@ module ChatgptAssistant
     end
 
     def run_stop
-      default_msg.stop_messages.each do |message|
-        telegram_bot.api.send_message(chat_id: msg.chat.id, text: message)
-      end
+      telegram_bot.api.send_message(chat_id: msg.chat.id, text: default_msg.commom_messages[:stop])
       telegram_bot.api.leave_chat(chat_id: msg.chat.id)
     end
 
@@ -226,63 +217,56 @@ module ChatgptAssistant
 
     def user_logged_message
       user.update(telegram_id: msg.chat.id)
-      telegram_bot.api.send_message(chat_id: msg.chat.id, text: "Usuário logado com sucesso!")
-      telegram_bot.api.send_message(chat_id: msg.chat.id,
-                                    text: "Agora você pode conversar comigo. Para parar de conversar comigo, digite /stop.")
+      telegram_bot.api.send_message(chat_id: msg.chat.id, text: default_msg.success_messages[:user_logged_in])
     end
 
     def user_not_logged_error_message
-      telegram_bot.api.send_message(chat_id: chat_id, text: "Senha incorreta!")
+      telegram_bot.api.send_message(chat_id: chat_id, text: default_msg.error_messages[:password])
     end
 
     def not_logged_in_message
-      default_msg.not_logged_in_messages.each do |message|
-        telegram_bot.api.send_message(chat_id: msg.chat.id, text: message)
-      end
+      telegram_bot.api.send_message(chat_id: msg.chat.id, text: default_msg.error_messages[:user_not_logged_in])
     end
 
     def user_created_message
-      telegram_bot.api.send_message(chat_id: msg.chat.id, text: "Usuário criado com sucesso!")
-      telegram_bot.api.send_message(chat_id: msg.chat.id,
-                                    text: "Agora você pode conversar comigo. Para parar de conversar comigo, digite /stop.")
+      telegram_bot.api.send_message(chat_id: msg.chat.id, text: default_msg.success_messages[:user_created])
     end
 
     def user_not_created_error_message
-      telegram_bot.api.send_message(chat_id: msg.chat.id, text: "Erro ao criar usuário!")
+      telegram_bot.api.send_message(chat_id: msg.chat.id, text: default_msg.error_messages[:user_creation])
     end
 
     def chat_created_message(chat)
       user.update(current_chat_id: chat.id)
-      telegram_bot.api.send_message(chat_id: msg.chat.id, text: default_msg.chat_creation_success_message)
+      telegram_bot.api.send_message(chat_id: msg.chat.id, text: default_msg.success_messages[:chat_created])
     end
 
     def chat_creation_failed_message
       telegram_bot.api.send_message(chat_id: msg.chat.id, text: default_msg.error_messages[:chat_creation_failed])
     end
 
-    def chat_failed
+    def no_chat_selected
       telegram_bot.api.send_message(chat_id: msg.chat.id,
-                                    text: "Você não está em nenhum chat. Para criar um novo chat, digite /novo_chat.")
+                                    text: default_msg.error_messages[:no_chat_selected])
     end
 
     def chat_not_found_message
-      telegram_bot.api.send_message(chat_id: msg.chat.id, text: "Chat não encontrado")
+      telegram_bot.api.send_message(chat_id: msg.chat.id, text: default_msg.error_messages[:chat_not_found])
     end
 
     def start_log
       logger.log("STARTING BOT AT #{Time.now}")
-      logger.log("ENVIRONMENT: #{ENV["ENV_TYPE"]}")
+      logger.log("ENVIRONMENT: #{@config.env_type}")
     end
 
+
     def error_log(e)
-      mess = "Algo deu errado, tente novamente mais tarde."
       if e.message.to_s.include?("Bad Request: message is too long")
-        mess = "Histórico de mensagens muito grande, talvez seja melhor criar outro chat ou perguntar ao bot sobre alguma recordação específica."
-      end
-      telegram_bot.api.send_message(chat_id: msg.chat.id,
-                                    text: mess)
-      if ENV["ENV_TYPE"] == "development" && e.message.to_s.include?("Bad Request: message is too long") == false
+        telegram_bot.api.send_message(chat_id: msg.chat.id, text: default_msg.error_messages[:message_history_too_long])
+      else
+        telegram_bot.api.send_message(chat_id: msg.chat.id, text: default_msg.error_messages[:something_went_wrong])
         telegram_bot.api.send_message(chat_id: msg.chat.id, text: "ERROR: #{e.message}\n #{e.backtrace}")
+
       end
       logger.log("ERROR: #{e.message}\n #{e.backtrace}")
     end

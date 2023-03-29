@@ -15,15 +15,18 @@ module ChatgptAssistant
     def chat(message, chat_id)
       @chat_id = chat_id
       @message = message
+      init_log
       @response = request(message)
       @json = JSON.parse(response.body)
-      init_log
+      logger.log("RESPONSE FROM OPENAI API: OK")
+      
 
       return error_log if response.status != 200
 
       text = json["choices"][0]["message"]["content"].gsub("```", "`").to_s
 
       Message.create(content: text, role: "assistant", chat_id: chat_id)
+      logger.log("MESSAGE SAVED IN DATABASE")
       text
     end
 
@@ -57,17 +60,17 @@ module ChatgptAssistant
     end
 
     def request_params(message)
-      messages = Message.where(chat_id: chat_id).order(created_at: :asc).limit(10)
+      messages = Message.where(chat_id: chat_id).order(id: :asc).last(10)
       if messages.empty?
+        ids = ["unknown"]
         messages = [{ role: "user", content: message }]
       else
+        ids = messages.map(&:id)
         messages = messages.map { |mess| { role: mess.role, content: mess.content } }
-        messages += [{ role: "user", content: message }]
       end
       logger.log("MESSAGES LOADED IN CONTEXT: #{messages.count}")
-      messages.each do |mess|
-        logger.log("MESSAGE ROLE: #{mess[:role]}")
-        logger.log("MESSAGE CONTENT: #{mess[:content]}")
+      messages.each_with_index do |mess, index|
+        logger.log("MESSAGE ROLE: #{mess[:role]}, ID: #{ids[index]}")
       end
       {
         model: "gpt-3.5-turbo",
