@@ -79,6 +79,10 @@ module ChatgptAssistant
 
     def login(email, password)
       @user = User.find_by(email: email)
+      last_access = User.find_by(telegram_id: msg.chat.id)
+      if user && last_access
+        last_access.update(telegram_id: nil) if last_access != @user 
+      end
       user.password == password ? user_logged_message : user_not_logged_error_message
     end
 
@@ -223,7 +227,7 @@ module ChatgptAssistant
     end
 
     def user_not_logged_error_message
-      telegram_bot.api.send_message(chat_id: chat_id, text: default_msg.error_messages[:password])
+      telegram_bot.api.send_message(chat_id: msg.chat.id, text: default_msg.error_messages[:password])
     end
 
     def not_logged_in_message
