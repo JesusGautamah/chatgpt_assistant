@@ -7,6 +7,7 @@ module ChatgptAssistant
     def initialize(config)
       @config = config
       @openai_api_key = config.openai_api_key
+      @language = config.language
       @conn = faraday_instance
       @logger = ChatterLogger.new
       classify_mode
@@ -22,7 +23,7 @@ module ChatgptAssistant
 
     private
 
-    attr_reader :openai_api_key, :ibm_api_key, :ibm_url, :aws_access_key_id, :aws_secret_access_key, :aws_region, :config, :logger
+    attr_reader :openai_api_key, :ibm_api_key, :ibm_url, :aws_access_key_id, :aws_secret_access_key, :aws_region, :config, :logger, :language, :voice
 
     def faraday_instance
       Faraday.new(url: "https://api.openai.com/") do |faraday|
@@ -36,10 +37,12 @@ module ChatgptAssistant
       if ibm_mode?
         @ibm_api_key = config.ibm_api_key
         @ibm_url = config.ibm_url
+        @voice = send("#{language}_ibm_voice")
       elsif aws_mode?
         @aws_access_key_id = config.aws_access_key_id
         @aws_secret_access_key = config.aws_secret_access_key
         @aws_region = config.aws_region
+        @voice = send("#{language}_aws_voice")
       end
     end
 
@@ -55,7 +58,7 @@ module ChatgptAssistant
       response = polly_client.synthesize_speech(
         output_format: "mp3",
         text: text,
-        voice_id: "Vitoria",
+        voice_id: voice,
         engine: "neural"
       )
 
@@ -78,7 +81,6 @@ module ChatgptAssistant
 
       text_to_speech.service_url = ibm_url
 
-      voice = "pt-BR_IsabelaV3Voice"
       audio_format = "audio/mp3"
       audio = text_to_speech.synthesize(
         text: text,
@@ -90,6 +92,22 @@ module ChatgptAssistant
         audio_file.write(audio)
       end
       "voice/ibm-#{time}.mp3"
+    end
+
+    def pt_aws_voice
+      "Vitoria"
+    end
+
+    def en_aws_voice
+      "Joanna"
+    end
+
+    def pt_ibm_voice
+      "pt-BR_IsabelaV3Voice"
+    end
+
+    def en_ibm_voice
+      "en-US_AllisonV3Voice"
     end
 
     def ibm_mode?
