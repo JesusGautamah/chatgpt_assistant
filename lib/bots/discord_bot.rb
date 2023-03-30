@@ -7,7 +7,7 @@ module ChatgptAssistant
       @bot ||= Discordrb::Commands::CommandBot.new(
         token: discord_token,
         client_id: discord_client_id,
-        prefix: 'gpt!'
+        prefix: discord_prefix,
       )
     end
 
@@ -20,6 +20,7 @@ module ChatgptAssistant
 
     def start
       logger.log('Starting Discord bot')
+      logger.log("Discord Prefix: #{discord_prefix}") 
 
       bot.command :start do |event|
         event.respond default_msg.commom_messages[:start]
