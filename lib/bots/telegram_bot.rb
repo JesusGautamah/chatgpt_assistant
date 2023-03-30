@@ -146,9 +146,7 @@ module ChatgptAssistant
         response = chat.messages.last(4).map do |mess|
           "#{mess.role}: #{mess.content}\n at: #{mess.created_at}\n\n"
         end.join
-
         logger.log("HIST RESPONSE: #{response}")
-
         telegram_bot.api.send_message(chat_id: msg.chat.id, text: response)
       else
         telegram_bot.api.send_message(chat_id: msg.chat.id, text: default_msg.error_messages[:no_chat_selected])
@@ -177,7 +175,6 @@ module ChatgptAssistant
       text = msg.text
       title = text.split("/").last
       chat = Chat.new(user_id: user.id, status: 0, title: title)
-
       chat.save ? chat_created_message(chat) : chat_creation_failed_message
     end
 
@@ -272,7 +269,6 @@ module ChatgptAssistant
       else
         telegram_bot.api.send_message(chat_id: msg.chat.id, text: default_msg.error_messages[:something_went_wrong])
         telegram_bot.api.send_message(chat_id: msg.chat.id, text: "ERROR: #{e.message}\n #{e.backtrace}")
-
       end
       logger.log("ERROR: #{e.message}\n #{e.backtrace}")
     end
