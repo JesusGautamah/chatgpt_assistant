@@ -37,10 +37,15 @@ module ChatgptAssistant
           user_email = message_content.split(':')[0]
           user_password = message_content.split(':')[1]
           if User.find_by(email: user_email).nil?
-            event.respond default_msg.error_messages[:password]
+            event.respond default_msg.error_messages[:email]
           else
             user = User.find_by(email: user_email)
+            last_access = User.find_by(discord_id: event.user.id)
             if user.password == user_password
+              if user && last_access != user
+                last_access.update(discord_id: nil) if last_access
+                user.update(discord_id: event.user.id)
+              end
               event.respond default_msg.success_messages[:user_logged_in]
             else
               event.respond default_msg.error_messages[:password]

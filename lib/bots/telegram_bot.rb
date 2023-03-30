@@ -80,10 +80,14 @@ module ChatgptAssistant
     def login(email, password)
       @user = User.find_by(email: email)
       last_access = User.find_by(telegram_id: msg.chat.id)
-      if user && last_access
-        last_access.update(telegram_id: nil) if last_access != @user 
+      if user.password == password
+        if user && last_access != user
+          last_access.update(telegram_id: nil) if last_access != @user 
+        end
+        user_logged_message
+      else
+        user_not_logged_error_message
       end
-      user.password == password ? user_logged_message : user_not_logged_error_message
     end
 
     def register(email, password)
