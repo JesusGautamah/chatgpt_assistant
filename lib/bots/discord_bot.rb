@@ -3,11 +3,31 @@
 module ChatgptAssistant
   # This class is responsible to handle the discord bot
   class DiscordBot < ApplicationBot
+    def start
+      start_logs
+      start_event
+      login_event
+      register_event
+      list_event
+      help_event
+      new_chat_event
+      sl_chat_event
+      ask_event
+      voice_connect_event
+      disconnect_event
+      speak_event
+      bot_init
+    end
+
+    private
+
+    attr_reader :message, :evnt
+
     def bot
       @bot ||= Discordrb::Commands::CommandBot.new(
         token: discord_token,
         client_id: discord_client_id,
-        prefix: discord_prefix,
+        prefix: discord_prefix
       )
     end
 
@@ -18,209 +38,226 @@ module ChatgptAssistant
       )
     end
 
-    def start
-      logger.log('Starting Discord bot')
-      logger.log("Discord Prefix: #{discord_prefix}") 
+    def start_logs
+      logger.log("Starting Discord bot")
+      logger.log("Discord Prefix: #{discord_prefix}")
+    end
 
+    def start_event
       bot.command :start do |event|
-        event.respond default_msg.commom_messages[:start]
-        event.respond default_msg.commom_messages[:start_helper].gsub("register/", "gpt!register ")
-        event.respond default_msg.commom_messages[:start_sec_helper].gsub("login/", "gpt!login ")
+        event.respond commom_messages[:start]
+        event.respond commom_messages[:start_helper].gsub("register/", "gpt!register ")
+        event.respond commom_messages[:start_sec_helper].gsub("login/", "gpt!login ")
       end
-      logger.log('Start Event Configured')
+      logger.log("Start Event Configured")
+    end
 
+    def login
+      user_email = message.split(":")[0]
+      user_password = message.split(":")[1]
+      case auth_userdiscord(user_email, user_password, evnt.user.id)
+      when "user not found"
+        evnt.respond error_messages[:user_not_found]
+      when "wrong password"
+        evnt.respond error_messages[:wrong_password]
+      when find_useremail(user_email)
+        evnt.respond success_messages[:user_logged_in]
+      end
+    end
+
+    def login_event
       bot.command :login do |event|
-        message_content = event.message.content.split(' ')[1]
-        if message_content.nil?
-          event.respond default_msg.commom_messages[:login]
-        else
-          user_email = message_content.split(':')[0]
-          user_password = message_content.split(':')[1]
-          if User.find_by(email: user_email).nil?
-            event.respond default_msg.error_messages[:email]
-          else
-            user = User.find_by(email: user_email)
-            last_access = User.find_by(discord_id: event.user.id)
-            if user.password == user_password
-              if user && last_access != user
-                last_access.update(discord_id: nil) if last_access
-                user.update(discord_id: event.user.id)
-              end
-              event.respond default_msg.success_messages[:user_logged_in]
-            else
-              event.respond default_msg.error_messages[:password]
-            end
-          end
-        end
+        @message = event.message.content.split(" ")[1]
+        @evnt = event
+        message.nil? ? event.respond(commom_messages[:login]) : login
       end
-      logger.log('Login Event Configured')
+      logger.log("Login Event Configured")
+    end
 
+    def register
+      user_email = message.split(":")[0]
+      user_password = message.split(":")[1]
+      if find_useremail(user_email).nil?
+        logger.log("Creating user #{user_email}")
+        if discord_user_create(evnt.user.id, user_email, user_password, evnt.user.username)
+          evnt.respond success_messages[:user_created]
+        else
+          evnt.respond error_messages[:user_not_created]
+        end
+      else
+        evnt.respond error_messages[:email]
+      end
+    end
+
+    def register_event
       bot.command :register do |event|
-        message_content = event.message.content.split(' ')[1]
-        if message_content.nil?
-          event.respond default_msg.commom_messages[:register]
+        @message = event.message.content.split(" ")[1]
+        @evnt = event
+        if message.nil?
+          event.respond commom_messages[:register]
         else
-          user_email = message_content.split(':')[0]
-          user_password = message_content.split(':')[1]
-          if User.find_by(email: user_email).nil?
-            logger.log event.user.username
-            logger.log event.user.id
-            user = User.new(email: user_email, password: user_password, name: event.user.username, discord_id: event.user.id)
-            if user.save
-              event.respond default_msg.success_messages[:user_created]
-            else
-              event.respond default_msg.error_messages[:user_not_created]
-              event.respond user.errors.full_messages
-            end
-          else
-            event.respond default_msg.error_messages[:email]
-          end
+          register
         end
       end
-      logger.log('Register Event Configured')
+      logger.log("Register Event Configured")
+    end
 
+    def list_event
       bot.command :list do |event|
         user = User.find_by(discord_id: event.user.id)
         if user
           chats = Chat.where(user_id: user.id)
           if chats.empty?
-            event.respond default_msg.error_messages[:chat_not_found]
+            event.respond error_messages[:chat_not_found]
           else
-            chats = chats.map { |chat| chat.title }
-            event.respond default_msg.commom_messages[:chat_list]
+            chats = chats.map(&:title)
+            event.respond commom_messages[:chat_list]
             event.respond chats.join("\n")
           end
         else
-          event.respond default_msg.error_messages[:user_not_logged_in]
+          event.respond error_messages[:user_not_logged_in]
         end
       end
-      logger.log('List Event Configured')
+      logger.log("List Event Configured")
+    end
 
+    def help_event
       bot.command :help do |event|
-        message = default_msg.help_messages.join("\n").gsub(" /", " gpt!").
-                                                       gsub("register/", "gpt!register ").
-                                                       gsub("login/", "gpt!login ").
-                                                       gsub("new_chat/", "gpt!new_chat/").
-                                                       gsub("sl_chat/", "gpt!sl_chat/")
+        message = help_messages.join("\n").gsub(" /", " gpt!")
+                               .gsub("register/", "gpt!register ")
+                               .gsub("login/", "gpt!login ")
+                               .gsub("new_chat/", "gpt!new_chat/")
+                               .gsub("sl_chat/", "gpt!sl_chat/")
         event.respond message
       end
-      logger.log('Help Event Configured')
+      logger.log("Help Event Configured")
+    end
 
+    def new_chat_event
       bot.command :new_chat do |event|
         user = User.find_by(discord_id: event.user.id)
-        chat_title = event.message.content.split(' ')[1.. -1].join(' ')
+        chat_title = event.message.content.split(" ")[1..].join(" ")
         if user
           chat = Chat.new(user_id: user.id, title: chat_title, status: 0)
           if chat.save
             user.update(current_chat_id: chat.id)
-            event.respond default_msg.success_messages[:chat_created]
+            event.respond success_messages[:chat_created]
           else
-            event.respond default_msg.error_messages[:chat_creation]
+            event.respond error_messages[:chat_creation]
           end
         else
-          event.respond default_msg.error_messages[:user_not_logged_in]
+          event.respond error_messages[:user_not_logged_in]
         end
       end
-      logger.log('New Chat Event Configured')
+      logger.log("New Chat Event Configured")
+    end
 
+    def sl_chat_event
       bot.command :sl_chat do |event|
-        chat_to_select = event.message.content.split(' ')[1.. -1].join(' ')
+        chat_to_select = event.message.content.split(" ")[1..].join(" ")
         user = User.find_by(discord_id: event.user.id)
         if user
           chat = Chat.find_by(title: chat_to_select, user_id: user.id)
           if chat
-            event.respond default_msg.success_messages[:chat_selected]
+            event.respond success_messages[:chat_selected]
           else
-            event.respond default_msg.error_messages[:chat_not_found]
+            event.respond error_messages[:chat_not_found]
           end
         else
-          event.respond default_msg.error_messages[:user_not_logged_in]
+          event.respond error_messages[:user_not_logged_in]
         end
       end
-      logger.log('SL Chat Event Configured')
+      logger.log("SL Chat Event Configured")
+    end
 
+    def ask_event
       bot.command :ask do |event|
-        message = event.message.content.split(' ')[1.. -1].join(' ')
+        message = event.message.content.split(" ")[1..].join(" ")
         user = User.find_by(discord_id: event.user.id)
         if user
           chat = Chat.where(id: user.current_chat_id).last
           if chat
-            Message.create(chat_id: chat.id, content: message, role: 'user')
+            Message.create(chat_id: chat.id, content: message, role: "user")
             response = chatter.chat(message, chat.id)
             event.respond response
           else
-            event.respond default_msg.error_messages[:chat_not_found]
+            event.respond error_messages[:chat_not_found]
           end
         else
-          event.respond default_msg.error_messages[:user_not_logged_in]
+          event.respond error_messages[:user_not_logged_in]
         end
       end
+      logger.log("Ask Event Configured")
+    end
 
+    def voice_connect_event
       bot.command :connect do |event|
         user = User.find_by(discord_id: event.user.id)
         if user
           chat = Chat.where(id: user.current_chat_id).last
           if chat
-            unless event.user.voice_channel
-              event.respond default_msg.error_messages[:user_not_in_voice_channel]
-            else
+            if event.user.voice_channel
               bot.voice_connect(event.user.voice_channel)
               "Connected to voice channel"
+            else
+              event.respond error_messages[:user_not_in_voice_channel]
             end
           else
-            event.respond default_msg.error_messages[:chat_not_found]
+            event.respond error_messages[:chat_not_found]
           end
         else
-          event.respond default_msg.error_messages[:user_not_logged_in]
+          event.respond error_messages[:user_not_logged_in]
         end
       end
+      logger.log("Voice Connect Event Configured")
+    end
 
+    def disconnect_event
       bot.command :disconnect do |event|
         user = User.find_by(discord_id: event.user.id)
         if user
           chat = Chat.where(id: user.current_chat_id).last
           if chat
-            if event.user.voice_channel && event.voice
-              event.voice.destroy
-            end
+            event.voice.destroy if event.user.voice_channel && event.voice
           else
-            event.respond default_msg.error_messages[:chat_not_found]
+            event.respond error_messages[:chat_not_found]
           end
         else
-          event.respond default_msg.error_messages[:user_not_logged_in]
+          event.respond error_messages[:user_not_logged_in]
         end
       end
+    end
 
+    def speak_event
       bot.command :speak do |event|
-        message = event.message.content.split(' ')[1.. -1].join(' ')
-        user = User.find_by(discord_id: event.user. id)
+        message = event.message.content.split(" ")[1..].join(" ")
+        user = User.find_by(discord_id: event.user.id)
         if user
           chat = Chat.where(id: user.current_chat_id).last
           if chat
-            Message.create(chat_id: chat.id, content: message, role: 'user')
+            Message.create(chat_id: chat.id, content: message, role: "user")
             response = chatter.chat(message, chat.id)
             audio_path = audio_synthesis.synthesize_text(response)
             event.respond response
             event.voice.play_file(audio_path)
-            # delete all files in voice folder, this is not a rails project
-            folder = 'voice/'
-            Dir.glob(folder + '*').each do |file|
-              next if file == '.keep' || file == 'voice/.keep'
-              File.delete(file)
-            end
-            "Audio Played Successfully"
+            delete_all_voice_files
           else
-            event.respond default_msg.error_messages[:chat_not_found]
+            event.respond error_messages[:chat_not_found]
           end
         else
-          event.respond default_msg.error_messages[:user_not_logged_in]
+          event.respond error_messages[:user_not_logged_in]
         end
       end
+    end
 
-      
-      logger.log('Discord bot started')
+    def bot_init
+      logger.log("Discord bot started")
       at_exit { bot.stop }
-      bot.run nil rescue start 
+      begin
+        bot.run nil
+      rescue StandardError
+        start
+      end
     end
   end
 end

@@ -17,6 +17,7 @@ require "telegram/bot"
 require "ibm_watson"
 require "discordrb"
 require "faraday"
+require "bcrypt"
 
 module ChatgptAssistant
   # This class is responsible for initializing the Chatgpt Assistant

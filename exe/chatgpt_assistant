@@ -2,15 +2,15 @@
 # frozen_string_literal: true
 
 path = ARGV[0]
-raise 'Please specify the path to copy files to' if path.nil?
+raise "Please specify the path to copy files to" if path.nil?
 
 puts "Creating new chatgpt assistant at #{path}"
 
 `mkdir -p #{path}`
 
-raise 'Path must be empty' unless Dir.empty?(path)
+raise "Path must be empty" unless Dir.empty?(path)
 
-gem_dir = Gem::Specification.find_by_name('chatgpt_assistant').gem_dir
+gem_dir = Gem::Specification.find_by_name("chatgpt_assistant").gem_dir
 
 `cp -r #{gem_dir}/lib #{path}`
 
@@ -30,7 +30,7 @@ end
   `cp #{gem_dir}/#{file} #{path}`
 end
 
-%w[/.bundle/ /.yardoc /_yardoc/ /coverage/ /doc/ /pkg/ /spec/reports/ /tmp/ /db_data /db_data/* 
+%w[/.bundle/ /.yardoc /_yardoc/ /coverage/ /doc/ /pkg/ /spec/reports/ /tmp/ /db_data /db_data/*
    .rspec_status .env /logs/telegram_chatgpt.log /voice/audio* /voice/ibm* /voice/polly* /voice/aws*].each do |file_to_ignore|
   `echo "#{file_to_ignore}" >> #{path}/.gitignore`
 end

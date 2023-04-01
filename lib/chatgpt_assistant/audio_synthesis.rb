@@ -23,7 +23,8 @@ module ChatgptAssistant
 
     private
 
-    attr_reader :openai_api_key, :ibm_api_key, :ibm_url, :aws_access_key_id, :aws_secret_access_key, :aws_region, :config, :logger, :language, :voice
+    attr_reader :openai_api_key, :ibm_api_key, :ibm_url, :aws_access_key_id, :aws_secret_access_key, :aws_region,
+                :config, :logger, :language, :voice
 
     def faraday_instance
       Faraday.new(url: "https://api.openai.com/") do |faraday|
@@ -65,6 +66,8 @@ module ChatgptAssistant
       File.open("voice/aws-#{time}.mp3", "wb") do |file|
         file.write(response.audio_stream.read)
       end
+
+      logger.log("SYNTHESIZED TEXT WITH AWS POLLY")
       "voice/aws-#{time}.mp3"
     end
 

@@ -3,7 +3,7 @@
 module ChatgptAssistant
   # This class is responsible for storing the default messages
   class DefaultMessages
-    def initialize(language = 'en')
+    def initialize(language = "en")
       @language = language
       load_message_context
     end
@@ -32,7 +32,7 @@ module ChatgptAssistant
                    \nExemplo de Registro: register/user@email.com:3214",
         login: "Para fazer login no sistema, digite login/email:senha (a senha deve ser um numero de 4 digitos ex: 1234).
                 \nExemplo de Login: login/user@mail.com:2134",
-        chat_list: "Aqui estão os chats que você criou:",
+        chat_list: "Aqui estão os chats que você criou:"
       }
     end
 
@@ -42,7 +42,7 @@ module ChatgptAssistant
         chat_created: "Chat criado com sucesso!",
         chat_selected: "Chat selecionado com sucesso!",
         user_logged_in: "Login realizado com sucesso!",
-        voice_channel_connected: "O bot entrou no canal de voz com sucesso!",
+        voice_channel_connected: "O bot entrou no canal de voz com sucesso!"
       }
     end
 
@@ -57,11 +57,14 @@ module ChatgptAssistant
         no_messages_founded: "Nenhuma mensagem encontrada",
         no_chat_selected: "Nenhum chat selecionado",
         chat_not_found: "Chat não encontrado",
+        no_chats_founded: "Nenhum chat encontrado",
         user_not_logged_in: "Usuário não logado",
+        user_not_found: "Usuário não encontrado",
         something_went_wrong: "Algo deu errado. Tente novamente mais tarde.",
         message_history_too_long: "O histórico mensagem é muito longo.",
         text_length: "O texto de resposta é muito longo. Tente diminuir a quantidade de respostas na mesma mensagem.",
-        user_not_in_voice_channel: "Você não está em um canal de voz."
+        user_not_in_voice_channel: "Você não está em um canal de voz.",
+        invalid_command: "Comando inválido. Tente novamente."
       }
     end
 
@@ -89,7 +92,7 @@ module ChatgptAssistant
                    \nExample of Registration: register/user@mail.com:3241",
         login: "To log in to the system, type login/email:password (the password must be a 4 digit number ex: 1234).
                 \nExample of Login: login/user@mail.com:2134",
-        chat_list: "Here are the chats you created:",
+        chat_list: "Here are the chats you created:"
       }
     end
 
@@ -98,7 +101,7 @@ module ChatgptAssistant
         user_created: "User created successfully!",
         chat_created: "Chat created successfully!",
         chat_selected: "Chat selected successfully!",
-        user_logged_in: "Login successfully!",
+        user_logged_in: "Login successfully!"
       }
     end
 
@@ -112,15 +115,18 @@ module ChatgptAssistant
         chat_creation: "Error creating chat. Try again",
         no_messages_founded: "No messages found",
         no_chat_selected: "No chat selected",
+        no_chats_founded: "No chats found",
         chat_not_found: "Chat not found",
         user_not_logged_in: "User not logged in",
+        user_not_found: "User not found",
         something_went_wrong: "Something went wrong. Try again later.",
         message_history_too_long: "The message history is too long.",
         text_length: "The response text is too long. Try to reduce the number of answers in the same message.",
-        user_not_in_voice_channel: "You are not in a voice channel."
+        user_not_in_voice_channel: "You are not in a voice channel.",
+        invalid_command: "Invalid command. Try again."
       }
     end
-    
+
     def help_messages_en
       ["To start talking to me, type /start",
        "To stop talking to me, type /stop",
