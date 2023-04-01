@@ -6,14 +6,14 @@
 /pkg/
 /spec/reports/
 /tmp/
-/db_data
-/db_data/*
-
-# rspec failure tracking
+.workflow_secrets
 .rspec_status
 .env
+
 /logs/telegram_chatgpt.log
 /voice/audio*
 /voice/ibm*
 /voice/polly*
 /voice/aws*
+/db_data
+/db_data/*
