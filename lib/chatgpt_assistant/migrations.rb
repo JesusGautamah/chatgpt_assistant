@@ -3,14 +3,17 @@
 require "active_record"
 require "active_model"
 
-# Email model
+# This file contains the migrations for the database tables
+
+# User model
 class UserMigration < ActiveRecord::Migration[5.2]
   def change
     return if ActiveRecord::Base.connection.table_exists? :users
 
     create_table :users do |t|
       t.string :email, null: false, limit: 100
-      t.string :password, null: false, limit: 4
+      t.string :password_hash, null: false, limit: 100
+      t.string :password_salt, null: false, limit: 100
       t.string :name, null: false, limit: 100
       t.string :telegram_id, limit: 100
       t.string :discord_id, limit: 100
@@ -25,6 +28,7 @@ class UserMigration < ActiveRecord::Migration[5.2]
   end
 end
 
+# Chat model
 class ChatMigration < ActiveRecord::Migration[5.2]
   def change
     return if ActiveRecord::Base.connection.table_exists? :chats
@@ -38,6 +42,7 @@ class ChatMigration < ActiveRecord::Migration[5.2]
   end
 end
 
+# Message model
 class MessageMigration < ActiveRecord::Migration[5.2]
   def change
     return if ActiveRecord::Base.connection.table_exists? :messages

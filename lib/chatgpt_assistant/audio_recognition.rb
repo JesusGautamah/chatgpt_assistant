@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module ChatgptAssistant
   # This is the AudioRecognition class
   class AudioRecognition
