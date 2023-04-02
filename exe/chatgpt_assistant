@@ -34,3 +34,10 @@ end
    .rspec_status .env /logs/telegram_chatgpt.log /voice/audio* /voice/ibm* /voice/polly* /voice/aws*].each do |file_to_ignore|
   `echo "#{file_to_ignore}" >> #{path}/.gitignore`
 end
+
+`cd #{path} && git init`
+
+puts "Done! Now you can run 'cd #{path} && bundle install'"
+puts "Build the docker image with 'rake compose:build'"
+puts "Run the bot with 'rake compose:up'"
+puts "For more information, see the README.md file"

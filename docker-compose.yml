@@ -12,7 +12,7 @@ services:
     build: .
     command: bash -c "exe/chatgpt_bot telegram"
     volumes:
-      - .:/telegram_chatgpt
+      - .:/chatgpt_assistant
     environment:
       POSTGRES_HOST: db
     env_file:
@@ -23,7 +23,7 @@ services:
     build: .
     command: bash -c "exe/chatgpt_bot discord"
     volumes:
-      - .:/telegram_chatgpt
+      - .:/chatgpt_assistant
     environment:
       POSTGRES_HOST: db
     env_file:
