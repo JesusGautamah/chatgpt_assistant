@@ -9,6 +9,7 @@ module ChatgptAssistant
       login_event
       register_event
       list_event
+      hist_event
       help_event
       new_chat_event
       sl_chat_event
@@ -118,6 +119,27 @@ module ChatgptAssistant
       chats_title = chats.map(&:title)
       evnt.respond commom_messages[:chat_list]
       evnt.respond chats_title.join("\n")
+    end
+
+    def hist_event
+      bot.command :hist do |event|
+        @evnt = event
+        @user = User.find_by(discord_id: event.user.id)
+        event.respond error_messages[:user_not_logged_in] if user.nil?
+        title = event.message.content.split(" ")[1 .. -1].join(" ")
+        @chat = Chat.find_by(user_id: user.id, title: title) if user
+        event.respond error_messages[:chat_not_found] if chat.nil? && user
+        hist_action if user && chat
+      end
+      logger.log("Hist Event Configured")
+    end
+
+    def hist_action
+      messages = Message.where(chat_id: chat.id).order(:created_at)
+      messages.each do |message|
+        evnt.respond "#{message.role} - #{message.content}\n#{message.created_at.strftime("%d/%m/%Y %H:%M")}"
+      end
+      "This is the end of the chat history"
     end
 
     def help_event

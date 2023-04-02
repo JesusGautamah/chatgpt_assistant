@@ -1,42 +1,64 @@
-# Chatgpt Assistant
+# ChatGPT Assistant
 
-This ruby gem is an way to easy initialize an client of Telegram and Discord bots with the ChatGPT API, Audio Transcription, IBM CLoud Text to Speech and AWS Polly, creating an assistant that can answer questions in text and voice, speak the answers, and have a conversation with the user.
+This Ruby gem provides an easy way to initialize a client for Telegram and Discord bots using the ChatGPT API, audio transcription, IBM Cloud Text to Speech, and AWS Polly, creating an assistant that can answer questions in text and voice and have a conversation with the user.
 
 ## Requirements
-  - Ruby > 2.6.0
-  - Docker
-  - Docker Compose
 
-# Installation
-You can install this as a gem, and use the cli to copy the files to desired folder, or you can just clone/fork this repo and use it as you want.
+- Ruby > 2.6.0
+- Docker
+- Docker Compose
 
-## Installation as a gem
-Run in your terminal:
+## Installation
 
-      gem install chatgpt_assistant
-      chatgpt_assistant PATH_TO_FOLDER
+To install the gem, run:
+
+```bash
+gem install chatgpt_assistant
+```
+
+Then, edit the .env_sample file to include the necessary credentials and rename it to .env. Run bundle install to install the necessary dependencies.
+
+Alternatively, you can clone/fork this repo to use it as you wish.
+
+### Installation as a gem example
+
+```bash
+gem install chatgpt_assistant
+chatgpt_assistant PATH_TO_FOLDER
+cd PATH_TO_FOLDER
+cp .env_sample .env
+bundle install
+```
 
 ## Installation as a repo
 Run in your terminal:
+```bash
+git clone https://github.com/JesusGautamah/chatgpt_assistant.git
+cd chatgpt_assistant
+cp .env_sample .env
+bundle install
+```
 
-      git clone https://github.com/JesusGautamah/chatgpt_assistant.git
+Make sure to run bundle before using the Lucy Dockerunner rake tasks.
 
-# Usage
-## Environment variables
-You have to rename the .env_sample file to .env and fill the variables with your own data.
+## Usage
 
-## Build the bot
-Run in your terminal inside the project folder:
+You can start the Docker Compose services required for the gem using the rake tasks provided by the Lucy Dockerunner gem. These tasks include compose:up, compose:down, compose:status, compose:shell, compose:restart, and others listed previously.
 
-      rake compose:build
+For example, to start the services, run:
 
-## Run the bot
+```ruby
+rake compose:up
+```
 
-      rake compose:up
 
-## Tail the logs
+To stop the services, run:
 
-      rake compose_logs:tail_all
+```ruby
+rake compose:down
+```
+
+After starting the Docker Compose services, you can use the features of the gem to create a chat assistant that responds to questions in both text and voice using the services mentioned above.
 
 ## More commands at https://github.com/JesusGautamah/lucy_dockerunner
 
