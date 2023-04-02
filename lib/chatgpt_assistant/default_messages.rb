@@ -53,6 +53,7 @@ module ChatgptAssistant
         password: "A senha que você digitou não é válida. Tente novamente",
         user: "O usuário que você digitou não existe. Tente novamente",
         user_creation: "Erro ao criar usuário. Tente novamente",
+        user_already_exists: "O usuário que você digitou já existe. Tente novamente",
         chat_creation: "Erro ao criar chat. Tente novamente",
         no_messages_founded: "Nenhuma mensagem encontrada",
         no_chat_selected: "Nenhum chat selecionado",

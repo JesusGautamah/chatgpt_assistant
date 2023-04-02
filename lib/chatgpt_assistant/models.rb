@@ -20,6 +20,10 @@ class User < ActiveRecord::Base
     self.password_salt = BCrypt::Engine.generate_salt
     self.password_hash = BCrypt::Engine.hash_secret(password_hash, password_salt)
   end
+
+  def last_chat
+    chats.last
+  end
 end
 
 # Chat model
