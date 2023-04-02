@@ -175,7 +175,7 @@ module ChatgptAssistant
       @chat = Chat.find_by(title: chat_to_select, user_id: user.id)
       evnt.respond error_messages[:chat_not_found] if chat.nil?
       user.update(current_chat_id: chat.id) if chat
-      event.respond success_messages[:chat_selected] if chat
+      evnt.respond success_messages[:chat_selected] if chat
     end
 
     def ask_event
@@ -209,16 +209,10 @@ module ChatgptAssistant
         event.respond error_messages[:user_not_in_voice_channel] if event.user.voice_channel.nil? && user
         event.respond error_messages[:user_already_connected] if event.voice && user
         event.respond error_messages[:chat_not_found] if user && event.user.voice_channel && !event.voice && Chat.where(id: user.current_chat_id).last.nil?
-        voice_connect_action if user && event.user.voice_channel && !event.voice && !Chat.where(id: user.current_chat_id).last.nil?
+        bot.voice_connect(event.user.voice_channel) if user && event.user.voice_channel && !event.voice && !Chat.where(id: user.current_chat_id).last.nil?
+        "Connected to voice channel" if user && event.user.voice_channel && event.voice && !Chat.where(id: user.current_chat_id).last.nil?
       end
       logger.log("Voice Connect Event Configured")
-    end
-
-    def voice_connect_action
-      logger.log("Connecting to voice channel: #{evnt.user.voice_channel.name}")
-      bot.voice_connect(evnt.user.voice_channel)
-      logger.log("Connected to voice channel: #{evnt.user.voice_channel.name}")
-      "Connected to voice channel"
     end
 
     def disconnect_event
@@ -247,7 +241,7 @@ module ChatgptAssistant
         @user = User.find_by(discord_id: event.user.id)
         event.respond error_messages[:user_not_logged_in] if user.nil?
         event.respond error_messages[:user_not_in_voice_channel] if event.user.voice_channel.nil? && user
-        event.respond error_messages[:user_not_connected] if !event.voice && user
+        event.respond error_messages[:bot_not_in_voice_channel] if !event.voice && user
         event.respond error_messages[:chat_not_found] if user && event.user.voice_channel && event.voice && Chat.where(id: user.current_chat_id).last.nil?
         ask_to_speak_action if user && event.user.voice_channel && event.voice && !Chat.where(id: user.current_chat_id).last.nil?
       end
@@ -269,11 +263,9 @@ module ChatgptAssistant
     def bot_init
       logger.log("Discord bot started")
       at_exit { bot.stop }
-      begin
-        bot.run nil
-      rescue StandardError
-        start
-      end
+      bot.run
+    rescue StandardError
+      start
     end
   end
 end
