@@ -53,6 +53,7 @@ module ChatgptAssistant
         password: "A senha que você digitou não é válida. Tente novamente",
         user: "O usuário que você digitou não existe. Tente novamente",
         user_creation: "Erro ao criar usuário. Tente novamente",
+        user_already_exists: "O usuário que você digitou já existe. Tente novamente",
         chat_creation: "Erro ao criar chat. Tente novamente",
         no_messages_founded: "Nenhuma mensagem encontrada",
         no_chat_selected: "Nenhum chat selecionado",
@@ -64,6 +65,7 @@ module ChatgptAssistant
         message_history_too_long: "O histórico mensagem é muito longo.",
         text_length: "O texto de resposta é muito longo. Tente diminuir a quantidade de respostas na mesma mensagem.",
         user_not_in_voice_channel: "Você não está em um canal de voz.",
+        bot_not_in_voice_channel: "O bot não está em um canal de voz.",
         invalid_command: "Comando inválido. Tente novamente."
       }
     end
@@ -123,6 +125,7 @@ module ChatgptAssistant
         message_history_too_long: "The message history is too long.",
         text_length: "The response text is too long. Try to reduce the number of answers in the same message.",
         user_not_in_voice_channel: "You are not in a voice channel.",
+        bot_not_in_voice_channel: "The bot is not in a voice channel.",
         invalid_command: "Invalid command. Try again."
       }
     end
