@@ -41,7 +41,7 @@ module ChatgptAssistant
         username: database_username,
         password: database_password
       )
-      ActiveRecord::Base.logger = Logger.new($stdout)
+      ActiveRecord::Base.logger = Logger.new($stdout) if ENV["ENV_TYPE"] == "development"
     end
 
     def migrate
