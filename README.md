@@ -7,7 +7,11 @@
 This Ruby gem provides an easy way to initialize a client for Telegram and Discord bots using the ChatGPT API, audio transcription, IBM Cloud Text to Speech, and AWS Polly, creating an assistant that can answer questions in text and voice and have a conversation with the user.
 
 #### Languages supported currently: en, pt - contributions are welcome!
+You can contribute by adding your language to the DefaultMessages class in lib/chatgpt_assistant/default_messages.rb. You can also add your language to the list of languages in the README.md file.
+Pull request from language/YOUR_LANGUAGE to main, remember to name your pull request as "Add YOUR_LANGUAGE support".
 
+Other contributions are welcome too!
+Remember to give a star to this repo if you like it!
 ## Requirements
 
 - Ruby > 2.6.0
@@ -110,6 +114,20 @@ After starting the Docker Compose services, you can use the features of the gem 
 A good way to contribute is add your language to DefaultMessages class in lib/chatgpt_assistant/default_messages.rb. You can also add your language to the list of languages in the README.md file.
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/JesusGautamah/chatgpt_assistant. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/JesusGautamah/chatgpt_assistant/blob/master/CODE_OF_CONDUCT.md).
+
+
+## [![Repography logo](https://images.repography.com/logo.svg)](https://repography.com) / Recent activity [![Time period](https://images.repography.com/33522702/JesusGautamah/chatgpt_assistant/recent-activity/y6ZDduNWHwPzbnUFsmdGrJ99Q1vyEKGOBWFOBvzGjnM/1rZM2QrF0__3eUfUXFe6jDraYjHvypniTqDWhCequ-U_badge.svg)](https://repography.com)
+[![Timeline graph](https://images.repography.com/33522702/JesusGautamah/chatgpt_assistant/recent-activity/y6ZDduNWHwPzbnUFsmdGrJ99Q1vyEKGOBWFOBvzGjnM/1rZM2QrF0__3eUfUXFe6jDraYjHvypniTqDWhCequ-U_timeline.svg)](https://github.com/JesusGautamah/chatgpt_assistant/commits)
+[![Issue status graph](https://images.repography.com/33522702/JesusGautamah/chatgpt_assistant/recent-activity/y6ZDduNWHwPzbnUFsmdGrJ99Q1vyEKGOBWFOBvzGjnM/1rZM2QrF0__3eUfUXFe6jDraYjHvypniTqDWhCequ-U_issues.svg)](https://github.com/JesusGautamah/chatgpt_assistant/issues)
+
+[![Pull request status graph](https://images.repography.com/33522702/JesusGautamah/chatgpt_assistant/recent-activity/y6ZDduNWHwPzbnUFsmdGrJ99Q1vyEKGOBWFOBvzGjnM/1rZM2QrF0__3eUfUXFe6jDraYjHvypniTqDWhCequ-U_prs.svg)](https://github.com/JesusGautamah/chatgpt_assistant/pulls)
+[![Trending topics](https://images.repography.com/33522702/JesusGautamah/chatgpt_assistant/recent-activity/y6ZDduNWHwPzbnUFsmdGrJ99Q1vyEKGOBWFOBvzGjnM/1rZM2QrF0__3eUfUXFe6jDraYjHvypniTqDWhCequ-U_words.svg)](https://github.com/JesusGautamah/chatgpt_assistant/commits)
+
+[![Top contributors](https://images.repography.com/33522702/JesusGautamah/chatgpt_assistant/recent-activity/y6ZDduNWHwPzbnUFsmdGrJ99Q1vyEKGOBWFOBvzGjnM/1rZM2QrF0__3eUfUXFe6jDraYjHvypniTqDWhCequ-U_users.svg)](https://github.com/JesusGautamah/chatgpt_assistant/graphs/contributors)
+[![Activity map](https://images.repography.com/33522702/JesusGautamah/chatgpt_assistant/recent-activity/y6ZDduNWHwPzbnUFsmdGrJ99Q1vyEKGOBWFOBvzGjnM/1rZM2QrF0__3eUfUXFe6jDraYjHvypniTqDWhCequ-U_map.svg)](https://github.com/JesusGautamah/chatgpt_assistant/commits)
+
+## Contributors
+  - [Jesus Gautamah](https://github.com/JesusGautamah) 
 
 ## License
 
