@@ -6,13 +6,15 @@ gem "bcrypt"
 
 gem "rake", "~> 13.0"
 
-gem "rspec", "~> 3.0"
+gem "rspec", "~> 3.0", group: :test
+
+gem "simplecov", "~> 0.21", group: :test
+
+gem "vcr", "~> 6.0", group: :test
 
 gem "rubocop", "~> 1.21"
 
 gem "rubocop-rspec", "~> 2.4"
-
-gem "simplecov", "~> 0.21"
 
 gem "telegram-bot-ruby", "~> 0.16"
 

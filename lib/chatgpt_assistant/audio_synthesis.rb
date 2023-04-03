@@ -9,7 +9,6 @@ module ChatgptAssistant
       @openai_api_key = config.openai_api_key
       @language = config.language
       @conn = faraday_instance
-      @logger = ChatterLogger.new
       classify_mode
     end
 
@@ -24,7 +23,7 @@ module ChatgptAssistant
     private
 
     attr_reader :openai_api_key, :ibm_api_key, :ibm_url, :aws_access_key_id, :aws_secret_access_key, :aws_region,
-                :config, :logger, :language, :voice
+                :config, :language, :voice
 
     def faraday_instance
       Faraday.new(url: "https://api.openai.com/") do |faraday|
@@ -49,7 +48,6 @@ module ChatgptAssistant
 
     def synthesize_text_aws(text)
       time = Time.now.to_i
-      logger.log("SYNTHESIZING TEXT WITH AWS POLLY")
       @time = Time.now.to_i
       polly_client = Aws::Polly::Client.new(
         access_key_id: aws_access_key_id,
@@ -66,14 +64,11 @@ module ChatgptAssistant
       File.open("voice/aws-#{time}.mp3", "wb") do |file|
         file.write(response.audio_stream.read)
       end
-
-      logger.log("SYNTHESIZED TEXT WITH AWS POLLY")
       "voice/aws-#{time}.mp3"
     end
 
     def synthesize_text_ibm(text)
       time = Time.now.to_i
-      logger.log("SYNTHESIZING TEXT WITH IBM WATSON")
       authenticator = IBMWatson::Authenticators::IamAuthenticator.new(
         apikey: ibm_api_key
       )

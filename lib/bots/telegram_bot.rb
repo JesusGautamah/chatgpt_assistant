@@ -4,59 +4,72 @@ module ChatgptAssistant
   # This class is responsible for the telegram bot features
   class TelegramBot < ApplicationBot
     def start
-      start_log
       bot.listen do |message|
         @msg = message
-        next unless text_or_audio?
-
-        message_received_log
-        message_text_cases if msg.text.present?
-        message_audio_process if msg.audio.present? || msg.voice.present?
+        event_callback
       end
+    rescue StandardError
+      retry
     end
 
     private
 
     attr_accessor :msg
 
-    def message_text_cases
-      logger.log("MESSAGE TEXT: TRUE")
+    def event_callback
+      return unless text_or_audio?
+
+      text_events if msg.text.present?
+      audio_event if msg.audio.present? || msg.voice.present?
+    end
+
+    def text_events
       case msg.text
       when "/start"
-        run_start
+        start_event
       when "/help"
-        run_help
+        help_event
       when "/list"
-        list_chats
+        list_event
       when "/stop"
-        run_stop
+        stop_event
       when "/hist"
-        run_hist
+        hist_event
       when nil
-        run_nil_error
+        nil_event
       else
-        operations
+        action_events
       end
     end
 
-    def message_audio_process
-      logger.log("MESSAGE AUDIO: TRUE")
-      return bot.api.send_message(chat_id: msg.chat.id, text: error_messages[:no_chat_selected]) if user.current_chat_id.nil? || user.current_chat_id.zero?
-      chat = Chat.find(user.current_chat_id)
-      message_create(transcribed_text, chat.id, "user")
-      text = chatter.chat(transcribed_text, chat.id)
-      voice = audio_synthesis.synthesize_text(text)
-      bot.api.send_message(chat_id: msg.chat.id, text: text)
-      bot.api.send_voice(chat_id: msg.chat.id, voice: Faraday::UploadIO.new(voice, "audio/mp3"))
-      delete_all_voice_files
+    def audio_event
+      return bot.api.send_message(chat_id: msg.chat.id, text: error_messages[:no_chat_selected]) if user.current_chat.nil?
+
+      chat = user.current_chat
+      user_audio = transcribed_file
+      message = Message.new(content: user_audio["text"], chat_id: chat.id, role: "user")
+      if message.save
+        ai_text = chatter.chat(user_audio["text"], chat.id)
+        ai_voice = audio_synthesis.synthesize_text(ai_text)
+        send_audio_message(ai_voice, ai_text)
+        delete_all_voice_files
+      else
+        bot.api.send_message(chat_id: msg.chat.id, text: error_messages[:message_creation_error])
+      end
     end
 
-    def operations
+    def send_audio_message(voice, text)
+      bot.api.send_voice(chat_id: msg.chat.id, voice: Faraday::UploadIO.new(voice, "audio/mp3"))
+      bot.api.send_message(chat_id: msg.chat.id, text: text)
+    end
+
+    def action_events
       return chatter_call unless actions?
       return new_chat if msg.text.include?("new_chat/")
       return select_chat if msg.text.include?("sl_chat/")
       return login if msg.text.include?("login/")
       return register if msg.text.include?("register/")
+
       invalid_command_error_message
     end
 
@@ -95,11 +108,11 @@ module ChatgptAssistant
       "https://api.telegram.org/file/bot#{telegram_token}/#{audio_info["result"]["file_path"]}"
     end
 
-    def transcribed_text
+    def transcribed_file
       audio_recognition.transcribe_audio(audio_url)
     end
 
-    def run_start
+    def start_event
       bot.api.send_message(chat_id: msg.chat.id, text: commom_messages[:start])
       help_message = help_messages.join("\n").to_s
       bot.api.send_message(chat_id: msg.chat.id, text: help_message)
@@ -107,38 +120,30 @@ module ChatgptAssistant
       bot.api.send_message(chat_id: msg.chat.id, text: commom_messages[:start_sec_helper])
     end
 
-    def run_hist
+    def hist_event
       return not_logged_in_message unless user
+      return bot.api.send_message(chat_id: msg.chat.id, text: error_messages[:no_chat_selected]) unless user.current_chat
 
-      chat = Chat.find(user.current_chat_id)
-      if chat
-        if chat.messages.count.zero?
-          return bot.api.send_message(chat_id: msg.chat.id,
-                                               text: error_messages[:no_messages_founded])
-        end
-
-        response = chat.messages.last(4).map do |mess|
-          "#{mess.role}: #{mess.content}\n at: #{mess.created_at}\n\n"
-        end.join
-        logger.log("HIST RESPONSE: #{response}")
-        bot.api.send_message(chat_id: msg.chat.id, text: response)
-      else
-        bot.api.send_message(chat_id: msg.chat.id, text: error_messages[:no_chat_selected])
+      if user.current_chat.messages.count.zero?
+        return bot.api.send_message(chat_id: msg.chat.id,
+                                    text: error_messages[:no_messages_founded])
       end
+
+      response = chat.messages.last(4).map do |mess|
+        "#{mess.role}: #{mess.content}\n at: #{mess.created_at}\n\n"
+      end.join
+      bot.api.send_message(chat_id: msg.chat.id, text: response)
     end
 
     def select_chat
-      if user.nil?
-        not_logged_in_message
-      else
-        chat = Chat.find_by(user: user, title: msg.text.split("/").last)
-        if chat
-          user.update(current_chat_id: chat.id)
-          bot.api.send_message(chat_id: msg.chat.id, text: success_messages[:chat_selected])
-        else
-          chat_not_found_message
-        end
-      end
+      return not_logged_in_message unless user
+
+      title = msg.text.split("/").last
+      chat = user.chat_by_title(title)
+      return chat_not_found_message unless chat
+
+      user.update(current_chat_id: chat.id)
+      bot.api.send_message(chat_id: msg.chat.id, text: success_messages[:chat_selected])
     end
 
     def new_chat
@@ -152,16 +157,21 @@ module ChatgptAssistant
       chat.save ? chat_created_message(chat) : chat_creation_failed_message
     end
 
-    def list_chats
-      chats = Chat.where(user_id: User.find_by(telegram_id: msg.chat.id).id)
-      return bot.api.send_message(chat_id: msg.chat.id, text: error_messages[:no_chats_founded]) if chats.count.zero?
-      bot.api.send_message(chat_id: msg.chat.id,
-                                    text: commom_messages[:chats_list])
+    def list_event
+      return unless valid_for_list_action?
+
+      bot.api.send_message(chat_id: msg.chat.id, text: commom_messages[:chat_list])
       chats_str = ""
-      chats.each do |chat|
+      user.chats.each do |chat|
         chats_str += "Chat #{chat.id} - #{chat.title}\n"
       end
       bot.api.send_message(chat_id: msg.chat.id, text: chats_str)
+    end
+
+    def valid_for_list_action?
+      bot.api.send_message(chat_id: msg.chat.id, text: error_messages[:not_logged_in]) if user.nil?
+      bot.api.send_message(chat_id: msg.chat.id, text: error_messages[:no_chats_founded]) if user.chats.count.zero?
+      !user.nil? && user.chats.count.positive?
     end
 
     def chatter_call
@@ -178,18 +188,18 @@ module ChatgptAssistant
       bot.api.send_message(chat_id: msg.chat.id, text: chatter.chat(msg.text, chat_id))
     end
 
-    def run_help
+    def help_event
       help_messages.each do |message|
         bot.api.send_message(chat_id: msg.chat.id, text: message)
       end
     end
 
-    def run_stop
+    def stop_event
       bot.api.send_message(chat_id: msg.chat.id, text: commom_messages[:stop])
       bot.api.leave_chat(chat_id: msg.chat.id)
     end
 
-    def run_nil_error
+    def nil_event
       bot.api.send_message(chat_id: msg.chat.id, text: error_messages[:nil])
     end
 
@@ -233,16 +243,11 @@ module ChatgptAssistant
 
     def no_chat_selected
       bot.api.send_message(chat_id: msg.chat.id,
-                                    text: error_messages[:no_chat_selected])
+                           text: error_messages[:no_chat_selected])
     end
 
     def chat_not_found_message
       bot.api.send_message(chat_id: msg.chat.id, text: error_messages[:chat_not_found])
-    end
-
-    def start_log
-      logger.log("STARTING BOT AT #{Time.now}")
-      logger.log("ENVIRONMENT: #{@config.env_type}")
     end
 
     def error_log(err)
@@ -250,14 +255,7 @@ module ChatgptAssistant
         bot.api.send_message(chat_id: msg.chat.id, text: error_messages[:message_history_too_long])
       else
         bot.api.send_message(chat_id: msg.chat.id, text: error_messages[:something_went_wrong])
-        bot.api.send_message(chat_id: msg.chat.id, text: "ERROR: #{err.message}\n #{err.backtrace}")
       end
-      logger.log("ERROR: #{err.message}\n #{err.backtrace}")
-    end
-
-    def message_received_log
-      logger.log("MESSAGE RECEIVED AT: #{Time.now}")
-      logger.log("MESSAGE FROM USER: #{msg.from.first_name} #{msg.from.last_name} - #{msg.from.username}")
     end
 
     def user

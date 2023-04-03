@@ -6,7 +6,6 @@ module ChatgptAssistant
     def initialize(config)
       @config = config
       default_msg = DefaultMessages.new(@config.language)
-      @logger = ChatterLogger.new
       @openai_api_key = @config.openai_api_key
       @telegram_token = @config.telegram_token
       @discord_token = @config.discord_token
@@ -32,8 +31,8 @@ module ChatgptAssistant
       @audio_synthesis ||= AudioSynthesis.new(config)
     end
 
-    def message_create(message, chat_id, role)
-      Message.create(content: message, chat_id: chat_id, role: role)
+    def transcribed_text
+      audio_recognition.transcribe_audio(audio_url)
     end
 
     def find_useremail(email)
@@ -112,7 +111,7 @@ module ChatgptAssistant
     end
 
     attr_reader :openai_api_key, :telegram_token, :database, :default_msg,
-                :logger, :mode, :config, :discord_token, :discord_client_id,
+                :mode, :config, :discord_token, :discord_client_id,
                 :discord_prefix, :commom_messages, :error_messages, :success_messages,
                 :help_messages
   end

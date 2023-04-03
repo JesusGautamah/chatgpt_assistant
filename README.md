@@ -16,10 +16,6 @@ To install the gem, run:
 gem install chatgpt_assistant
 ```
 
-Then, edit the .env_sample file to include the necessary credentials and rename it to .env. Run bundle install to install the necessary dependencies.
-
-Remember to edit docker-compose.prod.yml when deploying to production.
-
 Alternatively, you can clone/fork this repo to use it as you wish.
 
 ### Installation as a gem example
@@ -42,6 +38,10 @@ bundle install
 ```
 
 Make sure to run bundle before using the Lucy Dockerunner rake tasks.
+
+Then, edit the .env_sample file to include the necessary credentials and rename it to .env. Run bundle install to install the necessary dependencies.
+
+Remember to edit docker-compose.prod.yml when deploying to production.
 
 ## Usage
 
