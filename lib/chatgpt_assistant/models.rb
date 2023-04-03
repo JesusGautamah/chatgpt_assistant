@@ -29,7 +29,7 @@ class User < ActiveRecord::Base
     chats.last
   end
 
-  def chat_by_title
+  def chat_by_title(title)
     chats.find_by(title: title)
   end
 end
