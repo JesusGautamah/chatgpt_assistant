@@ -3,7 +3,6 @@
 require_relative "chatgpt_assistant/audio_recognition"
 require_relative "chatgpt_assistant/default_messages"
 require_relative "chatgpt_assistant/audio_synthesis"
-require_relative "chatgpt_assistant/chatter_logger"
 require_relative "chatgpt_assistant/chatter"
 require_relative "chatgpt_assistant/version"
 require_relative "chatgpt_assistant/config"

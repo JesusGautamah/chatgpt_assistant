@@ -16,7 +16,7 @@ services:
     environment:
       POSTGRES_HOST: db
     env_file:
-      - .env
+      - .env_prod
     depends_on:
       - db
   discord:
@@ -27,7 +27,7 @@ services:
     environment:
       POSTGRES_HOST: db
     env_file:
-      - .env
+      - .env_prod
     depends_on:
       - db
 volumes:

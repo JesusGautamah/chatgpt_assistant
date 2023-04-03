@@ -4,25 +4,24 @@ module ChatgptAssistant
   # This is the AudioRecognition class
   class AudioRecognition
     def initialize(openai_api_key)
+      time = Time.now.to_i
+      @dl_file_name = "voice/audio-#{time}.oga"
+      @file_name = "voice/audio-#{time}.mp3"
       @conn = Faraday.new(url: "https://api.openai.com/") do |faraday|
         faraday.request :multipart
         faraday.request :url_encoded
         faraday.adapter Faraday.default_adapter
       end
-      @logger = ChatterLogger.new
       @openai_api_key = openai_api_key
     end
 
     def download_audio(audio_url)
-      logger.log("DOWNLOADING AUDIO FROM TELEGRAM")
-      @time = Time.now.to_i
       audio_conn = Faraday.new(url: audio_url)
-      File.open("voice/audio-#{time}.oga", "wb") do |file|
+      File.open(dl_file_name, "wb") do |file|
         file.write(audio_conn.get.body)
       end
-
-      FFMPEG::Movie.new("voice/audio-#{time}.oga").transcode("voice/audio-#{time}.mp3")
-      File.delete("voice/audio-#{time}.oga")
+      FFMPEG::Movie.new(dl_file_name).transcode(file_name)
+      File.delete(dl_file_name)
     end
 
     def header
@@ -34,21 +33,27 @@ module ChatgptAssistant
 
     def payload
       {
-        "file": Faraday::UploadIO.new("voice/audio-#{time}.mp3", "audio/mp3"),
+        "file": Faraday::UploadIO.new(file_name, "audio/mp3"),
         "model": "whisper-1"
       }
+    end
+
+    def transcribed_file_json
+      {
+        file_name: file_name,
+        text: JSON.parse(response.body)["text"]
+      }.to_json
     end
 
     def transcribe_audio(audio_url)
       @audio_url = audio_url
       download_audio(audio_url)
-      response = conn.post("v1/audio/transcriptions", payload, header)
-      logger.log("RESPONSE FROM OPENAI API AUDIO TRANSCRIPTION")
-      JSON.parse(response.body)["text"]
+      @response = conn.post("v1/audio/transcriptions", payload, header)
+      transcribed_file_json
     end
 
     private
 
-    attr_reader :conn, :openai_api_key, :logger, :audio_url, :time, :ibm_api_key, :ibm_url
+    attr_reader :conn, :openai_api_key, :audio_url, :time, :ibm_api_key, :ibm_url, :response, :dl_file_name, :file_name
   end
 end

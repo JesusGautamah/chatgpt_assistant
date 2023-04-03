@@ -21,8 +21,16 @@ class User < ActiveRecord::Base
     self.password_hash = BCrypt::Engine.hash_secret(password_hash, password_salt)
   end
 
+  def current_chat
+    chats.find(current_chat_id)
+  end
+
   def last_chat
     chats.last
+  end
+
+  def chat_by_title
+    chats.find_by(title: title)
   end
 end
 

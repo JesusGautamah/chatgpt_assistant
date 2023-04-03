@@ -66,7 +66,8 @@ module ChatgptAssistant
         text_length: "O texto de resposta é muito longo. Tente diminuir a quantidade de respostas na mesma mensagem.",
         user_not_in_voice_channel: "Você não está em um canal de voz.",
         bot_not_in_voice_channel: "O bot não está em um canal de voz.",
-        invalid_command: "Comando inválido. Tente novamente."
+        invalid_command: "Comando inválido. Tente novamente.",
+        message_creation_error: "Erro ao criar mensagem. Tente novamente."
       }
     end
 
@@ -126,7 +127,8 @@ module ChatgptAssistant
         text_length: "The response text is too long. Try to reduce the number of answers in the same message.",
         user_not_in_voice_channel: "You are not in a voice channel.",
         bot_not_in_voice_channel: "The bot is not in a voice channel.",
-        invalid_command: "Invalid command. Try again."
+        invalid_command: "Invalid command. Try again.",
+        message_creation_error: "Error creating message. Try again."
       }
     end
 
