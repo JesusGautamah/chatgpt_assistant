@@ -1,12 +1,23 @@
 # ChatGPT Assistant
 
+[![Gem Version](https://badge.fury.io/rb/chatgpt_assistant.svg)](https://badge.fury.io/rb/chatgpt_assistant)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Ruby Version](https://img.shields.io/badge/Ruby-2.6.0%2B-blue.svg)](https://www.ruby-lang.org/en/)
+
 This Ruby gem provides an easy way to initialize a client for Telegram and Discord bots using the ChatGPT API, audio transcription, IBM Cloud Text to Speech, and AWS Polly, creating an assistant that can answer questions in text and voice and have a conversation with the user.
+
+#### Languages supported currently: en, pt - contributions are welcome!
 
 ## Requirements
 
 - Ruby > 2.6.0
 - Docker
 - Docker Compose
+- PostgreSQL
+- Telegram Bot API Token
+- Discord Bot API Token
+- IBM Cloud Text to Speech API Key or AWS Polly API Key
+- OpenAI API Key
 
 ## Installation
 
@@ -18,7 +29,7 @@ gem install chatgpt_assistant
 
 Alternatively, you can clone/fork this repo to use it as you wish.
 
-### Installation as a gem example
+## Installation as a gem example
 
 ```bash
 gem install chatgpt_assistant
@@ -37,6 +48,10 @@ cp .env_sample .env
 bundle install
 ```
 
+## Migrate your database
+```bash
+rake compose:up && sudo docker compose run --rm telegram exe/chatgpt_bot migrate
+```
 Make sure to run bundle before using the Lucy Dockerunner rake tasks.
 
 Then, edit the .env_sample file to include the necessary credentials and rename it to .env. Run bundle install to install the necessary dependencies.
@@ -49,22 +64,50 @@ You can start the Docker Compose services required for the gem using the rake ta
 
 For example, to start the services, run:
 
-```ruby
+```bash
 rake compose:up
 ```
 
 
 To stop the services, run:
 
-```ruby
+```bash
 rake compose:down
 ```
 
 After starting the Docker Compose services, you can use the features of the gem to create a chat assistant that responds to questions in both text and voice using the services mentioned above.
 
-## More commands at https://github.com/JesusGautamah/lucy_dockerunner
+#### More compose rake tasks at https://github.com/JesusGautamah/lucy_dockerunner
+
+## Discord Bot Commands
+
+- !start - shows the welcome message
+- !help - shows the help message
+- !login email:password - logs in the user
+- !register email:password - registers a new user
+- !list - lists the user created chatbots
+- !sl_chat CHAT TITLE - starts a chat with the chatbot with the given title
+- !new_chat CHAT TITLE - creates a new chatbot with the given title
+- !ask TEXT - sends a text to the chatbot
+- !connect - connects the chat bot to the current channel
+- !disconnect - disconnects the chat bot from the current channel
+- !speak TEXT - sends a text to the chatbot and gets the response in voice
+
+## Telegram Bot Commands
+
+- /start - shows the welcome message
+- /help - shows the help message
+- login/email:password - logs in the user
+- register/email:password - registers a new user
+- list - lists the user created chatbots
+- sl_chat/CHAT TITLE - starts a chat with the chatbot with the given title
+- new_chat/CHAT TITLE - creates a new chatbot with the given title
+- TEXT - sends a text to the chatbot
+- VOICE_MESSAGE or AUDIO FILE - sends a voice message to the chatbot and returns the response in voice
 
 ## Contributing
+
+A good way to contribute is add your language to DefaultMessages class in lib/chatgpt_assistant/default_messages.rb. You can also add your language to the list of languages in the README.md file.
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/JesusGautamah/chatgpt_assistant. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/JesusGautamah/chatgpt_assistant/blob/master/CODE_OF_CONDUCT.md).
 
