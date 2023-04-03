@@ -97,7 +97,7 @@ module ChatgptAssistant
     end
 
     def list_action
-      chats_title = chats.map(&:title)
+      chats_title = user.chats.map(&:title)
       evnt.respond commom_messages[:chat_list]
       evnt.respond chats_title.join("\n")
     end
@@ -148,8 +148,8 @@ module ChatgptAssistant
     end
 
     def create_chat_action
-      chat_title = event.message.content.split(" ")[1..].join(" ")
-      chat = Chat.new(user_id: user.id, title: chat_title, status: 0)
+      chat_title = evnt.message.content.split(" ")[1..].join(" ")
+      @chat = Chat.new(user_id: user.id, title: chat_title, status: 0)
       chat.save ? respond_with_success : evnt.respond(error_messages[:chat_creation])
     end
 
@@ -216,8 +216,8 @@ module ChatgptAssistant
     end
 
     def voice_connection_checker_action
-      evnt.respond error_messages[:user_not_in_voice_channel] if event.user.voice_channel.nil? && user
-      evnt.respond error_messages[:bot_already_connected] if event.voice && user
+      evnt.respond error_messages[:user_not_in_voice_channel] if evnt.user.voice_channel.nil? && user
+      evnt.respond error_messages[:bot_already_connected] if evnt.voice && user
     end
 
     def bot_disconnected?
@@ -239,12 +239,12 @@ module ChatgptAssistant
 
     def disconnect_checker_action
       evnt.respond error_messages[:user_not_logged_in] if user.nil?
-      evnt.respond error_messages[:user_not_in_voice_channel] if event.user.voice_channel.nil? && user
-      evnt.respond error_messages[:user_not_connected] if !event.voice && user
+      evnt.respond error_messages[:user_not_in_voice_channel] if evnt.user.voice_channel.nil? && user
+      evnt.respond error_messages[:user_not_connected] if !evnt.voice && user
     end
 
     def disconnect_action
-      bot.voice_destroy(event.user.voice_channel)
+      bot.voice_destroy(evnt.user.voice_channel)
       "Disconnected from voice channel"
     end
 
@@ -262,12 +262,12 @@ module ChatgptAssistant
 
     def speak_connect_checker_action
       evnt.respond error_messages[:user_not_logged_in] if user.nil?
-      evnt.respond error_messages[:chat_not_found] if user && event.user.voice_channel && event.voice && chat.nil?
+      evnt.respond error_messages[:chat_not_found] if user && evnt.user.voice_channel && evnt.voice && chat.nil?
     end
 
     def speak_connection_checker_action
-      evnt.respond error_messages[:user_not_in_voice_channel] if event.user.voice_channel.nil? && user
-      evnt.respond error_messages[:bot_not_in_voice_channel] if !event.voice && user
+      evnt.respond error_messages[:user_not_in_voice_channel] if evnt.user.voice_channel.nil? && user
+      evnt.respond error_messages[:bot_not_in_voice_channel] if !evnt.voice && user
     end
 
     def ask_to_speak_action

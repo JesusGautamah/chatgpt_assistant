@@ -81,7 +81,7 @@ module ChatgptAssistant
         user_not_found_error_message
       when "wrong password"
         wrong_password_error_message
-      when find_usertelegram(email)
+      when find_useremail(email)
         user_logged_in_message
       end
     end
