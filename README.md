@@ -110,6 +110,13 @@ After starting the Docker Compose services, you can use the features of the gem 
 - TEXT - sends a text to the chatbot
 - VOICE_MESSAGE or AUDIO FILE - sends a voice message to the chatbot and returns the response in voice
 
+## Recommended Actions runner
+
+You can run Github Actions workflows locally using [act](https://github.com/nektos/act)
+
+We recommend Act installation to run Github Actions workflows locally
+as we use it to deploy the bot in a server via ssh.
+
 ## Contributing
 
 A good way to contribute is add your language to DefaultMessages class in lib/chatgpt_assistant/default_messages.rb. You can also add your language to the list of languages in the README.md file.
