@@ -86,17 +86,20 @@ After starting the Docker Compose services, you can use the features of the gem 
 
 ## Discord Bot Commands
 
-- !start - shows the welcome message
-- !help - shows the help message
-- !login email:password - logs in the user
-- !register email:password - registers a new user
-- !list - lists the user created chatbots
-- !sl_chat CHAT TITLE - starts a chat with the chatbot with the given title
-- !new_chat CHAT TITLE - creates a new chatbot with the given title
-- !ask TEXT - sends a text to the chatbot
-- !connect - connects the chat bot to the current channel
-- !disconnect - disconnects the chat bot from the current channel
-- !speak TEXT - sends a text to the chatbot and gets the response in voice
+The discord commands prefix can be changed in the .env file.
+The default prefix is dgpt!
+
+- dgpt!start - shows the welcome message
+- dgpt!help - shows the help message
+- dgpt!login email:password - logs in the user
+- dgpt!register email:password - registers a new user
+- dgpt!list - lists the user created chatbots
+- dgpt!sl_chat CHAT TITLE - starts a chat with the chatbot with the given title
+- dgpt!new_chat CHAT TITLE - creates a new chatbot with the given title
+- dgpt!ask TEXT - sends a text to the chatbot
+- dgpt!connect - connects the chat bot to the current channel
+- dgpt!disconnect - disconnects the chat bot from the current channel
+- dgpt!speak TEXT - sends a text to the chatbot and gets the response in voice
 
 ## Telegram Bot Commands
 
