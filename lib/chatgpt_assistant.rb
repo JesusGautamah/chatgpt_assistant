@@ -31,26 +31,38 @@ module ChatgptAssistant
       return discord_bot if discord_mode?
 
       raise "Invalid mode"
+    rescue StandardError => e
+      save_error(e)
+      retry
     end
 
     private
 
-    attr_reader :mode, :config
+      attr_reader :mode, :config
 
-    def telegram_mode?
-      mode == "telegram"
-    end
+      def save_error(err)
+        puts "Error: #{err.message}"
+        err.backtrace.each { |line| puts line }
+        Error.create(message: err.message, backtrace: err.backtrace) unless err.message == Error.last&.message
+      rescue StandardError
+        puts "Error: #{err.message}"
+        puts "Backtrace: #{err.backtrace}"
+      end
 
-    def telegram_bot
-      TelegramBot.new(config).start
-    end
+      def telegram_mode?
+        mode == "telegram"
+      end
 
-    def discord_mode?
-      mode == "discord"
-    end
+      def telegram_bot
+        TelegramBot.new(config).start
+      end
 
-    def discord_bot
-      DiscordBot.new(config).start
-    end
+      def discord_mode?
+        mode == "discord"
+      end
+
+      def discord_bot
+        DiscordBot.new(config).start
+      end
   end
 end
