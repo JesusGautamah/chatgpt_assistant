@@ -3,7 +3,36 @@
 require "active_record"
 require "active_model"
 
-# This file contains the migrations for the database tables
+# Visitor model
+class VisitorMigration < ActiveRecord::Migration[5.2]
+  def change
+    return if ActiveRecord::Base.connection.table_exists? :visitors
+
+    create_table :visitors do |t|
+      t.string :telegram_id, limit: 100
+      t.string :discord_id, limit: 100
+      t.integer :platform, null: false, default: 0
+      t.string :name, null: false
+      t.integer :current_user_id, null: false, default: 0
+      t.timestamps
+    end
+  end
+end
+
+# VisitorActions model
+class VisitorActionsMigration < ActiveRecord::Migration[5.2]
+  def change
+    return if ActiveRecord::Base.connection.table_exists? :visitor_actions
+
+    create_table :visitor_actions do |t|
+      t.references :visitor, null: false, foreign_key: true
+      t.text :action, null: false
+      t.text :description, null: false
+      t.integer :role, null: false, default: 0
+      t.timestamps
+    end
+  end
+end
 
 # User model
 class UserMigration < ActiveRecord::Migration[5.2]
@@ -11,18 +40,32 @@ class UserMigration < ActiveRecord::Migration[5.2]
     return if ActiveRecord::Base.connection.table_exists? :users
 
     create_table :users do |t|
+      t.string :telegram_id, foreign_key: true, class_name: "Visitor"
+      t.string :discord_id, foreign_key: true, class_name: "Visitor"
       t.string :email, null: false, limit: 100
       t.string :password_hash, null: false, limit: 100
       t.string :password_salt, null: false, limit: 100
-      t.string :name, null: false, limit: 100
-      t.string :telegram_id, limit: 100
-      t.string :discord_id, limit: 100
       t.integer :current_chat_id, null: false, default: 0
       t.integer :role, null: false, default: 0
       t.integer :open_chats, null: false, default: 0
       t.integer :closed_chats, null: false, default: 0
       t.integer :total_chats, null: false, default: 0
       t.integer :total_messages, null: false, default: 0
+      t.timestamps
+    end
+  end
+end
+
+# UserActions model
+class UserActionsMigration < ActiveRecord::Migration[5.2]
+  def change
+    return if ActiveRecord::Base.connection.table_exists? :user_actions
+
+    create_table :user_actions do |t|
+      t.references :user, null: false, foreign_key: true
+      t.text :action, null: false, default: ""
+      t.text :description, null: false, default: ""
+      t.integer :role, null: false, default: 0
       t.timestamps
     end
   end
@@ -51,6 +94,21 @@ class MessageMigration < ActiveRecord::Migration[5.2]
       t.references :chat, null: false, foreign_key: true
       t.integer :role, null: false, default: 0
       t.text :content, null: false, default: ""
+      t.timestamps
+    end
+  end
+end
+
+# Error model
+class ErrorMigration < ActiveRecord::Migration[5.2]
+  def change
+    return if ActiveRecord::Base.connection.table_exists? :errors
+
+    create_table :errors do |t|
+      t.integer :chat_id
+      t.integer :user_id
+      t.text :message, null: false, default: ""
+      t.text :backtrace, null: false, array: true, default: []
       t.timestamps
     end
   end

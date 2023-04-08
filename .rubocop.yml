@@ -12,15 +12,23 @@ Style/StringLiteralsInInterpolation:
 Layout/LineLength:
   Max: 160
 
-# remove code length limit
 Metrics/MethodLength:
   Max: 200
 
-# Metrics/BlockLength:
-#   Enabled: false
+Metrics/BlockLength:
+  Max: 200
 
 Metrics/ClassLength:
-  Enabled: false
+  Max: 300
 
 Metrics/AbcSize:
-  Max: 40
+  Max: 35
+
+Layout/AccessModifierIndentation:
+  EnforcedStyle: indent
+  
+Layout/IndentationWidth:
+  Width: 2
+
+Layout/IndentationConsistency:
+  EnforcedStyle: indented_internal_methods

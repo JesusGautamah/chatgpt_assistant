@@ -17,3 +17,4 @@
 /voice/aws*
 /db_data
 /db_data/*
+/chatgpt_assistant.code-workspace
