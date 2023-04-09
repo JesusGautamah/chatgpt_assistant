@@ -11,7 +11,7 @@ module ChatgptAssistant
 
     def chat_if_exists
       chat = Chat.find_by(user_id: user.id, id: user.current_chat_id)
-      chat ? chat_success(chat.id) : no_chat_selected
+      chat ? chat_success(chat.id) : no_chat_selected_message
     end
 
     def visitor_user?

@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
+require_relative "helpers/discord_helper"
+
 module ChatgptAssistant
   # This class is responsible to handle the discord bot
   class DiscordBot < ApplicationBot
+    include DiscordHelper
+
     def start
       start_event
       login_event
@@ -24,25 +28,12 @@ module ChatgptAssistant
       attr_reader :message
       attr_accessor :evnt, :user, :chats, :chat
 
-      def bot
-        @bot ||= Discordrb::Commands::CommandBot.new(
-          token: discord_token,
-          client_id: discord_client_id,
-          prefix: discord_prefix
-        )
-      end
-
       def start_event
         bot.command :start do |event|
           @evnt = event
           @user = event.user
           start_action
         end
-      end
-
-      def start_action
-        evnt.respond commom_messages[:start_helper].gsub("register/", "gpt!register ")
-        evnt.respond commom_messages[:start_sec_helper].gsub("login/", "gpt!login ")
       end
 
       def login_event
@@ -114,7 +105,6 @@ module ChatgptAssistant
       def hist_event
         bot.command :hist do |event|
           @evnt = event
-          
           event.respond error_messages[:user_not_logged_in] if user.nil?
           title = event.message.content.split(" ")[1..].join(" ")
           @chat = user.chat_by_title(title)
