@@ -8,10 +8,10 @@ Gem::Specification.new do |spec|
   spec.authors = ["JesusGautamah"]
   spec.email = ["lima.jesuscc@gmail.com"]
 
-  spec.summary = "Easy way chatbot with GPT-3.5-turbo, Telegram bot, Discord bot,
+  spec.summary = "Easy way chatbot with Chatgpt, Telegram bot, Discord bot, currently using GPT-3.5-turbo,
   Audio Transcription and IBM Cloud Text to Speech or AWS Polly in docker containers."
 
-  spec.description = "This gem has the intention to facilitate the creation of chatbots with GPT-3.5-turbo,
+  spec.description = "This gem has the intention to facilitate the creation of chatbots with  Chatgpt,
   Telegram bot, Discord bot, Audio Transcription and IBM Cloud Text to Speech or AWS Polly in docker containers.
   Documentation: https://github.com/JesusGautamah/chatgpt_assistant"
 

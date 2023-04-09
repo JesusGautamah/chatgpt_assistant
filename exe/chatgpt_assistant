@@ -31,7 +31,7 @@ end
 end
 
 %w[deploy_and_build.sh deploy.sh].each do |file|
-  `cp #{gem_dir}/bin/#{file} #{path}`
+  `cp #{gem_dir}/#{file} #{path}`
 end
 
 %w[/.bundle/ /.yardoc /_yardoc/ /coverage/ /doc/ /pkg/ /spec/reports/ /tmp/ /db_data /db_data/*
@@ -42,7 +42,7 @@ end
 `cd #{path} && git init`
 
 `mkdir -p #{path}/.github/workflows`
-`cp #{gem_dir}/.github/workflows/*.yml #{path}/.github/workflows`
+`cp #{gem_dir}/workflows/*.yml #{path}/.github/workflows`
 
 puts "Done! Now you can run 'cd #{path} && bundle install'"
 puts "Build the docker image with 'rake compose:build'"
