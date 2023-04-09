@@ -40,7 +40,7 @@ module ChatgptAssistant
 
       def login_event
         bot.command :login do |event|
-          @message = event.message.content.split(" ")[1]
+          @message = event.message.content.split[1]
           @evnt = event
           message.nil? ? event.respond(commom_messages[:login]) : login_action
         end
@@ -48,7 +48,7 @@ module ChatgptAssistant
 
       def register_event
         bot.command :register do |event|
-          @message = event.message.content.split(" ")[1]
+          @message = event.message.content.split[1]
           @evnt = event
           message.nil? ? event.respond(commom_messages[:register]) : register_action
         end
@@ -68,7 +68,7 @@ module ChatgptAssistant
         bot.command :hist do |event|
           @evnt = event
           event.respond error_messages[:user_not_logged_in] if user.nil?
-          title = event.message.content.split(" ")[1..].join(" ")
+          title = event.message.content.split[1..].join(" ")
           @chat = user.chat_by_title(title)
           event.respond error_messages[:chat_not_found] if chat.nil? && user
           hist_action if user && chat
@@ -94,7 +94,7 @@ module ChatgptAssistant
       def sl_chat_event
         bot.command :sl_chat do |event|
           @evnt = event
-          chat_to_select = event.message.content.split(" ")[1..].join(" ")
+          chat_to_select = event.message.content.split[1..].join(" ")
           @user = find_user(discord_id: event.user.id)
           event.respond error_messages[:user_not_logged_in] if user.nil?
 
@@ -105,7 +105,7 @@ module ChatgptAssistant
       def ask_event
         bot.command :ask do |event|
           @evnt = event
-          @message = event.message.content.split(" ")[1..].join(" ")
+          @message = event.message.content.split[1..].join(" ")
           @user = find_user(discord_id: event.user.id)
           event.respond error_messages[:user_not_logged_in] if user.nil?
           ask_action if user
@@ -135,7 +135,7 @@ module ChatgptAssistant
       def speak_event
         bot.command :speak do |event|
           @evnt = event
-          @message = event.message.content.split(" ")[1..].join(" ")
+          @message = event.message.content.split[1..].join(" ")
           @user = find_user(discord_id: event.user.id)
           @chat = user.current_chat
           speak_connect_checker_action

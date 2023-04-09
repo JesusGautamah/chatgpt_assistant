@@ -9,23 +9,23 @@ module ChatgptAssistant
   # This class is responsible for the configuration of the Chatgpt Assistant
   class Config
     def initialize
-      @env_type = ENV["ENV_TYPE"]
-      @language = ENV["LANGUAGE"]
-      @mode = ENV["MODE"]
-      @database_host = ENV["POSTGRES_HOST"]
-      @database_name = ENV["POSTGRES_DB"]
-      @database_username = ENV["POSTGRES_USER"]
-      @database_password = ENV["POSTGRES_PASSWORD"]
-      @openai_api_key = ENV["OPENAI_API_KEY"]
-      @telegram_token = ENV["TELEGRAM_TOKEN"]
-      @discord_token = ENV["DISCORD_TOKEN"]
-      @discord_client_id = ENV["DISCORD_CLIENT_ID"]
-      @ibm_api_key = ENV["IBM_API_KEY"]
-      @ibm_url = ENV["IBM_URL"]
-      @aws_access_key_id = ENV["AWS_ACCESS_KEY_ID"]
-      @aws_secret_access_key = ENV["AWS_SECRET_ACCESS_KEY"]
-      @aws_region = ENV["AWS_REGION"]
-      @discord_prefix = ENV["DISCORD_PREFIX"]
+      @env_type = ENV.fetch("ENV_TYPE", nil)
+      @language = ENV.fetch("LANGUAGE", nil)
+      @mode = ENV.fetch("MODE", nil)
+      @database_host = ENV.fetch("POSTGRES_HOST", nil)
+      @database_name = ENV.fetch("POSTGRES_DB", nil)
+      @database_username = ENV.fetch("POSTGRES_USER", nil)
+      @database_password = ENV.fetch("POSTGRES_PASSWORD", nil)
+      @openai_api_key = ENV.fetch("OPENAI_API_KEY", nil)
+      @telegram_token = ENV.fetch("TELEGRAM_TOKEN", nil)
+      @discord_token = ENV.fetch("DISCORD_TOKEN", nil)
+      @discord_client_id = ENV.fetch("DISCORD_CLIENT_ID", nil)
+      @ibm_api_key = ENV.fetch("IBM_API_KEY", nil)
+      @ibm_url = ENV.fetch("IBM_URL", nil)
+      @aws_access_key_id = ENV.fetch("AWS_ACCESS_KEY_ID", nil)
+      @aws_secret_access_key = ENV.fetch("AWS_SECRET_ACCESS_KEY", nil)
+      @aws_region = ENV.fetch("AWS_REGION", nil)
+      @discord_prefix = ENV.fetch("DISCORD_PREFIX", nil)
     end
 
     attr_reader :openai_api_key, :telegram_token, :discord_token, :ibm_api_key, :ibm_url,

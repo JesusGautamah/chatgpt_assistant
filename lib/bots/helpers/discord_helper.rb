@@ -76,7 +76,7 @@ module ChatgptAssistant
     end
 
     def create_chat_action
-      chat_title = evnt.message.content.split(" ")[1..].join(" ")
+      chat_title = evnt.message.content.split[1..].join(" ")
       @chat = Chat.new(user_id: user.id, title: chat_title, status: 0)
       chat.save ? respond_with_success : send_message(error_messages[:chat_creation])
     end

@@ -29,9 +29,7 @@ module ChatgptAssistant
 
       def download_audio(audio_url)
         audio_conn = Faraday.new(url: audio_url)
-        File.open(dl_file_name, "wb") do |file|
-          file.write(audio_conn.get.body)
-        end
+        File.binwrite(dl_file_name, audio_conn.get.body)
         FFMPEG::Movie.new(dl_file_name).transcode(file_name)
         File.delete(dl_file_name)
       end
@@ -39,14 +37,14 @@ module ChatgptAssistant
       def header
         {
           "Content-Type": "multipart/form-data",
-          "Authorization": "Bearer #{openai_api_key}"
+          Authorization: "Bearer #{openai_api_key}"
         }
       end
 
       def payload
         {
-          "file": Faraday::UploadIO.new(file_name, "audio/mp3"),
-          "model": "whisper-1"
+          file: Faraday::UploadIO.new(file_name, "audio/mp3"),
+          model: "whisper-1"
         }
       end
 
