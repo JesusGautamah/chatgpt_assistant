@@ -30,7 +30,7 @@ module ChatgptAssistant
       attr_accessor :chat_id, :json
 
       def error_log
-        "Algo deu errado, tente novamente mais tarde."
+        "Algo deu errado, tente novamente mais tarde." # TODO: use a DefaultMessage object
       end
 
       def header
