@@ -17,5 +17,13 @@ module ChatgptAssistant
     def visitor_user?
       visitor&.tel_user.nil? && visitor&.dis_user.nil?
     end
+
+    def discord_voice_bot_disconnected?
+      user && evnt.user.voice_channel && !evnt.voice && !chat.nil?
+    end
+
+    def discord_voice_bot_connected?
+      user && evnt.user.voice_channel && evnt.voice && !chat.nil?
+    end
   end
 end

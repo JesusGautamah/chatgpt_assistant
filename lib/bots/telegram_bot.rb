@@ -153,6 +153,7 @@ module ChatgptAssistant
         if message.save
           ai_response = telegram_process_ai_voice(user_audio[:file])
           telegram_send_voice_message(voice: ai_response[:voice], text: ai_response[:text])
+          delete_file ai_response[:voice]
         else
           send_message error_messages[:message_creation_error], msg.chat.id
         end
