@@ -12,7 +12,7 @@ gem "simplecov", "~> 0.21", group: :test
 
 gem "vcr", "~> 6.0", group: :test
 
-gem "rubocop", "~> 1.21"
+gem "rubocop", "~> 1.49"
 
 gem "rubocop-rspec", "~> 2.4"
 
