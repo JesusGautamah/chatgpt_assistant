@@ -1,0 +1,19 @@
+# github actions ubuntu ssh deploy to server
+name: Deploy to server
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Deploy & Restart server
+        run: |
+          mkdir -p ~/.ssh |
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/telegram_server.pem
+          chmod 600 ~/.ssh/telegram_server.pem
+          ssh -i ~/.ssh/telegram_server.pem -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'bash -s' < ./deploy.sh
