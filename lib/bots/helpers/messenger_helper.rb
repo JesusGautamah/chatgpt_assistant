@@ -10,6 +10,11 @@ module ChatgptAssistant
       mess.each { |m| send_message m, msg.chat.id }
     end
 
+    def respond_with_success
+      user.update(current_chat_id: chat.id)
+      send_message success_messages[:chat_created]
+    end
+
     def parse_message(message, max_length)
       if message.length > max_length
         array = message.scan(/.{1,#{max_length}}/) if max_length.positive?
@@ -21,7 +26,7 @@ module ChatgptAssistant
     end
 
     def send_message(text, chat_id = nil)
-      @send_message = bot.api.present? ? telegram_send_message(text, chat_id) : discord_send_message(text)
+      @send_message = bot.respond_to?(:api) ? telegram_send_message(text, chat_id) : discord_send_message(text)
     end
 
     def telegram_send_message(text, chat_id)
@@ -30,6 +35,14 @@ module ChatgptAssistant
 
     def discord_send_message(text)
       evnt.respond text
+    end
+
+    def discord_help_message
+      help_messages.join("\n").gsub(" /", discord_prefix)
+                   .gsub("register/", "#{discord_prefix}register ")
+                   .gsub("login/", "#{discord_prefix}login ")
+                   .gsub("new_chat/", "#{discord_prefix}new_chat/")
+                   .gsub("sl_chat/", "#{discord_prefix}sl_chat/")
     end
 
     def user_logged_message

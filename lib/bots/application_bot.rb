@@ -5,10 +5,9 @@ require_relative "helpers/authentication_helper"
 require_relative "helpers/visit_helper"
 require_relative "helpers/audio_helper"
 require_relative "helpers/logger_action_helper"
-require_relative "helpers/discord_helper"
 require_relative "helpers/search_helper"
 require_relative "helpers/validation_helper"
-
+require_relative "helpers/file_helper"
 module ChatgptAssistant
   # This class is responsible to contain the shared variables between the bot classes
   class ApplicationBot
@@ -17,9 +16,9 @@ module ChatgptAssistant
     include VisitHelper
     include AudioHelper
     include LoggerActionHelper
-    include DiscordHelper
     include SearchHelper
     include ValidationHelper
+    include FileHelper
 
     def initialize(config)
       @config = config

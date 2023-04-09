@@ -7,6 +7,8 @@ module ChatgptAssistant
   class TelegramBot < ApplicationBot
     def start
       bot.listen do |message|
+        next if message.chat.type != "private" # disable group and channel messages, we will enable it later
+
         @msg = message
         @visitor = telegram_visited?(@msg.chat.id)
         next unless telegram_text_or_audio?
@@ -91,14 +93,12 @@ module ChatgptAssistant
         register_visitor_action("login", visitor.id) unless visitor.tel_user
         user_info = msg.text.split("/").last
         email, password = user_info.split(":")
-
         case telegram_user_auth(email, password, msg.chat.id)
         when "user not found"
-
           user_not_found_error_message
         when "wrong password"
           wrong_password_error_message
-        when find_user(email: email).email
+        when email
           user_logged_in_message
         end
       end
@@ -153,6 +153,7 @@ module ChatgptAssistant
         if message.save
           ai_response = telegram_process_ai_voice(user_audio[:file])
           telegram_send_voice_message(voice: ai_response[:voice], text: ai_response[:text])
+          delete_file ai_response[:voice]
         else
           send_message error_messages[:message_creation_error], msg.chat.id
         end
