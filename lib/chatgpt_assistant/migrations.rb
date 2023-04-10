@@ -13,7 +13,7 @@ class VisitorMigration < ActiveRecord::Migration[5.2]
       t.string :discord_id, limit: 100
       t.integer :platform, null: false, default: 0
       t.string :name, null: false
-      t.integer :current_user_id, null: false, default: 0
+      t.integer :current_user_id, default: 0
       t.timestamps
     end
   end

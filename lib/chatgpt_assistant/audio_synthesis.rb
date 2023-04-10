@@ -61,9 +61,7 @@ module ChatgptAssistant
           engine: "neural"
         )
 
-        File.open("voice/aws-#{time}.mp3", "wb") do |file|
-          file.write(response.audio_stream.read)
-        end
+        File.binwrite("voice/aws-#{time}.mp3", response.audio_stream.read)
         "voice/aws-#{time}.mp3"
       end
 
@@ -86,9 +84,7 @@ module ChatgptAssistant
           voice: voice
         ).result
 
-        File.open("voice/ibm-#{time}.mp3", "wb") do |audio_file|
-          audio_file.write(audio)
-        end
+        File.binwrite("voice/ibm-#{time}.mp3", audio)
         "voice/ibm-#{time}.mp3"
       end
 
