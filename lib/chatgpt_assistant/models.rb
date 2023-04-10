@@ -7,8 +7,6 @@ class Visitor < ActiveRecord::Base
   has_many :visitor_actions
   # has_one :tel_user, foreign_key: "telegram_id", class_name: "User"
   # has_one :dis_user, foreign_key: "discord_id", class_name: "User"
-  validates :telegram_id, uniqueness: true
-  validates :discord_id, uniqueness: true
   validates :name, presence: true
   validates :platform, presence: true
   enum platform: { telegram: 0, discord: 1 }
