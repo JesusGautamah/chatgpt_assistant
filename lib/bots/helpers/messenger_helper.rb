@@ -30,11 +30,13 @@ module ChatgptAssistant
     end
 
     def telegram_send_message(text, chat_id)
-      bot.api.send_message(chat_id: chat_id, text: text)
+      messages = parse_message(text, 4096)
+      messages.each { |m| bot.api.send_message(chat_id: chat_id, text: m) }
     end
 
     def discord_send_message(text)
-      evnt.respond text
+      messages = parse_message(text, 2000)
+      messages.each { |m| evnt.respond m }
     end
 
     def discord_help_message
