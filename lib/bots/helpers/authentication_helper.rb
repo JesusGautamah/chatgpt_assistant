@@ -39,7 +39,7 @@ module ChatgptAssistant
     def discord_user_access(discord_id, user_email)
       last_access = find_user(discord_id: discord_id)
       new_access = find_user(email: user_email)
-      last_acess.update(discord_id: nil) if last_access&.email != new_access&.email
+      last_access.update(discord_id: nil) if last_access&.email != new_access&.email
       new_access&.update(discord_id: discord_id)
       new_access.email
     end
