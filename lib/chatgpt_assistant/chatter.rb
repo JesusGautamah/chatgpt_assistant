@@ -10,27 +10,36 @@ module ChatgptAssistant
       @openai_api_key = openai_api_key
     end
 
-    def chat(message, chat_id)
+    def chat(message, chat_id, error_message)
+      @error_message = error_message
       @chat_id = chat_id
       @message = message
       @response = request(message)
       @json = JSON.parse(response.body)
 
-      return error_log if response.status != 200
+      return no_response_error if json["choices"].empty?
+      return bot_offline_error if response.status != 200
 
       text = json["choices"][0]["message"]["content"]
 
       Message.create(content: text, role: "assistant", chat_id: chat_id)
       text
+    rescue StandardError => e
+      Error.create(message: e.message, backtrace: e.backtrace)
+      error_message
     end
 
     private
 
       attr_reader :openai_api_key, :response, :message
-      attr_accessor :chat_id, :json
+      attr_accessor :chat_id, :json, :error_message
 
-      def error_log
-        "Algo deu errado, tente novamente mais tarde." # TODO: use a DefaultMessage object
+      def no_response_error
+        "I'm sorry, I didn't understand you. Please, try again."
+      end
+
+      def bot_offline_error
+        "I'm sorry, I'm offline. Please, try again later."
       end
 
       def header
@@ -59,7 +68,9 @@ module ChatgptAssistant
                    end
         {
           model: "gpt-3.5-turbo",
-          messages: messages
+          messages: messages,
+          max_tokens: 1000,
+          temperature: 0.1
         }.to_json
       end
 

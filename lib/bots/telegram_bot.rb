@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "helpers/telegram_helper"
+require_relative "helpers/telegram_voice_helper"
 
 module ChatgptAssistant
   # This class is responsible for the telegram bot features
@@ -24,6 +25,7 @@ module ChatgptAssistant
     private
 
       include TelegramHelper
+      include TelegramVoiceHelper
 
       attr_accessor :msg, :visitor, :chat, :chat_id
 
@@ -47,14 +49,10 @@ module ChatgptAssistant
       end
 
       def start_event
-        register_visitor_action("start", visitor.id) unless visitor.tel_user
-        register_user_action("start", visitor.tel_user.id) if visitor.tel_user
         telegram_send_start_message
       end
 
       def help_event
-        register_visitor_action("help", visitor.id) unless visitor.tel_user
-        register_user_action("help", visitor.tel_user.id) if visitor.tel_user
         help_messages.each { |m| send_message m, msg.chat.id }
       end
 
@@ -63,7 +61,6 @@ module ChatgptAssistant
         return no_chat_selected_message unless user.current_chat
         return no_messages_founded_message if user.current_chat.messages.count.zero?
 
-        register_user_action("hist", user.id)
         telegram_user_history.each do |m|
           send_message m, msg.chat.id
         end
@@ -72,7 +69,6 @@ module ChatgptAssistant
       def list_event
         return unless valid_for_list_action?
 
-        register_user_action("list", user.id)
         send_message commom_messages[:chat_list], msg.chat.id
         chats_str = ""
         user.chats.each_with_index { |c, i| chats_str += "Chat #{i + 1} - #{c.title}\n" }
@@ -90,7 +86,6 @@ module ChatgptAssistant
       end
 
       def login_event
-        register_visitor_action("login", visitor.id) unless visitor.tel_user
         user_info = msg.text.split("/").last
         email, password = user_info.split(":")
         case telegram_user_auth(email, password, msg.chat.id)
@@ -104,7 +99,6 @@ module ChatgptAssistant
       end
 
       def register_event
-        register_visitor_action("register", visitor.id)
         user_info = msg.text.split("/").last
         email, password = user_info.split(":")
         registered_email = telegram_user_create visitor.id, email, password
@@ -114,14 +108,12 @@ module ChatgptAssistant
       def new_chat_event
         return not_logged_in_message unless user
 
-        register_user_action("new_chat", user.id)
         telegram_create_chat
       end
 
       def select_chat_event
         return not_logged_in_message unless user
 
-        register_user_action("select_chat", user.id)
         title = msg.text.split("/").last
         chat = user.chat_by_title(title)
         return chat_not_found_message unless chat
@@ -131,15 +123,11 @@ module ChatgptAssistant
       end
 
       def stop_event
-        register_event_action("stop", visitor.id) unless visitor.tel_user
-        register_user_action("stop", visitor.tel_user.id) if visitor.tel_user
         send_message commom_messages[:stop], msg.chat.id
         bot.api.leave_chat(chat_id: msg.chat.id)
       end
 
       def nil_event
-        register_event_action("nil", visitor.id) unless visitor.tel_user
-        register_user_action("nil", visitor.tel_user.id) if visitor.tel_user
         send_message error_messages[:nil], msg.chat.id
       end
 
@@ -147,7 +135,6 @@ module ChatgptAssistant
         return not_logged_in_message unless user
         return no_chat_selected_message if user.current_chat_id.nil?
 
-        register_user_action("audio", user.id)
         user_audio = transcribe_file(telegram_audio_url)
         message = Message.new(content: user_audio[:text], chat_id: user.current_chat_id, role: "user")
         if message.save

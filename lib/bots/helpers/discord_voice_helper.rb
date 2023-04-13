@@ -25,7 +25,7 @@ module ChatgptAssistant
 
     def ask_to_speak_action
       Message.create(chat_id: chat.id, content: message, role: "user")
-      response = chatter.chat(message, chat.id)
+      response = chatter.chat(message, chat.id, error_messages[:something_went_wrong])
       audio_path = synthesis.synthesize_text(response)
       speak_answer_action(audio_path, response)
     end

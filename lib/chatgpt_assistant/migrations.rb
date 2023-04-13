@@ -19,21 +19,6 @@ class VisitorMigration < ActiveRecord::Migration[5.2]
   end
 end
 
-# VisitorActions model
-class VisitorActionsMigration < ActiveRecord::Migration[5.2]
-  def change
-    return if ActiveRecord::Base.connection.table_exists? :visitor_actions
-
-    create_table :visitor_actions do |t|
-      t.references :visitor, null: false, foreign_key: true
-      t.text :action, null: false
-      t.text :description, null: false
-      t.integer :role, null: false, default: 0
-      t.timestamps
-    end
-  end
-end
-
 # User model
 class UserMigration < ActiveRecord::Migration[5.2]
   def change
@@ -56,21 +41,6 @@ class UserMigration < ActiveRecord::Migration[5.2]
   end
 end
 
-# UserActions model
-class UserActionsMigration < ActiveRecord::Migration[5.2]
-  def change
-    return if ActiveRecord::Base.connection.table_exists? :user_actions
-
-    create_table :user_actions do |t|
-      t.references :user, null: false, foreign_key: true
-      t.text :action, null: false, default: ""
-      t.text :description, null: false, default: ""
-      t.integer :role, null: false, default: 0
-      t.timestamps
-    end
-  end
-end
-
 # Chat model
 class ChatMigration < ActiveRecord::Migration[5.2]
   def change
@@ -80,6 +50,9 @@ class ChatMigration < ActiveRecord::Migration[5.2]
       t.references :user, null: false, foreign_key: true
       t.text :title, null: false, default: "", limit: 100
       t.integer :status, null: false, default: 0
+      t.integer :messages_count, null: false, default: 0
+      t.string :actor
+      t.text :prompt
       t.timestamps
     end
   end

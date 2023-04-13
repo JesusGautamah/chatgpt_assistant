@@ -18,7 +18,7 @@ module ChatgptAssistant
 
       hash = new_access.password_hash
       salt = new_access.password_salt
-      valid_password?(password, hash, salt) ? telegram_user_access(visitor_access, new_access) : "wrong password"
+      valid_password?(password, hash, salt) ? telegram_user_access(_access, new_access) : "wrong password"
     end
 
     def telegram_user_access(visitor, new_access)
@@ -37,11 +37,11 @@ module ChatgptAssistant
     end
 
     def discord_user_access(discord_id, user_email)
-      last_access = find_user(discord_id: discord_id)
-      new_access = find_user(email: user_email)
-      last_access.update(discord_id: nil) if last_access&.email != new_access&.email
-      new_access&.update(discord_id: discord_id)
-      new_access.email
+      other_access = where_user(discord_id: discord_id)
+      other_access&.each { |access| access.update(discord_id: nil) }
+      user = find_user(email: user_email)
+      user.update(discord_id: discord_id)
+      user.email
     end
   end
 end

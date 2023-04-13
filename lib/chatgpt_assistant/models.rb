@@ -20,15 +20,6 @@ class Visitor < ActiveRecord::Base
   end
 end
 
-# VisitorActions model
-class VisitorAction < ActiveRecord::Base
-  belongs_to :visitor
-  validates :action, presence: true
-  validates :description, presence: true
-  validates :role, presence: true
-  enum role: { user: 0, assistant: 1, warning: 2 }
-end
-
 # User model
 class User < ActiveRecord::Base
   attr_accessor :password
@@ -64,16 +55,6 @@ class User < ActiveRecord::Base
   end
 end
 
-# UserActions model
-class UserAction < ActiveRecord::Base
-  belongs_to :user
-  validates :user_id, presence: true
-  validates :action, presence: true
-  validates :description, presence: true
-  validates :role, presence: true
-  enum role: { user: 0, assistant: 1, warning: 2 }
-end
-
 # Chat model
 class Chat < ActiveRecord::Base
   validates :user_id, presence: true
@@ -82,6 +63,15 @@ class Chat < ActiveRecord::Base
 
   belongs_to :user
   has_many :messages
+
+  after_create :init_chat_if_actor_provided
+
+  def init_chat_if_actor_provided
+    return if actor.nil?
+
+    messages.create(content: prompt, role: "user")
+    messages.create(content: "Hello, I'm #{actor}. I will follow #{prompt}", role: "assistant")
+  end
 end
 
 # Message model

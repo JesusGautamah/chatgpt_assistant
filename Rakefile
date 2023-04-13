@@ -3,6 +3,7 @@
 # require "bundler/gem_tasks"
 require "rspec/core/rake_task"
 require "lucy_dockerunner"
+require "awesome_chatgpt_actors"
 
 RSpec::Core::RakeTask.new(:spec)
 
@@ -13,3 +14,4 @@ RuboCop::RakeTask.new
 task default: %i[spec rubocop]
 
 LucyDockerunner.load_tasks
+AwesomeChatgptActors.load_tasks
