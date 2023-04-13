@@ -15,33 +15,6 @@ module ChatgptAssistant
       user ? chat_if_exists : not_logged_in_message
     end
 
-    def telegram_audio_info
-      bot.api.get_file(file_id: telegram_audio.file_id)
-    end
-
-    def telegram_audio_url
-      "https://api.telegram.org/file/bot#{telegram_token}/#{telegram_audio_info["result"]["file_path"]}"
-    end
-
-    def telegram_audio
-      msg.audio || msg.voice
-    end
-
-    def telegram_process_ai_voice(user_audio)
-      ai_text = chatter.chat(user_audio["text"], user.current_chat_id)
-      ai_voice = synthesis.synthesize_text(ai_text)
-      {
-        voice: ai_voice,
-        text: ai_text
-      }
-    end
-
-    def telegram_send_voice_message(voice: nil, text: nil)
-      messages = parse_message text, 4096
-      bot.api.send_voice(chat_id: msg.chat.id, voice: Faraday::UploadIO.new(voice, "audio/mp3"))
-      messages.each { |message| send_message message, msg.chat.id }
-    end
-
     def telegram_user_create(visitor_id, email, password)
       visitor = Visitor.find_by(id: visitor_id)
       return false unless visitor
@@ -62,7 +35,22 @@ module ChatgptAssistant
     def telegram_create_chat
       text = msg.text
       title = text.split("/").last
-      chat = Chat.new(user_id: user.id, status: 0, title: title)
+      mode = nil
+      if title.include?(":")
+        mode = title.split(":").last
+        title = title.split(":").first
+      end
+      actor_modes = AwesomeChatgptActors::CastControl.actors
+      return send_message "invalid mode", msg.chat.id unless (mode.to_i >= 1 && mode.to_i <= actor_modes.size + 1) || mode.nil?
+      return send_message "invalid chat title", msg.chat.id if title.nil? || title.empty?
+      return send_message "You already have a chat with this title", msg.chat.id if user.chat_by_title(title)
+
+      actor_name = actor_modes[mode.to_i - 1] if mode
+      actor = AwesomeChatgptActors::Actor.new(prompt_type: actor_name) if actor_name
+      chat = Chat.new(user_id: user.id, status: 0, title: title, actor: actor_name, prompt: actor.prompt) if actor
+      chat = Chat.new(user_id: user.id, status: 0, title: title) unless actor
+      return send_message "Something went wrong", msg.chat.id unless chat
+
       chat.save ? chat_created_message(chat) : chat_creation_failed_message
     end
 

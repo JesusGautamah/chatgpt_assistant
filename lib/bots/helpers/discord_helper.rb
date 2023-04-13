@@ -68,6 +68,13 @@ module ChatgptAssistant
       (message.save ? answer_action : send_message(error_messages[:message_not_saved])) if chat
     end
 
+    def private_message_action
+      @chat = Chat.where(id: user.current_chat_id).last
+      send_message error_messages[:chat_not_found] if chat.nil?
+      @message = Message.new(chat_id: chat.id, content: message, role: "user") if chat
+      (message.save ? answer_action : send_message(error_messages[:message_not_saved])) if chat
+    end
+
     def sl_chat_action(chat_to_select)
       @chat = user.chat_by_title(chat_to_select)
       send_message error_messages[:chat_not_found] if chat.nil?
@@ -76,13 +83,28 @@ module ChatgptAssistant
     end
 
     def create_chat_action
-      chat_title = evnt.message.content.split[1..].join(" ")
-      @chat = Chat.new(user_id: user.id, title: chat_title, status: 0)
-      chat.save ? respond_with_success : send_message(error_messages[:chat_creation])
+      title = evnt.message.content.split[1..].join(" ")
+      mode = nil
+      if title.include? ":"
+        mode = title.split(":").last.to_i
+        title = title.split(":").first
+      end
+      actors = AwesomeChatgptActors::CastControl.actors
+      return send_message "invalid mode" unless (mode.to_i >= 1 && mode.to_i <= actors.size + 1) || mode.nil?
+      return send_message "invalid chat title" if title.nil? || title.empty?
+      return send_message "chat title already exists" if user.chat_by_title(title)
+
+      actor_name = actors[mode.to_i - 1] if mode
+      actor = AwesomeChatgptActors::Actor.new(prompt_type: actor_name) if actor_name
+      chat = Chat.new(user_id: user.id, status: 0, title: title, actor: actor_name, prompt: actor.prompt) if actor
+      chat = Chat.new(user_id: user.id, status: 0, title: title) unless actor
+      return send_message "Something went wrong", msg.chat.id unless chat
+
+      chat.save ? chat_created_message(chat) : send_message(error_messages[:chat_creation])
     end
 
     def answer_action
-      response = chatter.chat(message.content, chat.id)
+      response = chatter.chat(message.content, chat.id, error_messages[:something_went_wrong])
       send_message response
     end
 

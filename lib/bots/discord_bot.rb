@@ -19,6 +19,7 @@ module ChatgptAssistant
       voice_connect_event
       disconnect_event
       speak_event
+      private_message_event
       bot_init
     end
 
@@ -35,6 +36,7 @@ module ChatgptAssistant
           @evnt = event
           @user = event.user
           start_action
+          "Ok"
         end
       end
 
@@ -43,6 +45,7 @@ module ChatgptAssistant
           @message = event.message.content.split[1]
           @evnt = event
           message.nil? ? event.respond(commom_messages[:login]) : login_action
+          "OK"
         end
       end
 
@@ -51,6 +54,7 @@ module ChatgptAssistant
           @message = event.message.content.split[1]
           @evnt = event
           message.nil? ? event.respond(commom_messages[:register]) : register_action
+          "OK"
         end
       end
 
@@ -58,9 +62,8 @@ module ChatgptAssistant
         bot.command :list do |event|
           @evnt = event
           @user = find_user(discord_id: event.user.id)
-          event.respond error_messages[:user_not_logged_in] if user.nil?
-          event.respond error_messages[:chat_not_found] if user.chats.empty? && user
-          list_action if user && !user.chats.empty?
+          valid_for_list_action? ? list_action : ""
+          "OK"
         end
       end
 
@@ -72,6 +75,7 @@ module ChatgptAssistant
           @chat = user.chat_by_title(title)
           event.respond error_messages[:chat_not_found] if chat.nil? && user
           hist_action if user && chat
+          "OK"
         end
       end
 
@@ -79,6 +83,7 @@ module ChatgptAssistant
         bot.command :help do |event|
           @evnt = event
           help_action
+          "OK"
         end
       end
 
@@ -88,6 +93,7 @@ module ChatgptAssistant
           @user = find_user(discord_id: event.user.id)
           event.respond error_messages[:user_not_logged_in] if user.nil?
           create_chat_action if user
+          "OK"
         end
       end
 
@@ -99,6 +105,7 @@ module ChatgptAssistant
           event.respond error_messages[:user_not_logged_in] if user.nil?
 
           sl_chat_action(chat_to_select) if user
+          "OK"
         end
       end
 
@@ -109,6 +116,7 @@ module ChatgptAssistant
           @user = find_user(discord_id: event.user.id)
           event.respond error_messages[:user_not_logged_in] if user.nil?
           ask_action if user
+          "OK"
         end
       end
 
@@ -116,10 +124,17 @@ module ChatgptAssistant
         bot.command :connect do |event|
           @evnt = event
           @user = find_user(discord_id: event.user.id)
-          @chat = Chat.where(id: user.current_chat_id).last
-          voice_connect_checker_action
-          voice_connection_checker_action
-          discord_voice_bot_connect
+          if user&.current_chat_id.nil?
+            event.respond error_messages[:no_chat_selected]
+          elsif user&.current_chat_id
+            @chat = Chat.where(id: user.current_chat_id).last
+            voice_connect_checker_action
+            voice_connection_checker_action
+            discord_voice_bot_connect
+          else
+            event.respond error_messages[:user_not_logged_in]
+          end
+          "OK"
         end
       end
 
@@ -129,6 +144,7 @@ module ChatgptAssistant
           @user = find_user(discord_id: event.user.id)
           disconnect_checker_action
           disconnect_action if user && event.user.voice_channel && event.voice
+          "OK"
         end
       end
 
@@ -141,6 +157,20 @@ module ChatgptAssistant
           speak_connect_checker_action
           speak_connection_checker_action
           ask_to_speak_action if user && event.user.voice_channel && event.voice && !chat.nil?
+          "OK"
+        end
+      end
+
+      def private_message_event
+        bot.message do |event|
+          @evnt = event
+          next if discord_next_action?
+
+          @message = event.message.content
+          @user = find_user(discord_id: event.user.id)
+          @chat = user.current_chat if user
+          private_message_action if user && !chat.nil?
+          "OK"
         end
       end
 

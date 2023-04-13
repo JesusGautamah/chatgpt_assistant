@@ -25,5 +25,14 @@ module ChatgptAssistant
     def discord_voice_bot_connected?
       user && evnt.user.voice_channel && evnt.voice && !chat.nil?
     end
+
+    def discord_next_action?
+      return true if evnt.channel.type != 1
+
+      %w[login register start help new_chat sl_chat ask list hist connect disconnect speak].each do |action|
+        return true if evnt.message.content.include?("#{discord_prefix}#{action}")
+      end
+      false
+    end
   end
 end

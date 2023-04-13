@@ -47,3 +47,5 @@ gem "lucy_dockerunner"
 gem "ibm_watson"
 
 gem "aws-sdk-polly"
+
+gem "awesome_chatgpt_actors"
