@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe ChatgptAssistant::AudioSynthesis do
-  let(:config) { double("config", openai_api_key: "openai_key", language: "en", mode: "aws", aws_access_key_id: "access_key", aws_secret_access_key: "secret_key", aws_region: "us-east-1") }
+  let(:config) do
+    double("config", openai_api_key: "openai_key", language: "en", mode: "aws", aws_access_key_id: "access_key", aws_secret_access_key: "secret_key",
+                     aws_region: "us-east-1")
+  end
 
   describe "#synthesize_text" do
     context "when using IBM mode" do

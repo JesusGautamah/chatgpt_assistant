@@ -3,7 +3,7 @@
 module ChatgptAssistant
   # This class is responsible for storing the default messages
   class DefaultMessages
-    def initialize(language = "en", discord_prefix = "!")
+    def initialize(language = "en", _discord_prefix = "!")
       @language = language
       load_message_context
     end

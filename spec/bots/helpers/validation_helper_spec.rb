@@ -4,7 +4,10 @@ RSpec.describe ChatgptAssistant::ValidationHelper do
   let(:user) { double("User", id: 1, current_chat_id: 1, chats: double("Chats", count: 1)) }
   let(:visitor) { double("Visitor", tel_user: nil, dis_user: nil) }
   let(:chat) { double("Chat", id: 1) }
-  let(:evnt) { double("Event", user: double("User", voice_channel: true), voice: true, channel: double("Channel", type: 1), message: double("Message", content: "#{discord_prefix}login")) }
+  let(:evnt) do
+    double("Event", user: double("User", voice_channel: true), voice: true, channel: double("Channel", type: 1),
+                    message: double("Message", content: "#{discord_prefix}login"))
+  end
   let(:discord_prefix) { "!" }
 
   describe "#valid_for_list_action?" do

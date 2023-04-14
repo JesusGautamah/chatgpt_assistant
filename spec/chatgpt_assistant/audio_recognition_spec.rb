@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe ChatgptAssistant::AudioRecognition do
   describe "#initialize" do
     it "creates a new instance of AudioRecognition with an openai api key" do

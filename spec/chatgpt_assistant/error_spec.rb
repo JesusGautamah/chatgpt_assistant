@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe ChatgptAssistant::NilError do
   let(:error_message) { ChatgptAssistant::DefaultMessages.new.error_messages[:nil] }
 

@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe ChatgptAssistant::ApplicationBot do
-  let(:config) { double("config", language: "en", openai_api_key: "API_KEY", telegram_token: "TELEGRAM_TOKEN", discord_token: "DISCORD_TOKEN", discord_client_id: "DISCORD_CLIENT_ID", discord_prefix: "PREFIX", db_connection: "DATABASE_CONNECTION", mode: "MODE") }
+  let(:config) do
+    double("config", language: "en", openai_api_key: "API_KEY", telegram_token: "TELEGRAM_TOKEN", discord_token: "DISCORD_TOKEN",
+                     discord_client_id: "DISCORD_CLIENT_ID", discord_prefix: "PREFIX", db_connection: "DATABASE_CONNECTION", mode: "MODE")
+  end
   let(:bot) { ChatgptAssistant::ApplicationBot.new(config) }
   let(:chatter) { double("Chatter") }
 
