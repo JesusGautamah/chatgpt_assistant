@@ -20,7 +20,7 @@ gem "factory_bot_rails", "~> 6.0", group: :test
 
 gem "faker", "~> 2.0", group: :test
 
-gem "database_cleaner", "~> 1.0", group: :test
+gem "database_cleaner", "~> 2.0", group: :test
 
 gem "dotenv", "~> 2.0", group: :test
 
