@@ -14,7 +14,7 @@ gem "simplecov", "~> 0.21", group: :test
 
 gem "vcr", "~> 6.0", group: :test
 
-gem "shoulda-matchers", "~> 4.0", group: :test
+gem "shoulda-matchers", "~> 5.3", group: :test
 
 gem "factory_bot_rails", "~> 6.0", group: :test
 
