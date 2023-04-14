@@ -30,7 +30,7 @@ module ChatgptAssistant
       @discord_prefix = @config.discord_prefix
       @database = @config.db_connection
       @mode = @config.mode
-      @commom_messages = default_msg.commom_messages
+      @common_messages = default_msg.common_messages
       @error_messages = default_msg.error_messages
       @success_messages = default_msg.success_messages
       @help_messages = default_msg.help_messages
@@ -38,7 +38,7 @@ module ChatgptAssistant
 
     attr_reader :openai_api_key, :telegram_token, :database, :default_msg,
                 :mode, :config, :discord_token, :discord_client_id,
-                :discord_prefix, :commom_messages, :error_messages, :success_messages,
+                :discord_prefix, :common_messages, :error_messages, :success_messages,
                 :help_messages
     attr_accessor :msg, :evnt, :bot, :audio_url, :visitor, :user, :chat, :chat_id
 

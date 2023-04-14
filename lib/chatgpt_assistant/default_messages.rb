@@ -3,15 +3,15 @@
 module ChatgptAssistant
   # This class is responsible for storing the default messages
   class DefaultMessages
-    def initialize(language = "en")
+    def initialize(language = "en", _discord_prefix = "!")
       @language = language
       load_message_context
     end
 
-    attr_reader :language, :commom_messages, :success_messages, :error_messages, :help_messages
+    attr_reader :language, :common_messages, :success_messages, :error_messages, :help_messages
 
     def load_message_context
-      @commom_messages = send("commom_messages_#{language}")
+      @common_messages = send("common_messages_#{language}")
       @success_messages = send("success_messages_#{language}")
       @error_messages = send("error_messages_#{language}")
       @help_messages = send("help_messages_#{language}")
@@ -19,7 +19,7 @@ module ChatgptAssistant
 
     private
 
-      def commom_messages_pt
+      def common_messages_pt
         {
           start: "Olá, eu sou o Chatgpt Assistant, um chatbot que usa a API da OpenAI para responder suas perguntas no Telegram e Discord.",
           stop: "Até mais!",
@@ -49,26 +49,32 @@ module ChatgptAssistant
       def error_messages_pt
         {
           nil: "Não entendi o que você disse. Tente novamente",
-          email: "O email que você digitou não é válido. Tente novamente",
-          password: "A senha que você digitou não é válida. Tente novamente",
+          wrong_email: "O email que você digitou não é válido. Tente novamente",
           wrong_password: "A senha que você digitou não é válida. Tente novamente",
-          user: "O usuário que você digitou não existe. Tente novamente",
-          user_creation: "Erro ao criar usuário. Tente novamente",
+
           user_already_exists: "O usuário que você digitou já existe. Tente novamente",
-          chat_creation: "Erro ao criar chat. Tente novamente",
-          no_messages_founded: "Nenhuma mensagem encontrada",
+          chat_already_exists: "Você já possui um chat com este titulo. Tente novamente",
+
+          sign_up_error: "Erro ao criar usuário. Tente novamente",
+          chat_not_created_error: "Erro ao criar chat. Tente novamente",
+          message_not_created_error: "Erro ao criar mensagem. Tente novamente",
           no_chat_selected: "Nenhum chat selecionado",
-          chat_not_found: "Chat não encontrado",
+
+          no_messages_founded: "Nenhuma mensagem encontrada",
           no_chats_founded: "Nenhum chat encontrado",
+          chat_not_found: "Chat não encontrado",
+          user_not_found: "O usuário que você digitou não existe. Tente novamente",
+          user_not_registered: "O usuário não está registrado no sistema",
           user_not_logged_in: "Usuário não logado",
-          user_not_found: "Usuário não encontrado",
-          something_went_wrong: "Algo deu errado. Tente novamente mais tarde.",
-          message_history_too_long: "O histórico mensagem é muito longo.",
-          text_length: "O texto de resposta é muito longo. Tente diminuir a quantidade de respostas na mesma mensagem.",
+
           user_not_in_voice_channel: "Você não está em um canal de voz.",
           bot_not_in_voice_channel: "O bot não está em um canal de voz.",
+
+          message_history_too_long: "O histórico mensagem é muito longo.",
+          text_length_too_long: "O texto de resposta é muito longo. Tente diminuir a quantidade de respostas na mesma mensagem.",
+
           invalid_command: "Comando inválido. Tente novamente.",
-          message_creation_error: "Erro ao criar mensagem. Tente novamente."
+          something_went_wrong: "Algo deu errado. Tente novamente mais tarde."
         }
       end
 
@@ -83,7 +89,18 @@ module ChatgptAssistant
          "Para ver esta mensagem novamente, digite /help"]
       end
 
-      def commom_messages_en
+      def help_message_discord_pt
+        ["Para começar a conversar comigo, digite #{discord_prefix}start",
+         "Para parar de conversar comigo, digite #{discord_prefix}stop",
+         "Para se registrar no sistema, digite #{discord_prefix}register email:senha (a senha deve ser um numero de 4 digitos ex: 1234)",
+         "Para fazer login no sistema, digite #{discord_prefix}login email:senha (a senha deve ser um numero de 4 digitos ex: 1234)",
+         "Para criar um novo chat, digite #{discord_prefix}new_chat nome do chat",
+         "Para selecionar um chat, digite #{discord_prefix}sl_chat nome do chat",
+         "Para listar os chats que você criou, digite #{discord_prefix}list",
+         "Para ver esta mensagem novamente, digite #{discord_prefix}help"]
+      end
+
+      def common_messages_en
         {
           start: "Hello, I'm the Chatgpt Assistant, a chatbot that uses the OpenAI API to answer your questions on Telegram and Discord.",
           stop: "See you later!",
@@ -111,26 +128,33 @@ module ChatgptAssistant
 
       def error_messages_en
         {
-          nil: "I didn't understand what you said. Try again",
-          email: "The email you typed is not valid. Try again",
-          password: "The password you typed is not valid. Try again",
+          nil: "I don't understand what you said. Try again",
+          wrong_email: "The email you typed is not valid. Try again",
           wrong_password: "The password you typed is not valid. Try again",
-          user: "The user you typed does not exist. Try again",
-          user_creation: "Error creating user. Try again",
-          chat_creation: "Error creating chat. Try again",
-          no_messages_founded: "No messages found",
+
+          user_already_exists: "The user you typed already exists. Try again",
+          chat_already_exists: "You already have a chat with this title. Try again",
+
+          sign_up_error: "Error creating user. Try again",
+          chat_not_created_error: "Error creating chat. Try again",
+          message_not_created_error: "Error creating message. Try again",
           no_chat_selected: "No chat selected",
+
+          no_messages_founded: "No messages found",
           no_chats_founded: "No chats found",
           chat_not_found: "Chat not found",
+          user_not_found: "The user you typed does not exist. Try again",
+          user_not_registered: "The user is not registered in the system",
           user_not_logged_in: "User not logged in",
-          user_not_found: "User not found",
-          something_went_wrong: "Something went wrong. Try again later.",
-          message_history_too_long: "The message history is too long.",
-          text_length: "The response text is too long. Try to reduce the number of answers in the same message.",
+
           user_not_in_voice_channel: "You are not in a voice channel.",
           bot_not_in_voice_channel: "The bot is not in a voice channel.",
+
+          message_history_too_long: "The message history is too long.",
+          text_length_too_long: "The response text is too long. Try to reduce the number of responses in the same message.",
+
           invalid_command: "Invalid command. Try again.",
-          message_creation_error: "Error creating message. Try again."
+          something_went_wrong: "Something went wrong. Try again later."
         }
       end
 
@@ -143,6 +167,17 @@ module ChatgptAssistant
          "To select a chat, type sl_chat/chat name",
          "To list the chats you created, type /list",
          "To see this message again, type /help"]
+      end
+
+      def help_message_discord_en
+        ["To start talking to me, type #{discord_prefix}start",
+         "To stop talking to me, type #{discord_prefix}stop",
+         "To register in the system, type #{discord_prefix}register email:password (the password must be a 4 digit number ex: 1234)",
+         "To log in to the system, type #{discord_prefix}login email:password (the password must be a 4 digit number ex: 1234)",
+         "To create a new chat, type #{discord_prefix}new_chat chat name",
+         "To select a chat, type #{discord_prefix}sl_chat chat name",
+         "To list the chats you created, type #{discord_prefix}list",
+         "To see this message again, type #{discord_prefix}help"]
       end
   end
 end

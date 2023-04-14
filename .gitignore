@@ -9,6 +9,7 @@
 .workflow_secrets
 .rspec_status
 .env
+.env_test
 
 /logs/telegram_chatgpt.log
 /voice/audio*

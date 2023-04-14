@@ -1,52 +1,40 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    actionmailer (7.0.4.3)
-      actionpack (= 7.0.4.3)
-      actionview (= 7.0.4.3)
-      activejob (= 7.0.4.3)
-      activesupport (= 7.0.4.3)
-      mail (~> 2.5, >= 2.5.4)
-      net-imap
-      net-pop
-      net-smtp
-      rails-dom-testing (~> 2.0)
-    actionpack (7.0.4.3)
-      actionview (= 7.0.4.3)
-      activesupport (= 7.0.4.3)
-      rack (~> 2.0, >= 2.2.0)
+    actionpack (6.1.7.3)
+      actionview (= 6.1.7.3)
+      activesupport (= 6.1.7.3)
+      rack (~> 2.0, >= 2.0.9)
       rack-test (>= 0.6.3)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.2.0)
-    actionview (7.0.4.3)
-      activesupport (= 7.0.4.3)
+    actionview (6.1.7.3)
+      activesupport (= 6.1.7.3)
       builder (~> 3.1)
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.1, >= 1.2.0)
-    activejob (7.0.4.3)
-      activesupport (= 7.0.4.3)
-      globalid (>= 0.3.6)
-    activemodel (7.0.4.3)
-      activesupport (= 7.0.4.3)
-    activerecord (7.0.4.3)
-      activemodel (= 7.0.4.3)
-      activesupport (= 7.0.4.3)
+    activemodel (6.1.7.3)
+      activesupport (= 6.1.7.3)
+    activerecord (6.1.7.3)
+      activemodel (= 6.1.7.3)
+      activesupport (= 6.1.7.3)
     activerecord-import (1.4.1)
       activerecord (>= 4.2)
-    activesupport (7.0.4.3)
+    activesupport (6.1.7.3)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
       tzinfo (~> 2.0)
-    addressable (2.8.1)
+      zeitwerk (~> 2.3)
+    addressable (2.8.4)
       public_suffix (>= 2.0.2, < 6.0)
     ast (2.4.2)
     awesome_chatgpt_actors (0.1.2)
       csv
       ruby-openai
     aws-eventstream (1.2.0)
-    aws-partitions (1.735.0)
+    aws-partitions (1.747.0)
     aws-sdk-core (3.171.0)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.651.0)
@@ -69,7 +57,7 @@ GEM
     connection_pool (2.4.0)
     crass (1.0.6)
     csv (3.2.6)
-    date (3.3.3)
+    database_cleaner (1.99.0)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
     diff-lcs (1.5.0)
@@ -84,19 +72,27 @@ GEM
     docile (1.4.0)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
+    dotenv (2.8.1)
     dry-inflector (1.0.0)
     erubi (1.12.0)
     et-orbi (1.2.7)
       tzinfo
     event_emitter (0.2.6)
     eventmachine (1.2.7)
+    factory_bot (6.2.1)
+      activesupport (>= 5.0.0)
+    factory_bot_rails (6.2.0)
+      factory_bot (~> 6.2.0)
+      railties (>= 5.0.0)
+    faker (2.23.0)
+      i18n (>= 1.8.11, < 2)
     faraday (2.7.4)
       faraday-net_http (>= 2.0, < 3.1)
       ruby2_keywords (>= 0.0.4)
     faraday-multipart (1.0.4)
       multipart-post (~> 2)
     faraday-net_http (3.0.2)
-    faye-websocket (0.11.1)
+    faye-websocket (0.11.2)
       eventmachine (>= 0.12.0)
       websocket-driver (>= 0.5.1)
     ffi (1.15.5)
@@ -106,8 +102,6 @@ GEM
     fugit (1.8.1)
       et-orbi (~> 1, >= 1.2.7)
       raabro (~> 1.4)
-    globalid (1.1.0)
-      activesupport (>= 5.0)
     http (4.4.1)
       addressable (~> 2.3)
       http-cookie (~> 1.0)
@@ -139,38 +133,21 @@ GEM
     jmespath (1.6.2)
     json (2.6.3)
     jwt (2.2.3)
-    loofah (2.19.1)
+    loofah (2.20.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     lucy_dockerunner (0.1.9)
-    mail (2.8.1)
-      mini_mime (>= 0.1.1)
-      net-imap
-      net-pop
-      net-smtp
+    method_source (1.0.0)
     mime-types (3.4.1)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2023.0218.1)
     mini_mime (1.1.2)
-    mini_portile2 (2.8.1)
     minitest (5.18.0)
     multi_json (1.15.0)
     multi_xml (0.6.0)
     multipart-post (2.3.0)
-    net-imap (0.3.4)
-      date
-      net-protocol
-    net-pop (0.1.2)
-      net-protocol
-    net-protocol (0.2.1)
-      timeout
-    net-smtp (0.3.3)
-      net-protocol
     netrc (0.11.0)
-    nokogiri (1.14.2)
-      mini_portile2 (~> 2.8.0)
-      racc (~> 1.4)
-    nokogiri (1.14.2-x86_64-linux)
+    nokogiri (1.14.3-x86_64-linux)
       racc (~> 1.4)
     opus-ruby (1.0.1)
       ffi
@@ -189,11 +166,17 @@ GEM
       nokogiri (>= 1.6)
     rails-html-sanitizer (1.5.0)
       loofah (~> 2.19, >= 2.19.1)
+    railties (6.1.7.3)
+      actionpack (= 6.1.7.3)
+      activesupport (= 6.1.7.3)
+      method_source
+      rake (>= 12.2)
+      thor (~> 1.0)
     rainbow (3.1.1)
     rake (13.0.6)
     redis (5.0.6)
       redis-client (>= 0.9.0)
-    redis-client (0.14.0)
+    redis-client (0.14.1)
       connection_pool
     regexp_parser (2.7.0)
     rest-client (2.1.0)
@@ -202,19 +185,27 @@ GEM
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
     rexml (3.2.5)
-    rspec (3.12.0)
-      rspec-core (~> 3.12.0)
-      rspec-expectations (~> 3.12.0)
-      rspec-mocks (~> 3.12.0)
-    rspec-core (3.12.1)
-      rspec-support (~> 3.12.0)
-    rspec-expectations (3.12.2)
+    rspec (3.9.0)
+      rspec-core (~> 3.9.0)
+      rspec-expectations (~> 3.9.0)
+      rspec-mocks (~> 3.9.0)
+    rspec-core (3.9.3)
+      rspec-support (~> 3.9.3)
+    rspec-expectations (3.9.4)
       diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.12.0)
-    rspec-mocks (3.12.3)
+      rspec-support (~> 3.9.0)
+    rspec-mocks (3.9.1)
       diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.12.0)
-    rspec-support (3.12.0)
+      rspec-support (~> 3.9.0)
+    rspec-rails (3.9.1)
+      actionpack (>= 3.0)
+      activesupport (>= 3.0)
+      railties (>= 3.0)
+      rspec-core (~> 3.9.0)
+      rspec-expectations (~> 3.9.0)
+      rspec-mocks (~> 3.9.0)
+      rspec-support (~> 3.9.0)
+    rspec-support (3.9.4)
     rubocop (1.50.1)
       json (~> 2.3)
       parallel (~> 1.10)
@@ -238,7 +229,9 @@ GEM
     ruby2_keywords (0.0.5)
     rufus-scheduler (3.8.2)
       fugit (~> 1.1, >= 1.1.6)
-    sidekiq (7.0.7)
+    shoulda-matchers (4.5.1)
+      activesupport (>= 4.2.0)
+    sidekiq (7.0.8)
       concurrent-ruby (< 2)
       connection_pool (>= 2.3.0)
       rack (>= 2.2.4)
@@ -260,9 +253,9 @@ GEM
       faraday (~> 2.0)
       faraday-multipart (~> 1.0)
       virtus (~> 2.0)
+    thor (1.2.1)
     thread_safe (0.3.6)
     tilt (2.1.0)
-    timeout (0.3.2)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unf (0.1.4)
@@ -281,13 +274,12 @@ GEM
     websocket-driver (0.7.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
+    zeitwerk (2.6.7)
 
 PLATFORMS
-  ruby
   x86_64-linux
 
 DEPENDENCIES
-  actionmailer
   activemodel
   activerecord
   activerecord-import
@@ -295,7 +287,11 @@ DEPENDENCIES
   awesome_chatgpt_actors
   aws-sdk-polly
   bcrypt
+  database_cleaner (~> 1.0)
   discordrb (~> 3.4)
+  dotenv (~> 2.0)
+  factory_bot_rails (~> 6.0)
+  faker (~> 2.0)
   faraday
   ibm_watson
   lucy_dockerunner
@@ -303,8 +299,10 @@ DEPENDENCIES
   rake (~> 13.0)
   redis
   rspec (~> 3.0)
-  rubocop (~> 1.50)
+  rspec-rails (~> 3.0)
+  rubocop (~> 1.49)
   rubocop-rspec (~> 2.4)
+  shoulda-matchers (~> 4.0)
   sidekiq
   sidekiq-scheduler
   simplecov (~> 0.21)
@@ -313,4 +311,4 @@ DEPENDENCIES
   vcr (~> 6.0)
 
 BUNDLED WITH
-   2.2.32
+   2.4.10
