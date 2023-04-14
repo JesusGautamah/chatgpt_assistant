@@ -8,7 +8,7 @@ RSpec.describe Chat, type: :model do
   it { is_expected.to validate_presence_of(:title) }
   it { is_expected.to have_many(:messages) }
 
-  it 'has a valid factory' do
+  it "has a valid factory" do
     expect(subject).to be_valid
   end
 end

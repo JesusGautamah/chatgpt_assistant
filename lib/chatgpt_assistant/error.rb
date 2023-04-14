@@ -10,11 +10,10 @@ module ChatgptAssistant
   end
 
   class NilError < StandardError
-    def initialize(message =  load_error_context[:nil])
+    def initialize(message = load_error_context[:nil])
       super(message)
     end
 
-    private
     include LoadError
   end
 
@@ -23,7 +22,6 @@ module ChatgptAssistant
       super(message)
     end
 
-    private
     include LoadError
   end
 
@@ -32,7 +30,6 @@ module ChatgptAssistant
       super(message)
     end
 
-    private
     include LoadError
   end
 
@@ -41,7 +38,6 @@ module ChatgptAssistant
       super(message)
     end
 
-    private
     include LoadError
   end
 
@@ -50,7 +46,6 @@ module ChatgptAssistant
       super(message)
     end
 
-    private
     include LoadError
   end
 
@@ -59,7 +54,6 @@ module ChatgptAssistant
       super(message)
     end
 
-    private
     include LoadError
   end
 
@@ -68,7 +62,6 @@ module ChatgptAssistant
       super(message)
     end
 
-    private
     include LoadError
   end
 
@@ -77,7 +70,6 @@ module ChatgptAssistant
       super(message)
     end
 
-    private
     include LoadError
   end
 
@@ -86,7 +78,6 @@ module ChatgptAssistant
       super(message)
     end
 
-    private
     include LoadError
   end
 
@@ -95,7 +86,6 @@ module ChatgptAssistant
       super(message)
     end
 
-    private
     include LoadError
   end
 
@@ -104,7 +94,6 @@ module ChatgptAssistant
       super(message)
     end
 
-    private
     include LoadError
   end
 
@@ -113,7 +102,6 @@ module ChatgptAssistant
       super(message)
     end
 
-    private
     include LoadError
   end
 
@@ -122,7 +110,6 @@ module ChatgptAssistant
       super(message)
     end
 
-    private
     include LoadError
   end
 
@@ -131,7 +118,6 @@ module ChatgptAssistant
       super(message)
     end
 
-    private
     include LoadError
   end
 
@@ -140,7 +126,6 @@ module ChatgptAssistant
       super(message)
     end
 
-    private
     include LoadError
   end
 
@@ -149,7 +134,6 @@ module ChatgptAssistant
       super(message)
     end
 
-    private
     include LoadError
   end
 
@@ -158,7 +142,6 @@ module ChatgptAssistant
       super(message)
     end
 
-    private
     include LoadError
   end
 
@@ -167,7 +150,6 @@ module ChatgptAssistant
       super(message)
     end
 
-    private
     include LoadError
   end
 
@@ -176,7 +158,6 @@ module ChatgptAssistant
       super(message)
     end
 
-    private
     include LoadError
   end
 
@@ -185,7 +166,6 @@ module ChatgptAssistant
       super(message)
     end
 
-    private
     include LoadError
   end
 
@@ -194,7 +174,6 @@ module ChatgptAssistant
       super(message)
     end
 
-    private
     include LoadError
   end
 end

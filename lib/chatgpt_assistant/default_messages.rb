@@ -51,7 +51,7 @@ module ChatgptAssistant
           nil: "Não entendi o que você disse. Tente novamente",
           wrong_email: "O email que você digitou não é válido. Tente novamente",
           wrong_password: "A senha que você digitou não é válida. Tente novamente",
-          
+
           user_already_exists: "O usuário que você digitou já existe. Tente novamente",
           chat_already_exists: "Você já possui um chat com este titulo. Tente novamente",
 
@@ -70,12 +70,11 @@ module ChatgptAssistant
           user_not_in_voice_channel: "Você não está em um canal de voz.",
           bot_not_in_voice_channel: "O bot não está em um canal de voz.",
 
-          
           message_history_too_long: "O histórico mensagem é muito longo.",
           text_length_too_long: "O texto de resposta é muito longo. Tente diminuir a quantidade de respostas na mesma mensagem.",
 
           invalid_command: "Comando inválido. Tente novamente.",
-          something_went_wrong: "Algo deu errado. Tente novamente mais tarde.",
+          something_went_wrong: "Algo deu errado. Tente novamente mais tarde."
         }
       end
 
@@ -155,7 +154,7 @@ module ChatgptAssistant
           text_length_too_long: "The response text is too long. Try to reduce the number of responses in the same message.",
 
           invalid_command: "Invalid command. Try again.",
-          something_went_wrong: "Something went wrong. Try again later.",
+          something_went_wrong: "Something went wrong. Try again later."
         }
       end
 

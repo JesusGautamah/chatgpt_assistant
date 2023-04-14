@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe ChatgptAssistant::Chatter do
-  let(:openai_api_key) { ENV["OPENAI_API_KEY"] }
+  let(:openai_api_key) { ENV.fetch("OPENAI_API_KEY", nil) }
   let(:chatter) { described_class.new(openai_api_key) }
 
   describe "#chat" do

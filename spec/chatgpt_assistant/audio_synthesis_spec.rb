@@ -1,43 +1,43 @@
- # frozen_string_literal: true
+# frozen_string_literal: true
 
 RSpec.describe ChatgptAssistant::AudioSynthesis do
-  let(:config) { double('config', openai_api_key: 'openai_key', language: 'en', mode: 'aws', aws_access_key_id: 'access_key', aws_secret_access_key: 'secret_key', aws_region: 'us-east-1') }
+  let(:config) { double("config", openai_api_key: "openai_key", language: "en", mode: "aws", aws_access_key_id: "access_key", aws_secret_access_key: "secret_key", aws_region: "us-east-1") }
 
-  describe '#synthesize_text' do
-    context 'when using IBM mode' do
-      let(:config) { double('config', openai_api_key: 'openai_key', language: 'en', mode: 'ibm', ibm_api_key: 'ibm_key', ibm_url: 'https://api.us-south.text-to-speech.watson.cloud.ibm.com/instances/123') }
+  describe "#synthesize_text" do
+    context "when using IBM mode" do
+      let(:config) { double("config", openai_api_key: "openai_key", language: "en", mode: "ibm", ibm_api_key: "ibm_key", ibm_url: "https://api.us-south.text-to-speech.watson.cloud.ibm.com/instances/123") }
       let(:audio_synthesis) { ChatgptAssistant::AudioSynthesis.new(config) }
 
       before do
-        allow(audio_synthesis).to receive(:synthesize_text_ibm).and_return('voice/ibm-12345.mp3')
+        allow(audio_synthesis).to receive(:synthesize_text_ibm).and_return("voice/ibm-12345.mp3")
       end
 
-      it 'calls synthesize_text_ibm method' do
-        expect(audio_synthesis).to receive(:synthesize_text_ibm).with('Hello, how are you?')
-        audio_synthesis.synthesize_text('Hello, how are you?')
+      it "calls synthesize_text_ibm method" do
+        expect(audio_synthesis).to receive(:synthesize_text_ibm).with("Hello, how are you?")
+        audio_synthesis.synthesize_text("Hello, how are you?")
       end
     end
 
-    context 'when using AWS mode' do
+    context "when using AWS mode" do
       let(:audio_synthesis) { ChatgptAssistant::AudioSynthesis.new(config) }
 
       before do
-        allow(audio_synthesis).to receive(:synthesize_text_aws).and_return('voice/aws-12345.mp3')
+        allow(audio_synthesis).to receive(:synthesize_text_aws).and_return("voice/aws-12345.mp3")
       end
 
-      it 'calls synthesize_text_aws method' do
-        expect(audio_synthesis).to receive(:synthesize_text_aws).with('Hello, how are you?')
-        audio_synthesis.synthesize_text('Hello, how are you?')
+      it "calls synthesize_text_aws method" do
+        expect(audio_synthesis).to receive(:synthesize_text_aws).with("Hello, how are you?")
+        audio_synthesis.synthesize_text("Hello, how are you?")
       end
     end
   end
 
-  describe '#synthesize_text_ibm' do
+  describe "#synthesize_text_ibm" do
     let(:audio_synthesis) { ChatgptAssistant::AudioSynthesis.new(config) }
-    let(:authenticator) { double('authenticator') }
-    let(:text_to_speech) { double('text_to_speech') }
-    let(:audio_format) { 'audio/mp3' }
-    let(:audio) { 'audio_file' }
+    let(:authenticator) { double("authenticator") }
+    let(:text_to_speech) { double("text_to_speech") }
+    let(:audio_format) { "audio/mp3" }
+    let(:audio) { "audio_file" }
     let(:time) { Time.now.to_i }
 
     before do
@@ -45,7 +45,7 @@ RSpec.describe ChatgptAssistant::AudioSynthesis do
       allow(IBMWatson::TextToSpeechV1).to receive(:new).and_return(text_to_speech)
       allow(File).to receive(:binwrite)
       allow(text_to_speech).to receive(:service_url=)
-      allow(text_to_speech).to receive(:synthesize).and_return(double('result', result: audio))
+      allow(text_to_speech).to receive(:synthesize).and_return(double("result", result: audio))
     end
 
     # it 'calls IBM Watson API to synthesize text into speech and save the file' do
@@ -58,10 +58,10 @@ RSpec.describe ChatgptAssistant::AudioSynthesis do
     # end
   end
 
-  describe '#synthesize_text_aws' do
+  describe "#synthesize_text_aws" do
     let(:audio_synthesis) { ChatgptAssistant::AudioSynthesis.new(config) }
-    let(:polly_client) { double('polly_client') }
-    let(:response) { double('response', audio_stream: double('audio_stream', read: 'audio_file')) }
+    let(:polly_client) { double("polly_client") }
+    let(:response) { double("response", audio_stream: double("audio_stream", read: "audio_file")) }
     let(:time) { Time.now.to_i }
 
     before do

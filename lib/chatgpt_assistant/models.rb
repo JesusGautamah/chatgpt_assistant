@@ -24,7 +24,7 @@ class User < ActiveRecord::Base
 
   belongs_to :tel_visitor, optional: true, foreign_key: "telegram_id", class_name: "Visitor"
   belongs_to :dis_visitor, optional: true, foreign_key: "discord_id", class_name: "Visitor"
-  
+
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }, length: { maximum: 100 }
   validates :role, presence: true
   validates :open_chats, presence: true
@@ -36,7 +36,6 @@ class User < ActiveRecord::Base
   before_save :encrypt_password
 
   has_many :chats
-  
 
   def encrypt_password
     return if password.nil?

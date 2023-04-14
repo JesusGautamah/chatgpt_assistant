@@ -47,6 +47,7 @@ module ChatgptAssistant
     def create_db
       db_connection
       return if database_exists?
+
       ActiveRecord::Base.establish_connection(
         adapter: "postgresql",
         host: database_host,
@@ -56,7 +57,7 @@ module ChatgptAssistant
         password: database_password
       )
       ActiveRecord::Base.logger = Logger.new($stdout) if ENV["ENV_TYPE"] == "development"
-      ActiveRecord::Base.connection.create_database(database_name) 
+      ActiveRecord::Base.connection.create_database(database_name)
     end
 
     def migrate

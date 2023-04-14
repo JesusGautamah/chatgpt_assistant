@@ -30,7 +30,7 @@ RSpec.describe ChatgptAssistant do
     end
 
     context "when mode is discord" do
-      let (:mode) { "discord" }
+      let(:mode) { "discord" }
 
       before do
         allow(subject).to receive(:discord_mode?).and_return(true)

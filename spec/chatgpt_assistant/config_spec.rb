@@ -104,7 +104,7 @@ RSpec.describe ChatgptAssistant::Config do
 
     context "when AWS_ACCESS_KEY_ID is not set" do
       before { ENV.delete("AWS_ACCESS_KEY_ID") }
-    
+
       # it "raises an error" do
       #   expect { config.aws_access_key_id }.to raise_error(KeyError)
       # end
@@ -122,11 +122,10 @@ RSpec.describe ChatgptAssistant::Config do
 
     context "when AWS_SECRET_ACCESS_KEY is not set" do
       before { ENV.delete("AWS_SECRET_ACCESS_KEY") }
-      
+
       # it "raises an error" do
       #   expect { config.aws_secret_access_key }.to raise_error(KeyError)
       # end
     end
   end
 end
-        

@@ -3,11 +3,11 @@
 RSpec.describe Visitor, type: :model do
   it { should validate_presence_of(:name) }
   it { should validate_presence_of(:platform) }
-  it { should define_enum_for(:platform).with_values([:telegram, :discord]) }
+  it { should define_enum_for(:platform).with_values(%i[telegram discord]) }
 
   describe "#tel_user" do
     let(:visitor) { create(:visitor, telegram_id: "123") }
-    let(:user) { create(:user, telegram_id: "123") } 
+    let(:user) { create(:user, telegram_id: "123") }
 
     it "returns the user with the corresponding telegram_id" do
       user
