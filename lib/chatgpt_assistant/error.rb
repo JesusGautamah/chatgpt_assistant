@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module ChatgptAssistant
+  # Load Error
   module LoadError
     def load_error_context
       language = ENV.fetch("LANGUAGE", "en")
