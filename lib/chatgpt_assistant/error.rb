@@ -9,6 +9,7 @@ module ChatgptAssistant
     end
   end
 
+  # Nil Error
   class NilError < StandardError
     def initialize(message = load_error_context[:nil])
       super(message)
@@ -17,6 +18,7 @@ module ChatgptAssistant
     include LoadError
   end
 
+  # Wrong Email Error
   class WrongEmailError < StandardError
     def initialize(message = load_error_context[:wrong_email])
       super(message)
@@ -25,6 +27,7 @@ module ChatgptAssistant
     include LoadError
   end
 
+  # Wrong Password Error
   class WrongPasswordError < StandardError
     def initialize(message = load_error_context[:wrong_password])
       super(message)
@@ -33,6 +36,7 @@ module ChatgptAssistant
     include LoadError
   end
 
+  # User Already Exists Error
   class UserAlreadyExistsError < StandardError
     def initialize(message = load_error_context[:user_already_exists])
       super(message)
@@ -41,6 +45,7 @@ module ChatgptAssistant
     include LoadError
   end
 
+  # Chat Already Exists Error
   class ChatAlreadyExistsError < StandardError
     def initialize(message = load_error_context[:chat_already_exists])
       super(message)
@@ -49,6 +54,7 @@ module ChatgptAssistant
     include LoadError
   end
 
+  # Sign Up Error
   class SignUpError < StandardError
     def initialize(message = load_error_context[:sign_up_error])
       super(message)
@@ -57,6 +63,7 @@ module ChatgptAssistant
     include LoadError
   end
 
+  # Chat Not Created Error
   class ChatNotCreatedError < StandardError
     def initialize(message = load_error_context[:chat_not_created_error])
       super(message)
@@ -65,6 +72,7 @@ module ChatgptAssistant
     include LoadError
   end
 
+  # Message Not Created Error
   class MessageNotCreatedError < StandardError
     def initialize(message = load_error_context[:message_not_created_error])
       super(message)
@@ -73,6 +81,7 @@ module ChatgptAssistant
     include LoadError
   end
 
+  # No Chat Selected Error
   class NoChatSelectedError < StandardError
     def initialize(message = load_error_context[:no_chat_selected])
       super(message)
@@ -81,6 +90,7 @@ module ChatgptAssistant
     include LoadError
   end
 
+  # No Messages Founded Error
   class NoMessagesFoundedError < StandardError
     def initialize(message = load_error_context[:no_messages_founded])
       super(message)
@@ -89,6 +99,7 @@ module ChatgptAssistant
     include LoadError
   end
 
+  # No Chats Founded Error
   class NoChatsFoundedError < StandardError
     def initialize(message = load_error_context[:no_chats_founded])
       super(message)
@@ -97,6 +108,7 @@ module ChatgptAssistant
     include LoadError
   end
 
+  # Chat Not Found Error
   class ChatNotFoundError < StandardError
     def initialize(message = load_error_context[:chat_not_found])
       super(message)
@@ -105,6 +117,7 @@ module ChatgptAssistant
     include LoadError
   end
 
+  # User Not Found Error
   class UserNotFoundError < StandardError
     def initialize(message = load_error_context[:user_not_found])
       super(message)
@@ -113,6 +126,7 @@ module ChatgptAssistant
     include LoadError
   end
 
+  # User Not Registered Error
   class UserNotRegisteredError < StandardError
     def initialize(message = load_error_context[:user_not_registered])
       super(message)
@@ -121,6 +135,7 @@ module ChatgptAssistant
     include LoadError
   end
 
+  # User Not Logged In Error
   class UserNotLoggedInError < StandardError
     def initialize(message = load_error_context[:user_not_logged_in])
       super(message)
@@ -129,6 +144,7 @@ module ChatgptAssistant
     include LoadError
   end
 
+  # User Not In Voice Channel Error
   class UserNotInVoiceChannelError < StandardError
     def initialize(message = load_error_context[:user_not_in_voice_channel])
       super(message)
@@ -137,6 +153,7 @@ module ChatgptAssistant
     include LoadError
   end
 
+  # Bot Not In Voice Channel Error
   class BotNotInVoiceChannelError < StandardError
     def initialize(message = load_error_context[:bot_not_in_voice_channel])
       super(message)
@@ -145,6 +162,7 @@ module ChatgptAssistant
     include LoadError
   end
 
+  # Message Not Found Error
   class MessageHistoryTooLongError < StandardError
     def initialize(message = load_error_context[:message_history_too_long])
       super(message)
@@ -153,6 +171,7 @@ module ChatgptAssistant
     include LoadError
   end
 
+  # Text Length Too Long Error
   class TextLengthTooLongError < StandardError
     def initialize(message = load_error_context[:text_length_too_long])
       super(message)
@@ -161,6 +180,7 @@ module ChatgptAssistant
     include LoadError
   end
 
+  # Invalid Command Error
   class InvalidCommandError < StandardError
     def initialize(message = load_error_context[:invalid_command])
       super(message)
@@ -169,6 +189,7 @@ module ChatgptAssistant
     include LoadError
   end
 
+  # Something Went Wrong Error
   class SomethingWentWrongError < StandardError
     def initialize(message = load_error_context[:something_went_wrong])
       super(message)
