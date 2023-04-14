@@ -7,6 +7,7 @@ require_relative "chatgpt_assistant/chatter"
 require_relative "chatgpt_assistant/version"
 require_relative "chatgpt_assistant/config"
 require_relative "chatgpt_assistant/models"
+require_relative "chatgpt_assistant/error"
 require_relative "bots/application_bot"
 require_relative "bots/telegram_bot"
 require_relative "bots/discord_bot"
@@ -32,23 +33,11 @@ module ChatgptAssistant
       return discord_bot if discord_mode?
 
       raise "Invalid mode"
-    rescue StandardError => e
-      save_error(e)
-      retry
     end
 
     private
 
       attr_reader :mode, :config
-
-      def save_error(err)
-        puts "Error: #{err.message}"
-        err.backtrace.each { |line| puts line }
-        Error.create(message: err.message, backtrace: err.backtrace) unless err.message == Error.last&.message
-      rescue StandardError
-        puts "Error: #{err.message}"
-        puts "Backtrace: #{err.backtrace}"
-      end
 
       def telegram_mode?
         mode == "telegram"

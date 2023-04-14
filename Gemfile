@@ -8,9 +8,21 @@ gem "rake", "~> 13.0"
 
 gem "rspec", "~> 3.0", group: :test
 
+gem "rspec-rails", "~> 3.0", group: :test
+
 gem "simplecov", "~> 0.21", group: :test
 
 gem "vcr", "~> 6.0", group: :test
+
+gem "shoulda-matchers", "~> 4.0", group: :test
+
+gem "factory_bot_rails", "~> 6.0", group: :test
+
+gem "faker", "~> 2.0", group: :test
+
+gem "database_cleaner", "~> 1.0", group: :test
+
+gem "dotenv", "~> 2.0", group: :test
 
 gem "rubocop", "~> 1.49"
 
@@ -28,7 +40,7 @@ gem "activerecord"
 
 gem "activesupport"
 
-gem "actionmailer"
+# gem "actionmailer"
 
 gem "redis"
 
