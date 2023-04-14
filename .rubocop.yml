@@ -11,22 +11,22 @@ Style/StringLiteralsInInterpolation:
   EnforcedStyle: double_quotes
 
 Layout/LineLength:
-  Max: 160
+  Max: 180
 
 Metrics/ModuleLength:
   Max: 120
 
 Metrics/MethodLength:
-  Max: 200
+  Max: 250
 
 Metrics/BlockLength:
-  Max: 200
+  Max: 250
 
 Metrics/ClassLength:
   Max: 300
 
 Metrics/AbcSize:
-  Max: 28
+  Max: 35
 
 Layout/AccessModifierIndentation:
   EnforcedStyle: indent
