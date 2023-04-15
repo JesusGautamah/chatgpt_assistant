@@ -1,4 +1,4 @@
-# # frozen_string_literal: true
+# frozen_string_literal: true
 
 # RSpec.describe ChatgptAssistant::ValidationHelper do
 #   let(:user) { double("User", id: 1, current_chat_id: 1, chats: double("Chats", count: 1)) }

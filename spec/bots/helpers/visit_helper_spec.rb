@@ -5,7 +5,7 @@ RSpec.describe ChatgptAssistant::VisitHelper do
   let(:chat_id) { 123 }
   let(:user_id) { 456 }
   let(:msg) { double("Telegram Message", from: double("Telegram User", first_name: "John")) }
-  let(:msg_2) { double("Telegram Message", from: double("Telegram User 2", first_name: "John 2")) }
+  let(:msg_s) { double("Telegram Message", from: double("Telegram User 2", first_name: "John 2")) }
   let(:evnt) { double("Discord Event", user: double("Discord User", name: "Jane")) }
   let(:config) { ChatgptAssistant::Config.new }
   let(:helper_telegram_bot) { ChatgptAssistant::TelegramBot.new(config) }

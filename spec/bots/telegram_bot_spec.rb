@@ -1,4 +1,4 @@
-# # frozen_string_literal: true
+# frozen_string_literal: true
 
 # RSpec.describe ChatgptAssistant::TelegramBot do
 #   let(:config) { ChatgptAssistant::Config.new }

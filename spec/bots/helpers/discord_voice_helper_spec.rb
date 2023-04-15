@@ -1,4 +1,4 @@
-# # frozen_string_literal: true
+# frozen_string_literal: true
 
 # RSpec.describe ChatgptAssistant::DiscordVoiceHelper do
 #   let(:dummy_class) { Class.new { include ChatgptAssistant::DiscordVoiceHelper } }

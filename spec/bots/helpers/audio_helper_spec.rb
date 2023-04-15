@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe ChatgptAssistant::AudioHelper do
-  let(:config) {ChatgptAssistant::Config.new}
+  let(:config) { ChatgptAssistant::Config.new }
   let(:helper_bot) { ChatgptAssistant::TelegramBot.new(config) }
 
   describe "#recognition" do
