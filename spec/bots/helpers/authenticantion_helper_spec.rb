@@ -22,8 +22,8 @@ RSpec.describe ChatgptAssistant::AuthenticationHelper do
     let(:email) { "test@example.com" }
     let(:password) { "password" }
     let(:telegram_id) { "123456789" }
-    let(:visitor) { double("Visitor", telegram_id: telegram_id) }
-    let(:user) { double("User", email: email, password_hash: BCrypt::Password.create(password), password_salt: BCrypt::Engine.generate_salt) }
+    let(:visitor) { create(:visitor, telegram_id: telegram_id) }
+    let(:user) { create(:user, email: email, password: password) }
 
     before do
       allow(helper_instance).to receive(:find_visitor).with(telegram_id: telegram_id).and_return(visitor)
@@ -57,9 +57,9 @@ RSpec.describe ChatgptAssistant::AuthenticationHelper do
 
   describe "#telegram_user_access" do
     let(:telegram_id) { "123456789" }
-    let(:visitor) { double("Visitor", telegram_id: telegram_id) }
+    let(:visitor) { create(:visitor, telegram_id: telegram_id) }
     let(:user_email) { "test@example.com" }
-    let(:user) { double("User", email: user_email) }
+    let(:user) { create(:user, email: user_email) }
 
     before do
       allow(helper_instance).to receive(:where_user).with(telegram_id: telegram_id).and_return(nil)
@@ -70,10 +70,10 @@ RSpec.describe ChatgptAssistant::AuthenticationHelper do
       expect(helper_instance.telegram_user_access(visitor, user)).to eq(user_email)
     end
 
-    it "updates existing_access telegram_id and return email" do
-      existing_access = double("User", telegram_id: "987654321")
+    it "updates existing_access nil and return email" do
+      existing_access = create(:user, telegram_id: telegram_id)
       allow(helper_instance).to receive(:where_user).with(telegram_id: telegram_id).and_return(existing_access)
-      expect(existing_access).to receive(:update).with(telegram_id: telegram_id)
+      expect(existing_access).to receive(:update).with(telegram_id: nil)
       expect(helper_instance.telegram_user_access(visitor, user)).to eq(user_email)
     end
   end

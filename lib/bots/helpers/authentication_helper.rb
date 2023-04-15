@@ -18,12 +18,13 @@ module ChatgptAssistant
 
       hash = new_access.password_hash
       salt = new_access.password_salt
-      valid_password?(password, hash, salt) ? telegram_user_access(_access, new_access) : "wrong password"
+      valid_password?(password, hash, salt) ? telegram_user_access(visitor_access, new_access) : "wrong password"
     end
 
     def telegram_user_access(visitor, new_access)
       other_access = where_user(telegram_id: visitor.telegram_id)
-      other_access&.each { |access| access.update(telegram_id: nil) }
+      other_access&.each { |access| access.update(telegram_id: nil) } if other_access&.class == Array
+      other_access&.update(telegram_id: nil) if other_access&.class == User
       new_access.update(telegram_id: visitor.telegram_id)
       new_access.email
     end

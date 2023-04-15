@@ -23,11 +23,12 @@ module ChatgptAssistant
 
     def where_user(telegram_id: nil, discord_id: nil, email: nil)
       if telegram_id
-        User.where(telegram_id: telegram_id)
+        # force to return an array
+        User.where(telegram_id: telegram_id).to_a
       elsif discord_id
-        User.where(discord_id: discord_id)
+        User.where(discord_id: discord_id).to_a
       elsif email
-        User.where(email: email)
+        User.where(email: email).to_a
       end
     end
   end

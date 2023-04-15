@@ -1,12 +1,15 @@
 # frozen_string_literal: true
 
 RSpec.describe ChatgptAssistant::MessengerHelper do
-  let(:helper) { Class.new { extend ChatgptAssistant::MessengerHelper } }
+  let(:config) { ChatgptAssistant::Config.new }
+  let(:helper) { ChatgptAssistant::TelegramBot.new(config) }
+  let(:msg) { double("msg", text: "Hello", chat: double("chat", id: chat_id)) }
+  let(:error_message) { "Something went wrong! Try again later" }
+  let(:user) { create(:user) }
+  let(:chat) { create(:chat, user: user) }
+  let(:chat_id) { chat.id }
 
   describe "#chat_success" do
-    let(:chat_id) { 1 }
-    let(:msg) { double("msg", text: "Hello", chat: double("chat", id: chat_id)) }
-    let(:error_message) { "Something went wrong! Try again later" }
 
     context "when user message is saved successfully" do
       before do
@@ -17,21 +20,26 @@ RSpec.describe ChatgptAssistant::MessengerHelper do
       end
 
       it "creates a new message with user's chat_id, content and role" do
+        user.update(current_chat_id: chat.id)
+        helper.instance_variable_set(:@msg, msg)
         expect(Message).to receive(:new).with(chat_id: chat_id, content: msg.text, role: "user")
         helper.chat_success(chat_id)
       end
 
       it "calls chatter.chat with user's message, chat_id and error message" do
-        expect(helper).to receive(:chatter).with(msg.text, chat_id, error_messages[:something_went_wrong]).and_return(double("chatter", chat: "Hello, World!"))
+        helper.instance_variable_set(:@msg, msg)
+        expect(helper.chatter).to receive(:chat).with(msg.text, chat_id, helper.error_messages[:something_went_wrong])
         helper.chat_success(chat_id)
       end
 
-      it "calls parse_message with the response from chatter.chat and 4096 as max_length" do
+      it "calls parse_message with the response from chatter.chat" do
+        helper.instance_variable_set(:@msg, msg)
         expect(helper).to receive(:parse_message).with("Hello, World!", 4096).and_return(["Hello,", "World!"])
         helper.chat_success(chat_id)
       end
 
       it "calls send_message with each message from parse_message and chat_id" do
+        helper.instance_variable_set(:@msg, msg)
         expect(helper).to receive(:send_message).with("Hello,", chat_id)
         expect(helper).to receive(:send_message).with("World!", chat_id)
         helper.chat_success(chat_id)
@@ -45,16 +53,14 @@ RSpec.describe ChatgptAssistant::MessengerHelper do
       end
 
       it "calls send_message with error message and chat_id" do
-        expect(helper).to receive(:send_message).with(error_messages[:something_went_wrong], chat_id)
+        helper.instance_variable_set(:@msg, msg)
+        expect(helper).to receive(:send_message).with(helper.error_messages[:something_went_wrong], chat_id)
         helper.chat_success(chat_id)
       end
     end
   end
 
   describe "#respond_with_success" do
-    let(:chat) { double("chat", id: 1) }
-    let(:user) { double("user") }
-
     before do
       allow(helper).to receive(:user).and_return(user)
       allow(helper).to receive(:send_message)
@@ -66,7 +72,7 @@ RSpec.describe ChatgptAssistant::MessengerHelper do
     end
 
     it "calls send_message with success message" do
-      expect(helper).to receive(:send_message).with(success_messages[:chat_created])
+      expect(helper).to receive(:send_message).with(helper.success_messages[:chat_created])
       helper.respond_with_success(chat)
     end
   end
