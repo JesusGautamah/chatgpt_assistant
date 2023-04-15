@@ -1,4 +1,4 @@
-# frozen_string_literal: true 
+# frozen_string_literal: true
 
 RSpec.describe ChatgptAssistant::DiscordBot do
   let(:config) { ChatgptAssistant::Config.new }

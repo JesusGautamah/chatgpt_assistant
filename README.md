@@ -91,8 +91,8 @@ The default prefix is dgpt!
 
 - dgpt!start - shows the welcome message
 - dgpt!help - shows the help message
-- dgpt!login email:password - logs in the user
-- dgpt!register email:password - registers a new user
+- dgpt!login email:password - logs in the user. Remember to use private messages to register or login and share a server with right permissions with the bot to message it.
+- dgpt!register email:password - registers a new user, email is not verfied yet, so you can use any email, the password is encrypted with bcrypt and stored in the database with salt.
 - dgpt!list - lists the user created chatbots
 - dgpt!sl_chat CHAT TITLE - starts a chat with the chatbot with the given title
 - dgpt!new_chat CHAT TITLE - creates a new chatbot with the given title
@@ -105,8 +105,8 @@ The default prefix is dgpt!
 
 - /start - shows the welcome message
 - /help - shows the help message
-- login/email:password - logs in the user
-- register/email:password - registers a new user
+- login/email:password - logs in the user. Remember to use private messages to register or login.
+- register/email:password - registers a new user, email is not verfied yet, so you can use any email, the password is encrypted with bcrypt and stored in the database with salt. Remember to use private messages to register or login.
 - list - lists the user created chatbots
 - sl_chat/CHAT TITLE - starts a chat with the chatbot with the given title
 - new_chat/CHAT TITLE - creates a new chatbot with the given title
