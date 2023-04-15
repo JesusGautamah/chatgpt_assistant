@@ -11,7 +11,7 @@ RSpec.describe ChatgptAssistant::Chatter do
       let(:chat) { create(:chat, user: user) }
       let(:message_text) { "Hello!" }
       let(:message) { create(:message, content: message_text, chat: chat, role: "user") }
-      let(:chat_id) { 1 }
+      let(:chat_id) { chat.id }
       let(:error_message) { "I'm sorry, an error occurred." }
 
       before do
@@ -26,7 +26,7 @@ RSpec.describe ChatgptAssistant::Chatter do
       end
 
       it "creates a new message with the bot's response" do
-        expect { chatter.chat(message, chat_id, error_message) }.to change(Message, :count).by(1)
+        expect { chatter.chat(message, chat_id, error_message) }.to change(Message, :count).by(2)
       end
     end
 

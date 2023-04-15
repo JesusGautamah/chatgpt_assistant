@@ -5,7 +5,7 @@ module ChatgptAssistant
   module MessengerHelper
     def chat_success(chat_id)
       user_message = Message.new(chat_id: chat_id, content: msg.text, role: "user")
-      if user_message.save
+      if user_message&.save
         text = chatter.chat(msg.text, chat_id, error_messages[:something_went_wrong])
         mess = parse_message(text, 4096)
         mess.each { |m| send_message m, msg.chat.id }

@@ -7,7 +7,7 @@ services:
     volumes:
       - ./db_data:/var/lib/postgresql/data
     env_file:
-      - .env
+      - .env_prod
   telegram:
     build: .
     command: bash -c "exe/chatgpt_bot telegram"

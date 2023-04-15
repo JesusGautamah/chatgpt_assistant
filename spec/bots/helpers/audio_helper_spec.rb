@@ -1,37 +1,35 @@
 # frozen_string_literal: true
 
 RSpec.describe ChatgptAssistant::AudioHelper do
-  let(:dummy_class) { Class.new { include ChatgptAssistant::AudioHelper } }
-  let(:dummy_instance) { dummy_class.new }
+  let(:config) { ChatgptAssistant::Config.new }
+  let(:helper_bot) { ChatgptAssistant::TelegramBot.new(config) }
 
   describe "#recognition" do
     let(:openai_api_key) { "some_key" }
 
     it "creates an instance of ChatgptAssistant::AudioRecognition with openai_api_key" do
-      allow(dummy_instance).to receive(:openai_api_key).and_return(openai_api_key)
+      allow(helper_bot).to receive(:openai_api_key).and_return(openai_api_key)
       expect(ChatgptAssistant::AudioRecognition).to receive(:new).with(openai_api_key)
-      dummy_instance.recognition
+      helper_bot.recognition
     end
 
-    # it "memoizes the instance of ChatgptAssistant::AudioRecognition" do
-    #   expect(ChatgptAssistant::AudioRecognition).to receive(:new).once.and_return("some_instance")
-    #   2.times { dummy_instance.recognition }
-    # end
+    it "memoizes the instance of ChatgptAssistant::AudioRecognition" do
+      expect(ChatgptAssistant::AudioRecognition).to receive(:new).once.and_return("some_instance")
+      2.times { helper_bot.recognition }
+    end
   end
 
   describe "#synthesis" do
-    let(:config) { instance_double("Config") }
-
     it "creates an instance of ChatgptAssistant::AudioSynthesis with config" do
-      allow(dummy_instance).to receive(:config).and_return(config)
+      allow(helper_bot).to receive(:config).and_return(config)
       expect(ChatgptAssistant::AudioSynthesis).to receive(:new).with(config)
-      dummy_instance.synthesis
+      helper_bot.synthesis
     end
 
-    # it "memoizes the instance of ChatgptAssistant::AudioSynthesis" do
-    #   expect(ChatgptAssistant::AudioSynthesis).to receive(:new).once.and_return("some_instance")
-    #   2.times { dummy_instance.synthesis }
-    # end
+    it "memoizes the instance of ChatgptAssistant::AudioSynthesis" do
+      expect(ChatgptAssistant::AudioSynthesis).to receive(:new).once.and_return("some_instance")
+      2.times { helper_bot.synthesis }
+    end
   end
 
   describe "#transcribe_file" do
@@ -39,12 +37,12 @@ RSpec.describe ChatgptAssistant::AudioHelper do
     let(:url) { "https://example.com/some_file.wav" }
 
     before do
-      allow(dummy_instance).to receive(:recognition).and_return(recognition)
+      allow(helper_bot).to receive(:recognition).and_return(recognition)
     end
 
     it "calls transcribe_audio on the recognition instance" do
       expect(recognition).to receive(:transcribe_audio).with(url)
-      dummy_instance.transcribe_file(url)
+      helper_bot.transcribe_file(url)
     end
   end
 end
