@@ -57,7 +57,12 @@ GEM
     connection_pool (2.4.0)
     crass (1.0.6)
     csv (3.2.6)
-    database_cleaner (1.99.0)
+    database_cleaner (2.0.2)
+      database_cleaner-active_record (>= 2, < 3)
+    database_cleaner-active_record (2.1.0)
+      activerecord (>= 5.a)
+      database_cleaner-core (~> 2.0.0)
+    database_cleaner-core (2.0.1)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
     diff-lcs (1.5.0)
@@ -287,7 +292,7 @@ DEPENDENCIES
   awesome_chatgpt_actors
   aws-sdk-polly
   bcrypt
-  database_cleaner (~> 1.0)
+  database_cleaner (~> 2.0)
   discordrb (~> 3.4)
   dotenv (~> 2.0)
   factory_bot_rails (~> 6.0)
