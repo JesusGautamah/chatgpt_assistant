@@ -6,7 +6,7 @@ gem "bcrypt"
 
 gem "rake", "~> 13.0"
 
-gem "rspec", "~> 3.0", group: :test
+gem "rspec", "~> 3.12", group: :test
 
 gem "rspec-rails", "~> 4.0", group: :test
 
