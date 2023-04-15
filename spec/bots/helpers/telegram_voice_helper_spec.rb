@@ -3,7 +3,7 @@
 # RSpec.describe ChatgptAssistant::TelegramVoiceHelper do
 #   let(:config) { ChatgptAssistant::Config.new }
 #   let(:dummy_class) { ChatgptAssistant::TelegramBot.new(config) }
-#   let(:bot) { 
+#   let(:bot) {
 #   let(:msg) { double("msg", chat: double("chat", id: 123), audio: nil, voice: nil) }
 #   let(:user) { double("user", current_chat_id: 123) }
 #   let(:chatter) { double("chatter") }

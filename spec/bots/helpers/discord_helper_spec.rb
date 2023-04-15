@@ -5,10 +5,8 @@
 #   let(:config) { ChatgptAssistant::Config.new }
 #   let(:helper) { ChatgptAssistant::DiscordBot.new(config) }
 #   let(:start_message) { "#{discord_prefix}start"}
-  
 
 #   let(:user) { create(:user) }
-
 
 #   describe "#bot" do
 #     it "returns a Discordrb::Commands::CommandBot instance" do

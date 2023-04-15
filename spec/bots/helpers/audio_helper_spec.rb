@@ -20,7 +20,6 @@ RSpec.describe ChatgptAssistant::AudioHelper do
   end
 
   describe "#synthesis" do
-
     it "creates an instance of ChatgptAssistant::AudioSynthesis with config" do
       allow(helper_bot).to receive(:config).and_return(config)
       expect(ChatgptAssistant::AudioSynthesis).to receive(:new).with(config)

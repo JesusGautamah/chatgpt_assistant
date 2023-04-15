@@ -10,7 +10,6 @@ RSpec.describe ChatgptAssistant::MessengerHelper do
   let(:chat_id) { chat.id }
 
   describe "#chat_success" do
-
     context "when user message is saved successfully" do
       before do
         allow_any_instance_of(Message).to receive(:save).and_return(true)
