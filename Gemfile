@@ -8,7 +8,7 @@ gem "rake", "~> 13.0"
 
 gem "rspec", "~> 3.0", group: :test
 
-gem "rspec-rails", "~> 4.0", group: :test
+gem "rspec-rails", "~> 6.0", group: :test
 
 gem "simplecov", "~> 0.21", group: :test
 
