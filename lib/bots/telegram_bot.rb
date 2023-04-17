@@ -8,8 +8,6 @@ module ChatgptAssistant
   class TelegramBot < ApplicationBot
     def start
       bot.listen do |message|
-        next if message.chat.type != "private" # disable group and channel messages, we will enable it later
-
         @msg = message
         @visitor = telegram_visited?(@msg.chat.id)
         next unless telegram_text_or_audio?
@@ -42,10 +40,12 @@ module ChatgptAssistant
         when "/stop"
           stop_event
         when nil
-          nil_event
+          raise NilError
         else
           action_events
         end
+      rescue NilError => e
+        send_message e.message, msg.chat.id
       end
 
       def start_event
@@ -57,93 +57,124 @@ module ChatgptAssistant
       end
 
       def hist_event
-        return not_logged_in_message unless user
-        return no_chat_selected_message unless user.current_chat
-        return no_messages_founded_message if user.current_chat.messages.count.zero?
+        raise UserNotLoggedInError if user.nil?
+        raise NoChatSelectedError if user.current_chat.nil?
+        raise NoMessagesFoundedError if user.current_chat.messages.count.zero?
 
-        telegram_user_history.each do |m|
+        user.chat_history.each do |m|
           send_message m, msg.chat.id
         end
+      rescue NoChatSelectedError, UserNotLoggedInError, NoMessagesFoundedError => e
+        send_message e.message, msg.chat.id
       end
 
       def list_event
-        return unless valid_for_list_action?
+        raise UserNotLoggedInError if user.nil?
+        raise NoChatsFoundedError if user.chats.count.zero?
 
-        send_message commom_messages[:chat_list], msg.chat.id
+        send_message common_messages[:chat_list], msg.chat.id
         chats_str = ""
         user.chats.each_with_index { |c, i| chats_str += "Chat #{i + 1} - #{c.title}\n" }
         send_message chats_str, msg.chat.id
+      rescue NoChatsFoundedError, UserNotLoggedInError => e
+        send_message e.message, msg.chat.id
       end
 
       def action_events
-        return login_event if msg.text.include?("login/")
-        return register_event if msg.text.include?("register/")
+        return auth_events if auth_event?
         return new_chat_event if msg.text.include?("new_chat/")
         return select_chat_event if msg.text.include?("sl_chat/")
         return telegram_chat_event unless telegram_actions?
 
-        invalid_command_error_message
+        raise InvalidCommandError
+      rescue InvalidCommandError => e
+        send_message e.message, msg.chat.id
+      end
+
+      def auth_event?
+        msg.text.include?("login/") || msg.text.include?("register/") || msg.text.include?("sign_out/")
+      end
+
+      def auth_events
+        return login_event if msg.text.include?("login/")
+        return register_event if msg.text.include?("register/")
+        return sign_out_event if msg.text.include?("sign_out/")
       end
 
       def login_event
+        raise UserLoggedInError if user
+
         user_info = msg.text.split("/").last
         email, password = user_info.split(":")
         case telegram_user_auth(email, password, msg.chat.id)
         when "user not found"
-          user_not_found_error_message
+          raise UserNotFoundError
         when "wrong password"
-          wrong_password_error_message
+          raise WrongPasswordError
         when email
           user_logged_in_message
         end
+      rescue UserNotFoundError, WrongPasswordError, UserLoggedInError => e
+        send_message e.message, msg.chat.id
       end
 
       def register_event
         user_info = msg.text.split("/").last
+        raise NoRegisterInfoError if user_info.nil?
+        raise UserLoggedInError if user
+
         email, password = user_info.split(":")
-        registered_email = telegram_user_create visitor.id, email, password
-        registered_email == email ? user_created_message : user_creation_error_message
+        raise NoRegisterInfoError if email.nil? || password.nil?
+
+        RegisterJob.perform_async(email, password, visitor.telegram_id)
+      rescue NoRegisterInfoError, UserLoggedInError => e
+        send_message e.message, msg.chat.id
+      end
+
+      def sign_out_event
+        raise UserNotLoggedInError if user.nil?
+
+        user.update(telegram_id: nil)
+        send_message success_messages[:user_logged_out], msg.chat.id
+      rescue UserNotLoggedInError => e
+        send_message e.message, msg.chat.id
       end
 
       def new_chat_event
-        return not_logged_in_message unless user
+        raise UserNotLoggedInError if user.nil?
 
-        telegram_create_chat
+        NewChatJob.perform_async(msg.text.split("/").last, user.id, msg.chat.id)
+      rescue UserNotLoggedInError => e
+        send_message e.message, msg.chat.id
       end
 
       def select_chat_event
-        return not_logged_in_message unless user
+        raise UserNotLoggedInError if user.nil?
 
         title = msg.text.split("/").last
         chat = user.chat_by_title(title)
-        return chat_not_found_message unless chat
+        raise ChatNotFoundError if chat.nil?
 
-        user.update(current_chat_id: chat.id)
+        raise ChatNotFoundError unless user.update(current_chat_id: chat.id)
+
         send_message success_messages[:chat_selected], msg.chat.id
-      end
-
-      def stop_event
-        send_message commom_messages[:stop], msg.chat.id
-        bot.api.leave_chat(chat_id: msg.chat.id)
-      end
-
-      def nil_event
-        send_message error_messages[:nil], msg.chat.id
+      rescue UserNotLoggedInError, ChatNotFoundError => e
+        send_message e.message, msg.chat.id
       end
 
       def audio_event
-        return not_logged_in_message unless user
-        return no_chat_selected_message if user.current_chat_id.nil?
+        raise UserNotLoggedInError if user.nil?
+        raise NoChatSelectedError if user.current_chat.nil?
 
         user_audio = transcribe_file(telegram_audio_url)
         message = Message.new(content: user_audio[:text], chat_id: user.current_chat_id, role: "user")
-        if message.save
-          ai_response = telegram_process_ai_voice(user_audio[:file])
-          telegram_send_voice_message(voice: ai_response[:voice], text: ai_response[:text])
-          delete_file ai_response[:voice]
-        else
-          send_message error_messages[:message_creation_error], msg.chat.id
-        end
+        raise MessageNotSavedError unless message.save
+
+        ai_response = telegram_process_ai_voice(user_audio[:file])
+        telegram_send_voice_message(voice: ai_response[:voice], text: ai_response[:text])
+        delete_file ai_response[:voice]
+      rescue UserNotLoggedInError, NoChatSelectedError, MessageNotSavedError => e
+        send_message e.message, msg.chat.id
       end
   end
 end

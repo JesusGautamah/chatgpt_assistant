@@ -25,11 +25,11 @@ module ChatgptAssistant
     end
 
     def telegram_send_start_message
-      send_message commom_messages[:start], msg.chat.id
+      send_message common_messages[:start], msg.chat.id
       help_message = help_messages.join("\n").to_s
       send_message help_message, msg.chat.id
-      send_message commom_messages[:start_helper], msg.chat.id
-      send_message commom_messages[:start_sec_helper], msg.chat.id
+      send_message common_messages[:start_helper], msg.chat.id
+      send_message common_messages[:start_sec_helper], msg.chat.id
     end
 
     def telegram_create_chat
@@ -52,10 +52,6 @@ module ChatgptAssistant
       return send_message "Something went wrong", msg.chat.id unless chat
 
       chat.save ? chat_created_message(chat) : chat_creation_failed_message
-    end
-
-    def telegram_user_history
-      user.current_chat.messages.last(10).map { |m| "#{m.role}: #{m.content}\nat: #{m.created_at}" }
     end
 
     def telegram_text_or_audio?

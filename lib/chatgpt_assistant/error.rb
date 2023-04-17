@@ -10,7 +10,16 @@ module ChatgptAssistant
     end
   end
 
-  # Nil Error
+  # No User Error
+  class NoRegisterInfoError < StandardError
+    def initialize(message = load_error_context[:no_register_info])
+      super(message)
+    end
+
+    include LoadError
+  end
+
+  # Nil Command Error
   class NilError < StandardError
     def initialize(message = load_error_context[:nil])
       super(message)
@@ -130,6 +139,15 @@ module ChatgptAssistant
   # User Not Registered Error
   class UserNotRegisteredError < StandardError
     def initialize(message = load_error_context[:user_not_registered])
+      super(message)
+    end
+
+    include LoadError
+  end
+
+  # User Logged In Error
+  class UserLoggedInError < StandardError
+    def initialize(message = load_error_context[:user_logged_in])
       super(message)
     end
 

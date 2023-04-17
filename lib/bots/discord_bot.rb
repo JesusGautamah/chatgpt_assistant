@@ -44,7 +44,7 @@ module ChatgptAssistant
         bot.command :login do |event|
           @message = event.message.content.split[1]
           @evnt = event
-          message.nil? ? event.respond(commom_messages[:login]) : login_action
+          message.nil? ? event.respond(common_messages[:login]) : login_action
           "OK"
         end
       end
@@ -53,7 +53,7 @@ module ChatgptAssistant
         bot.command :register do |event|
           @message = event.message.content.split[1]
           @evnt = event
-          message.nil? ? event.respond(commom_messages[:register]) : register_action
+          message.nil? ? event.respond(common_messages[:register]) : register_action
           "OK"
         end
       end
@@ -70,9 +70,8 @@ module ChatgptAssistant
       def hist_event
         bot.command :hist do |event|
           @evnt = event
-          event.respond error_messages[:user_not_logged_in] if user.nil?
-          title = event.message.content.split[1..].join(" ")
-          @chat = user.chat_by_title(title)
+          @user = find_user(discord_id: event.user.id)
+          @chat = user.current_chat
           event.respond error_messages[:chat_not_found] if chat.nil? && user
           hist_action if user && chat
           "OK"
@@ -130,7 +129,7 @@ module ChatgptAssistant
             @chat = Chat.where(id: user.current_chat_id).last
             voice_connect_checker_action
             voice_connection_checker_action
-            discord_voice_bot_connect
+            VoiceConnectJob.perform_async(event.user.voice_channel.id)
           else
             event.respond error_messages[:user_not_logged_in]
           end
@@ -164,6 +163,7 @@ module ChatgptAssistant
       def private_message_event
         bot.message do |event|
           @evnt = event
+          @visitor = discord_visited?(@evnt.user.id)
           next if discord_next_action?
 
           @message = event.message.content
