@@ -11,6 +11,9 @@ when "telegram"
   ChatgptAssistant::Main.new("telegram").start
 when "discord"
   ChatgptAssistant::Main.new("discord").start
+when "sidekiq"
+  # start sidekiq with the lib/chatgpt_assistant/sidekiq.rb
+  system "bundle exec sidekiq -r ./lib/chatgpt_assistant/sidekiq.rb -C ./lib/chatgpt_assistant/sidekiq.yml"
 when "migrate"
   ChatgptAssistant::Config.new.migrate
 end

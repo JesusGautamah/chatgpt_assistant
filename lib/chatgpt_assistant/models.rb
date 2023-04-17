@@ -25,15 +25,15 @@ class User < ActiveRecord::Base
   belongs_to :tel_visitor, optional: true, foreign_key: "telegram_id", class_name: "Visitor"
   belongs_to :dis_visitor, optional: true, foreign_key: "discord_id", class_name: "Visitor"
 
-  validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }, length: { maximum: 100 }
-  validates :role, presence: true
-  validates :open_chats, presence: true
-  validates :closed_chats, presence: true
-  validates :total_chats, presence: true
-  validates :total_messages, presence: true
-  validates :password, presence: true
+  validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }, length: { maximum: 100 }, on: :create
+  validates :role, presence: true, on: :create
+  validates :open_chats, presence: true, on: :create
+  validates :closed_chats, presence: true, on: :create
+  validates :total_chats, presence: true, on: :create
+  validates :total_messages, presence: true, on: :create
+  validates :password, presence: true, on: :create
 
-  before_save :encrypt_password
+  before_save :encrypt_password, if: :password
 
   has_many :chats
 
@@ -55,6 +55,10 @@ class User < ActiveRecord::Base
   def chat_by_title(title)
     chats.find_by(title: title)
   end
+
+  def chat_history
+    current_chat.messages.last(10).map { |m| "#{m.role}: #{m.content}\nat: #{m.created_at}" }
+  end
 end
 
 # Chat model
@@ -71,15 +75,14 @@ class Chat < ActiveRecord::Base
   def init_chat_if_actor_provided
     return if actor.nil?
 
-    messages.create(content: prompt, role: "user")
-    messages.create(content: "Hello, I'm #{actor}. I will follow #{prompt}", role: "assistant")
+    messages.create(content: prompt, role: "system")
   end
 end
 
 # Message model
 class Message < ActiveRecord::Base
   validates :content, presence: true
-  enum role: { user: 0, assistant: 1 }
+  enum role: { user: 0, assistant: 1, system: 2 }
 
   belongs_to :chat
 end

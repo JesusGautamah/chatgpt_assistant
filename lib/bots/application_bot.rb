@@ -1,21 +1,31 @@
 # frozen_string_literal: true
 
+# helpers
 require_relative "helpers/messenger_helper"
 require_relative "helpers/authentication_helper"
 require_relative "helpers/visit_helper"
 require_relative "helpers/audio_helper"
-require_relative "helpers/logger_action_helper"
 require_relative "helpers/search_helper"
 require_relative "helpers/validation_helper"
 require_relative "helpers/file_helper"
+
+# jobs
+require_relative "jobs/register_job"
+require_relative "jobs/new_chat_job"
+require_relative "jobs/voice_connect_job"
+
+# services
+require_relative "services/register_service"
+require_relative "services/new_chat_service"
+require_relative "services/voice_connect_service"
+
 module ChatgptAssistant
-  # This class is responsible to contain the shared variables between the bot classes
+  # This class is responsible to contain the shared attributes and methods
   class ApplicationBot
     include MessengerHelper
     include AuthenticationHelper
     include VisitHelper
     include AudioHelper
-    include LoggerActionHelper
     include SearchHelper
     include ValidationHelper
     include FileHelper

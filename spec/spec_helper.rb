@@ -44,8 +44,8 @@ RSpec.configure do |config|
     end
   end
 
-  Shoulda::Matchers.configure do |config|
-    config.integrate do |with|
+  Shoulda::Matchers.configure do |conf|
+    conf.integrate do |with|
       with.test_framework :rspec
       with.library :active_model
       with.library :active_record

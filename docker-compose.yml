@@ -1,5 +1,11 @@
 version: "3.3"
 services:
+  redis:
+    image: redis:6-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis_data:/data
   db:
     image: postgres:12.2
     ports:
@@ -30,5 +36,17 @@ services:
       - .env
     depends_on:
       - db
+  sidekiq:
+    build: .
+    command: bash -c "exe/chatgpt_bot sidekiq"
+    volumes:
+      - .:/chatgpt_assistant
+    environment:
+      POSTGRES_HOST: db
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis
 volumes:
   postgres:

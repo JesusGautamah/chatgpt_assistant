@@ -42,6 +42,7 @@ module ChatgptAssistant
           chat_created: "Chat criado com sucesso!",
           chat_selected: "Chat selecionado com sucesso!",
           user_logged_in: "Login realizado com sucesso!",
+          user_logged_out: "Logout realizado com sucesso!",
           voice_channel_connected: "O bot entrou no canal de voz com sucesso!"
         }
       end
@@ -55,6 +56,7 @@ module ChatgptAssistant
           user_already_exists: "O usuário que você digitou já existe. Tente novamente",
           chat_already_exists: "Você já possui um chat com este titulo. Tente novamente",
 
+          no_register_info: "Você não digitou o email e a senha. Tente novamente",
           sign_up_error: "Erro ao criar usuário. Tente novamente",
           chat_not_created_error: "Erro ao criar chat. Tente novamente",
           message_not_created_error: "Erro ao criar mensagem. Tente novamente",
@@ -65,6 +67,7 @@ module ChatgptAssistant
           chat_not_found: "Chat não encontrado",
           user_not_found: "O usuário que você digitou não existe. Tente novamente",
           user_not_registered: "O usuário não está registrado no sistema",
+          user_logged_in: "Usuário está logado no sistema, faça logout para continuar",
           user_not_logged_in: "Usuário não logado",
 
           user_not_in_voice_channel: "Você não está em um canal de voz.",
@@ -122,7 +125,9 @@ module ChatgptAssistant
           user_created: "User created successfully!",
           chat_created: "Chat created successfully!",
           chat_selected: "Chat selected successfully!",
-          user_logged_in: "Login successfully!"
+          user_logged_in: "Login successfully!",
+          user_logged_out: "Logout successfully!",
+          voice_channel_connected: "The bot entered the voice channel successfully!"
         }
       end
 
@@ -135,6 +140,7 @@ module ChatgptAssistant
           user_already_exists: "The user you typed already exists. Try again",
           chat_already_exists: "You already have a chat with this title. Try again",
 
+          no_register_info: "You did not type the email and password. Try again",
           sign_up_error: "Error creating user. Try again",
           chat_not_created_error: "Error creating chat. Try again",
           message_not_created_error: "Error creating message. Try again",
@@ -145,6 +151,7 @@ module ChatgptAssistant
           chat_not_found: "Chat not found",
           user_not_found: "The user you typed does not exist. Try again",
           user_not_registered: "The user is not registered in the system",
+          user_logged_in: "User is logged in the system, do logout to continue",
           user_not_logged_in: "User not logged in",
 
           user_not_in_voice_channel: "You are not in a voice channel.",

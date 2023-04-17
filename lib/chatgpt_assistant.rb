@@ -17,6 +17,8 @@ require "aws-sdk-polly"
 require "telegram/bot"
 require "ibm_watson"
 require "discordrb"
+require "sidekiq"
+require "sidekiq-scheduler"
 require "faraday"
 require "bcrypt"
 

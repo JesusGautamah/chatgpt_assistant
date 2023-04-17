@@ -12,8 +12,8 @@ module ChatgptAssistant
     end
 
     def start_action
-      send_message commom_messages[:start_helper].gsub("register/", "gpt!register ")
-      send_message commom_messages[:start_sec_helper].gsub("login/", "gpt!login ")
+      send_message common_messages[:start_helper].gsub("register/", "gpt!register ")
+      send_message common_messages[:start_sec_helper].gsub("login/", "gpt!login ")
     end
 
     def login_action
@@ -46,7 +46,7 @@ module ChatgptAssistant
 
     def list_action
       chats_title = user.chats.map(&:title)
-      send_message commom_messages[:chat_list]
+      send_message common_messages[:chat_list]
       send_message chats_title.join("\n")
     end
 

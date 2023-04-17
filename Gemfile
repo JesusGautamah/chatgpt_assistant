@@ -40,8 +40,6 @@ gem "activerecord"
 
 gem "activesupport"
 
-# gem "actionmailer"
-
 gem "redis"
 
 gem "sidekiq"
@@ -61,3 +59,5 @@ gem "ibm_watson"
 gem "aws-sdk-polly"
 
 gem "awesome_chatgpt_actors"
+
+gem "sidekiq-expiring-jobs"

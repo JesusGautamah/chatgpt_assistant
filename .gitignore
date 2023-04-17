@@ -19,3 +19,5 @@
 /db_data
 /db_data/*
 /chatgpt_assistant.code-workspace
+/redis_data
+/redis_data/*
