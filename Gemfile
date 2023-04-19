@@ -24,7 +24,7 @@ gem "database_cleaner", "~> 2.0", group: :test
 
 gem "dotenv", "~> 2.0", group: :test
 
-gem "rubocop", "~> 1.49"
+gem "rubocop", "~> 1.50"
 
 gem "rubocop-rspec", "~> 2.20"
 
