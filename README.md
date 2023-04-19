@@ -6,15 +6,14 @@
 
 This Ruby gem provides an easy way to initialize a client for Telegram and Discord bots using the ChatGPT API, audio transcription, IBM Cloud Text to Speech, and AWS Polly, creating an assistant that can answer questions in text and voice and have a conversation with the user.
 
-#### Languages supported currently: en, pt - contributions are welcome!
-You can contribute by adding your language to the DefaultMessages class in lib/chatgpt_assistant/default_messages.rb. You can also add your language to the list of languages in the README.md file.
-Pull request from language/YOUR_LANGUAGE to main, remember to name your pull request as "Add YOUR_LANGUAGE support".
+#### Languages supported currently: en, pt
 
 Other contributions are welcome too!
 Remember to give a star to this repo if you like it!
 ## Requirements
 
-- Ruby > 2.6.0
+- Ruby > 2.6.0 - for the gem who can create bots projects in your machine
+- Ruby 3.2.2 - inside the docker contianer or for run the bots in your machine
 - Docker
 - Docker Compose
 - PostgreSQL
@@ -87,7 +86,7 @@ After starting the Docker Compose services, you can use the features of the gem 
 ## Discord Bot Commands
 
 The discord commands prefix can be changed in the .env file.
-The default prefix is dgpt!
+The default prefix is !!
 
 - dgpt!start - shows the welcome message
 - dgpt!help - shows the help message
@@ -97,9 +96,6 @@ The default prefix is dgpt!
 - dgpt!sl_chat CHAT TITLE - starts a chat with the chatbot with the given title
 - dgpt!new_chat CHAT TITLE - creates a new chatbot with the given title
 - dgpt!ask TEXT - sends a text to the chatbot
-- dgpt!connect - connects the chat bot to the current channel
-- dgpt!disconnect - disconnects the chat bot from the current channel
-- dgpt!speak TEXT - sends a text to the chatbot and gets the response in voice
 
 ## Telegram Bot Commands
 
