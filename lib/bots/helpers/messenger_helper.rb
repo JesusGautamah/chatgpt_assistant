@@ -53,27 +53,27 @@ module ChatgptAssistant
 
     def user_logged_message
       user.update(telegram_id: msg.chat.id)
-      bot.api&.send_message(chat_id: msg.chat.id, text: success_messages[:user_logged_in])
+      bot.api&.send_message(chat_id: msg.chat.id, text: success_messages[:user_logged_in]) if bot.respond_to?(:api)
       evnt&.respond success_messages[:user_logged_in] if evnt.present?
     end
 
     def invalid_command_error_message
-      bot.api&.send_message(chat_id: msg.chat.id, text: error_messages[:invalid_command])
+      bot.api&.send_message(chat_id: msg.chat.id, text: error_messages[:invalid_command]) if bot.respond_to?(:api)
       evnt&.respond error_messages[:invalid_command]
     end
 
     def user_not_found_error_message
-      bot.api&.send_message(chat_id: msg.chat.id, text: error_messages[:user_not_found]) if bot.api.present?
+      bot.api&.send_message(chat_id: msg.chat.id, text: error_messages[:user_not_found]) if bot.respond_to?(:api)
       evnt&.respond error_messages[:user_not_found] if evnt.present?
     end
 
     def user_created_message
-      bot.api&.send_message(chat_id: msg.chat.id, text: success_messages[:user_created]) if bot.api.present?
+      bot.api&.send_message(chat_id: msg.chat.id, text: success_messages[:user_created]) if bot.respond_to?(:api)
       evnt&.respond success_messages[:user_created] if evnt.present?
     end
 
     def user_creation_error_message
-      bot.api&.send_message(chat_id: msg.chat.id, text: error_messages[:user_creation]) if bot.api.present?
+      bot.api&.send_message(chat_id: msg.chat.id, text: error_messages[:user_creation]) if bot.respond_to?(:api)
       evnt&.respond error_messages[:user_creation] if evnt.present?
     end
 
@@ -87,47 +87,46 @@ module ChatgptAssistant
     def telegram_created(chat)
       bot.api.send_message(chat_id: msg.chat.id, text: "Intructions sended to actor:\n#{chat.prompt}") unless chat.actor.nil?
       bot.api.send_message(chat_id: msg.chat.id, text: "Response from assistant:\n#{chat.messages[1].content}") unless chat.actor.nil?
-      bot.api.send_message(chat_id: msg.chat.id, text: success_messages[:chat_created]) if bot.api.present?
+      bot.api.send_message(chat_id: msg.chat.id, text: success_messages[:chat_created]) if bot.respond_to?(:api)
     end
 
     def discord_created(chat)
       evnt.respond "Intructions sended to actor:\n#{chat.prompt}" unless chat.actor.nil?
-      evnt.respond "Response from assistant:\n#{chat.messages[1].content}" unless chat.actor.nil?
       evnt.respond success_messages[:chat_created] if evnt.present?
     end
 
     def not_logged_in_message
-      bot.api&.send_message(chat_id: msg.chat.id, text: error_messages[:user_not_logged_in])
+      bot.api&.send_message(chat_id: msg.chat.id, text: error_messages[:user_not_logged_in]) if bot.respond_to?(:api)
       evnt&.respond(error_messages[:user_not_logged_in])
     end
 
     def wrong_password_error_message
-      bot.api&.send_message(chat_id: msg.chat.id, text: error_messages[:password])
+      bot.api&.send_message(chat_id: msg.chat.id, text: error_messages[:password]) if bot.respond_to?(:api)
       evnt&.respond(error_messages[:password])
     end
 
     def chat_not_found_message
-      bot.api&.send_message(chat_id: msg.chat.id, text: error_messages[:chat_not_found])
+      bot.api&.send_message(chat_id: msg.chat.id, text: error_messages[:chat_not_found]) if bot.respond_to?(:api)
       evnt&.respond(error_messages[:chat_not_found])
     end
 
     def no_chat_selected_message
-      bot&.api&.send_message(chat_id: msg.chat.id, text: error_messages[:no_chat_selected])
+      bot&.api&.send_message(chat_id: msg.chat.id, text: error_messages[:no_chat_selected]) if bot.respond_to?(:api)
       evnt&.respond(error_messages[:no_chat_selected])
     end
 
     def no_messages_founded_message
-      bot&.api&.send_message(chat_id: msg.chat.id, text: error_messages[:no_messages_founded])
+      bot&.api&.send_message(chat_id: msg.chat.id, text: error_messages[:no_messages_founded]) if bot.respond_to?(:api)
       evnt&.respond(error_messages[:no_messages_founded])
     end
 
     def chat_creation_failed_message
-      bot&.api&.send_message(chat_id: msg.chat.id, text: error_messages[:chat_creation_failed])
+      bot&.api&.send_message(chat_id: msg.chat.id, text: error_messages[:chat_creation_failed]) if bot.respond_to?(:api)
       evnt&.respond(error_messages[:chat_creation_failed])
     end
 
     def user_logged_in_message
-      bot.api&.send_message(chat_id: msg.chat.id, text: success_messages[:user_logged_in])
+      bot.api&.send_message(chat_id: msg.chat.id, text: success_messages[:user_logged_in]) if bot.respond_to?(:api)
       evnt&.respond(success_messages[:user_logged_in])
     end
   end
