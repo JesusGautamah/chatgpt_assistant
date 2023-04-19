@@ -62,6 +62,11 @@ Remember to edit docker-compose.prod.yml when deploying to production.
 rake compose:up && sudo docker compose run --rm telegram exe/chatgpt_bot migrate
 ```
 
+## Install [Awesome Chatgpt Actors](https://github.com/JesusGautamah/awesome-chatgpt-actors)
+```bash
+rake chatgpt_actors:install
+```
+
 ## Usage
 
 You can start the Docker Compose services required for the gem using the rake tasks provided by the Lucy Dockerunner gem. These tasks include compose:up, compose:down, compose:status, compose:shell, compose:restart, and others listed previously.
