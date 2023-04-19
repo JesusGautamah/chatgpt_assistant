@@ -27,7 +27,7 @@ module ChatgptAssistant
     end
 
     def discord_next_action?
-      return true if evnt.channel.type != 1
+      return true if evnt.channel.type != 1 && evnt.channel.name != "ai-spaces"
 
       %w[login register start help new_chat sl_chat ask list hist connect disconnect speak].each do |action|
         return true if evnt.message.content.include?("#{discord_prefix}#{action}")

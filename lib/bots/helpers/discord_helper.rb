@@ -95,7 +95,7 @@ module ChatgptAssistant
       return send_message "chat title already exists" if user.chat_by_title(title)
 
       actor_name = actors[mode.to_i - 1] if mode
-      actor = AwesomeChatgptActors::Actor.new(prompt_type: actor_name) if actor_name
+      actor = AwesomeChatgptActors::Actor.new(role: actor_name, language: config.language) if actor_name
       chat = Chat.new(user_id: user.id, status: 0, title: title, actor: actor_name, prompt: actor.prompt) if actor
       chat = Chat.new(user_id: user.id, status: 0, title: title) unless actor
       return send_message "Something went wrong", msg.chat.id unless chat

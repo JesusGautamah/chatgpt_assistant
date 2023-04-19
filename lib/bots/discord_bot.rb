@@ -16,9 +16,6 @@ module ChatgptAssistant
       new_chat_event
       sl_chat_event
       ask_event
-      voice_connect_event
-      disconnect_event
-      speak_event
       private_message_event
       bot_init
     end
