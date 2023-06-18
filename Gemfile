@@ -26,7 +26,7 @@ gem "dotenv", "~> 2.0", group: :test
 
 gem "rubocop", "~> 1.50"
 
-gem "rubocop-rspec", "~> 2.20"
+gem "rubocop-rspec", "~> 2.22"
 
 gem "telegram-bot-ruby", "~> 0.16"
 
