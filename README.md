@@ -10,7 +10,7 @@ This Ruby gem provides an easy way to initialize a client for Telegram and Disco
 #### Telegram voice messages are working fine
 #### Languages supported currently: en, pt
 
-#### Registration and Account Confirmation only on telegram, sign in with the same credentials on discord after registering on telegram.
+#### Registration and Account Confirmation are avaiable on telegram only, sign in with the same credentials on discord after registering on telegram.
 
 Other contributions are welcome too!
 Remember to give a star to this repo if you like it!
