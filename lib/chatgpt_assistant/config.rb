@@ -27,14 +27,6 @@ module ChatgptAssistant
       @aws_secret_access_key = ENV.fetch("AWS_SECRET_ACCESS_KEY", nil)
       @aws_region = ENV.fetch("AWS_REGION", nil)
       @discord_prefix = ENV.fetch("DISCORD_PREFIX", nil)
-
-      @smtp_address = ENV.fetch("SMTP_ADDRESS", nil)
-      @smtp_port = ENV.fetch("SMTP_PORT", nil)
-      @smtp_domain = ENV.fetch("SMTP_DOMAIN", nil)
-      @smtp_user_name = ENV.fetch("SMTP_USER_NAME", nil)
-      @smtp_password = ENV.fetch("SMTP_PASSWORD", nil)
-      @smtp_authentication = ENV.fetch("SMTP_AUTHENTICATION", nil)
-      @smtp_enable_starttls_auto = ENV.fetch("SMTP_ENABLE_STARTTLS_AUTO", nil)
     end
 
     attr_reader :openai_api_key, :telegram_token, :discord_token, :ibm_api_key, :ibm_url,
@@ -79,23 +71,6 @@ module ChatgptAssistant
       ChatMigration.new.migrate(:up)
       MessageMigration.new.migrate(:up)
       ErrorMigration.new.migrate(:up)
-    end
-
-    def smtp_connection
-      ActionMailer::Base.raise_delivery_errors = true
-      ActionMailer::Base.view_paths = [
-        File.join(File.expand_path(__dir__), "mailers")
-      ]
-      ActionMailer::Base.delivery_method = :smtp
-      ActionMailer::Base.smtp_settings = {
-        address: smtp_address,
-        port: smtp_port,
-        domain: smtp_domain,
-        user_name: smtp_user_name,
-        password: smtp_password,
-        authentication: smtp_authentication,
-        enable_starttls_auto: smtp_enable_starttls_auto == "true"
-      }
     end
 
     private
