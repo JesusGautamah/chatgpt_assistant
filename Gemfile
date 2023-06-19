@@ -2,7 +2,7 @@
 
 source "https://rubygems.org"
 
-gem "bcrypt"
+gem "bcrypt", "~> 3.1"
 
 gem "rake", "~> 13.0"
 
@@ -10,54 +10,56 @@ gem "rspec", "~> 3.12", group: :test
 
 gem "rspec-rails", "~> 6.0", group: :test
 
-gem "simplecov", "~> 0.21", group: :test
+gem "simplecov", "~> 0.22", group: :test
 
-gem "vcr", "~> 6.0", group: :test
+gem "vcr", "~> 6.1", group: :test
 
 gem "shoulda-matchers", "~> 5.3", group: :test
 
-gem "factory_bot_rails", "~> 6.0", group: :test
+gem "factory_bot_rails", "~> 6.2", group: :test
 
-gem "faker", "~> 2.0", group: :test
+gem "faker", "~> 2.23", group: :test
 
 gem "database_cleaner", "~> 2.0", group: :test
 
-gem "dotenv", "~> 2.0", group: :test
+gem "dotenv", "~> 2.8", group: :test
 
 gem "rubocop", "~> 1.50"
 
 gem "rubocop-rspec", "~> 2.22"
 
-gem "telegram-bot-ruby", "~> 0.16"
+gem "telegram-bot-ruby", "~> 1.0"
 
 gem "discordrb", "~> 3.4"
 
-gem "faraday"
+gem "faraday", "~> 2.7"
 
-gem "activemodel"
+gem "activemodel", "~> 6.1"
 
-gem "activerecord"
+gem "activerecord", "~> 6.1"
 
-gem "activesupport"
+gem "activesupport", "~> 6.1"
 
-gem "redis"
+gem "actionmailer", "~> 6.1"
 
-gem "sidekiq"
+gem "redis", "~> 5.0"
 
-gem "sidekiq-scheduler"
+gem "sidekiq", "~> 7.0"
 
-gem "activerecord-import"
+gem "sidekiq-scheduler", "~> 5.0"
 
-gem "pg"
+gem "activerecord-import", "~> 1.4"
 
-gem "streamio-ffmpeg"
+gem "pg", "~> 1.5"
 
-gem "lucy_dockerunner"
+gem "streamio-ffmpeg", "~> 3.0"
 
-gem "ibm_watson"
+gem "lucy_dockerunner", "~> 0.2"
 
-gem "aws-sdk-polly"
+gem "ibm_watson", "~> 2.2"
 
-gem "awesome_chatgpt_actors"
+gem "aws-sdk-polly", "~> 1.69"
 
-gem "sidekiq-expiring-jobs"
+gem "awesome_chatgpt_actors", "~> 0.1"
+
+gem "sidekiq-expiring-jobs", "~> 0.1"

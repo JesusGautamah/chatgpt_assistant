@@ -9,8 +9,8 @@ module ChatgptAssistant
 
     sidekiq_options queue: :default
 
-    def perform(email, password, chat_id)
-      RegisterService.new(email, password, chat_id).call
+    def perform(email, password, name, chat_id)
+      RegisterService.new(email, password, name, chat_id).call
     end
   end
 end

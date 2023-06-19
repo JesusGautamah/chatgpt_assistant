@@ -9,7 +9,6 @@ module ChatgptAssistant
     def start
       start_event
       login_event
-      register_event
       list_event
       hist_event
       help_event
@@ -46,20 +45,11 @@ module ChatgptAssistant
         end
       end
 
-      def register_event
-        bot.command :register do |event|
-          @message = event.message.content.split[1]
-          @evnt = event
-          message.nil? ? event.respond(common_messages[:register]) : register_action
-          "OK"
-        end
-      end
-
       def list_event
         bot.command :list do |event|
           @evnt = event
           @user = find_user(discord_id: event.user.id)
-          valid_for_list_action? ? list_action : ""
+          list_action if valid_for_list_action?
           "OK"
         end
       end
@@ -88,7 +78,8 @@ module ChatgptAssistant
           @evnt = event
           @user = find_user(discord_id: event.user.id)
           event.respond error_messages[:user_not_logged_in] if user.nil?
-          create_chat_action if user
+          event.respond error_messages[:account_not_verified] if user && !user.active?
+          create_chat_action if user&.active?
           "OK"
         end
       end
@@ -99,8 +90,8 @@ module ChatgptAssistant
           chat_to_select = event.message.content.split[1..].join(" ")
           @user = find_user(discord_id: event.user.id)
           event.respond error_messages[:user_not_logged_in] if user.nil?
-
-          sl_chat_action(chat_to_select) if user
+          event.respond error_messages[:account_not_verified] if user && !user.active?
+          sl_chat_action(chat_to_select) if user&.active?
           "OK"
         end
       end
@@ -111,7 +102,8 @@ module ChatgptAssistant
           @message = event.message.content.split[1..].join(" ")
           @user = find_user(discord_id: event.user.id)
           event.respond error_messages[:user_not_logged_in] if user.nil?
-          ask_action if user
+          event.respond error_messages[:account_not_verified] if user && !user.active?
+          ask_action if user&.active?
           "OK"
         end
       end
@@ -120,13 +112,15 @@ module ChatgptAssistant
         bot.command :connect do |event|
           @evnt = event
           @user = find_user(discord_id: event.user.id)
-          if user&.current_chat_id.nil?
+          if user && !user.active?
+            event.respond error_messages[:account_not_verified]
+          elsif user&.current_chat_id.nil?
             event.respond error_messages[:no_chat_selected]
           elsif user&.current_chat_id
             @chat = Chat.where(id: user.current_chat_id).last
             voice_connect_checker_action
             voice_connection_checker_action
-            VoiceConnectJob.perform_async(event.user.voice_channel.id)
+            bot.voice_connect(event.user.voice_channel)
           else
             event.respond error_messages[:user_not_logged_in]
           end

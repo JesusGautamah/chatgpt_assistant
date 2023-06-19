@@ -27,15 +27,20 @@ class UserMigration < ActiveRecord::Migration[5.2]
     create_table :users do |t|
       t.string :telegram_id, foreign_key: true, class_name: "Visitor"
       t.string :discord_id, foreign_key: true, class_name: "Visitor"
+      t.string :name, limit: 100
       t.string :email, null: false, limit: 100
+      t.string :phone, limit: 100
       t.string :password_hash, null: false, limit: 100
       t.string :password_salt, null: false, limit: 100
+      t.string :token, null: false, limit: 100, default: ""
+      t.string :openai_token, null: false, limit: 100, default: ""
       t.integer :current_chat_id, null: false, default: 0
       t.integer :role, null: false, default: 0
       t.integer :open_chats, null: false, default: 0
       t.integer :closed_chats, null: false, default: 0
       t.integer :total_chats, null: false, default: 0
       t.integer :total_messages, null: false, default: 0
+      t.boolean :active, null: false, default: false
       t.timestamps
     end
   end

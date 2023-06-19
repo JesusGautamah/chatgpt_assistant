@@ -44,6 +44,22 @@ class User < ActiveRecord::Base
     self.password_hash = BCrypt::Engine.hash_secret(password, password_salt)
   end
 
+  def encrypt_token
+    confirmation = { email: email, password_hash: password_hash, time: created_at }
+    BCrypt::Engine.hash_secret(JSON.parse(confirmation.to_json), password_salt)
+  end
+
+  def confirm_account(hash)
+    confirmation = { email: email, password_hash: password_hash, time: created_at }
+    secret = BCrypt::Engine.hash_secret(JSON.parse(confirmation.to_json), password_salt)
+    return false unless secret == hash
+
+    self.token = secret
+    self.active = true
+    save
+    true
+  end
+
   def current_chat
     chats.find(current_chat_id)
   end

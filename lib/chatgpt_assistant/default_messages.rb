@@ -43,7 +43,8 @@ module ChatgptAssistant
           chat_selected: "Chat selecionado com sucesso!",
           user_logged_in: "Login realizado com sucesso!",
           user_logged_out: "Logout realizado com sucesso!",
-          voice_channel_connected: "O bot entrou no canal de voz com sucesso!"
+          voice_channel_connected: "O bot entrou no canal de voz com sucesso!",
+          account_confirmed: "Conta confirmada com sucesso!"
         }
       end
 
@@ -77,7 +78,9 @@ module ChatgptAssistant
           text_length_too_long: "O texto de resposta é muito longo. Tente diminuir a quantidade de respostas na mesma mensagem.",
 
           invalid_command: "Comando inválido. Tente novamente.",
-          something_went_wrong: "Algo deu errado. Tente novamente mais tarde."
+          something_went_wrong: "Algo deu errado. Tente novamente mais tarde.",
+          account_not_verified: "Sua conta não foi verificada. Verifique sua caixa de email.",
+          account_not_confirmed: "Sua conta não foi confirmada. Verifique sua caixa de email."
         }
       end
 
@@ -127,7 +130,8 @@ module ChatgptAssistant
           chat_selected: "Chat selected successfully!",
           user_logged_in: "Login successfully!",
           user_logged_out: "Logout successfully!",
-          voice_channel_connected: "The bot entered the voice channel successfully!"
+          voice_channel_connected: "The bot entered the voice channel successfully!",
+          account_confirmed: "Your account has been verified!"
         }
       end
 
@@ -161,7 +165,9 @@ module ChatgptAssistant
           text_length_too_long: "The response text is too long. Try to reduce the number of responses in the same message.",
 
           invalid_command: "Invalid command. Try again.",
-          something_went_wrong: "Something went wrong. Try again later."
+          something_went_wrong: "Something went wrong. Try again later.",
+          account_not_verified: "Your account is not verified. Please check your email and verify your account.",
+          account_not_confirmed: "Something went wrong. Please check your email and verify your account. Maybe you pass the wrong code."
         }
       end
 

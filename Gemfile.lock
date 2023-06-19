@@ -1,6 +1,13 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    actionmailer (6.1.7.3)
+      actionpack (= 6.1.7.3)
+      actionview (= 6.1.7.3)
+      activejob (= 6.1.7.3)
+      activesupport (= 6.1.7.3)
+      mail (~> 2.5, >= 2.5.4)
+      rails-dom-testing (~> 2.0)
     actionpack (6.1.7.3)
       actionview (= 6.1.7.3)
       activesupport (= 6.1.7.3)
@@ -14,6 +21,9 @@ GEM
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.1, >= 1.2.0)
+    activejob (6.1.7.3)
+      activesupport (= 6.1.7.3)
+      globalid (>= 0.3.6)
     activemodel (6.1.7.3)
       activesupport (= 6.1.7.3)
     activerecord (6.1.7.3)
@@ -44,14 +54,8 @@ GEM
       aws-sigv4 (~> 1.1)
     aws-sigv4 (1.5.2)
       aws-eventstream (~> 1, >= 1.0.2)
-    axiom-types (0.1.1)
-      descendants_tracker (~> 0.0.4)
-      ice_nine (~> 0.11.0)
-      thread_safe (~> 0.3, >= 0.3.1)
     bcrypt (3.1.18)
     builder (3.2.4)
-    coercible (1.0.0)
-      descendants_tracker (~> 0.0.1)
     concurrent-ruby (1.2.2)
     connection_pool (2.4.0)
     crass (1.0.6)
@@ -62,8 +66,7 @@ GEM
       activerecord (>= 5.a)
       database_cleaner-core (~> 2.0.0)
     database_cleaner-core (2.0.1)
-    descendants_tracker (0.0.4)
-      thread_safe (~> 0.3, >= 0.3.1)
+    date (3.3.3)
     diff-lcs (1.5.0)
     discordrb (3.4.0)
       discordrb-webhooks (~> 3.3.0)
@@ -77,7 +80,25 @@ GEM
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
     dotenv (2.8.1)
+    dry-core (1.0.0)
+      concurrent-ruby (~> 1.0)
+      zeitwerk (~> 2.6)
     dry-inflector (1.0.0)
+    dry-logic (1.5.0)
+      concurrent-ruby (~> 1.0)
+      dry-core (~> 1.0, < 2)
+      zeitwerk (~> 2.6)
+    dry-struct (1.6.0)
+      dry-core (~> 1.0, < 2)
+      dry-types (>= 1.7, < 2)
+      ice_nine (~> 0.11)
+      zeitwerk (~> 2.6)
+    dry-types (1.7.1)
+      concurrent-ruby (~> 1.0)
+      dry-core (~> 1.0)
+      dry-inflector (~> 1.0)
+      dry-logic (~> 1.4)
+      zeitwerk (~> 2.6)
     erubi (1.12.0)
     et-orbi (1.2.7)
       tzinfo
@@ -106,6 +127,8 @@ GEM
     fugit (1.8.1)
       et-orbi (~> 1, >= 1.2.7)
       raabro (~> 1.4)
+    globalid (1.1.0)
+      activesupport (>= 5.0)
     http (4.4.1)
       addressable (~> 2.3)
       http-cookie (~> 1.0)
@@ -137,15 +160,30 @@ GEM
     loofah (2.21.3)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
-    lucy_dockerunner (0.1.9)
+    lucy_dockerunner (0.2.0)
+    mail (2.8.1)
+      mini_mime (>= 0.1.1)
+      net-imap
+      net-pop
+      net-smtp
     method_source (1.0.0)
     mime-types (3.4.1)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2023.0218.1)
+    mini_mime (1.1.2)
     mini_portile2 (2.8.2)
     minitest (5.18.0)
     multi_json (1.15.0)
     multipart-post (2.3.0)
+    net-imap (0.3.6)
+      date
+      net-protocol
+    net-pop (0.1.2)
+      net-protocol
+    net-protocol (0.2.1)
+      timeout
+    net-smtp (0.3.3)
+      net-protocol
     netrc (0.11.0)
     nokogiri (1.15.2)
       mini_portile2 (~> 2.8.2)
@@ -254,14 +292,14 @@ GEM
     simplecov_json_formatter (0.1.4)
     streamio-ffmpeg (3.0.2)
       multi_json (~> 1.8)
-    telegram-bot-ruby (0.23.0)
-      dry-inflector
+    telegram-bot-ruby (1.0.0)
+      dry-struct (~> 1.6)
       faraday (~> 2.0)
       faraday-multipart (~> 1.0)
-      virtus (~> 2.0)
+      zeitwerk (~> 2.6)
     thor (1.2.2)
-    thread_safe (0.3.6)
     tilt (2.1.0)
+    timeout (0.3.2)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unf (0.1.4)
@@ -269,10 +307,6 @@ GEM
     unf_ext (0.0.8.2)
     unicode-display_width (2.4.2)
     vcr (6.1.0)
-    virtus (2.0.0)
-      axiom-types (~> 0.1)
-      coercible (~> 1.0)
-      descendants_tracker (~> 0.0, >= 0.0.3)
     websocket (1.2.9)
     websocket-client-simple (0.6.1)
       event_emitter
@@ -287,36 +321,38 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  activemodel
-  activerecord
-  activerecord-import
-  activesupport
-  awesome_chatgpt_actors
-  aws-sdk-polly
-  bcrypt
+  actionmailer (~> 6.1)
+  actionpack (~> 6.1)
+  activemodel (~> 6.1)
+  activerecord (~> 6.1)
+  activerecord-import (~> 1.4)
+  activesupport (~> 6.1)
+  awesome_chatgpt_actors (~> 0.1)
+  aws-sdk-polly (~> 1.69)
+  bcrypt (~> 3.1)
   database_cleaner (~> 2.0)
   discordrb (~> 3.4)
-  dotenv (~> 2.0)
-  factory_bot_rails (~> 6.0)
-  faker (~> 2.0)
-  faraday
-  ibm_watson
-  lucy_dockerunner
-  pg
+  dotenv (~> 2.8)
+  factory_bot_rails (~> 6.2)
+  faker (~> 2.23)
+  faraday (~> 2.7)
+  ibm_watson (~> 2.2)
+  lucy_dockerunner (~> 0.2)
+  pg (~> 1.5)
   rake (~> 13.0)
-  redis
+  redis (~> 5.0)
   rspec (~> 3.12)
   rspec-rails (~> 6.0)
   rubocop (~> 1.50)
   rubocop-rspec (~> 2.22)
   shoulda-matchers (~> 5.3)
-  sidekiq
-  sidekiq-expiring-jobs
-  sidekiq-scheduler
-  simplecov (~> 0.21)
-  streamio-ffmpeg
-  telegram-bot-ruby (~> 0.16)
-  vcr (~> 6.0)
+  sidekiq (~> 7.0)
+  sidekiq-expiring-jobs (~> 0.1)
+  sidekiq-scheduler (~> 5.0)
+  simplecov (~> 0.22)
+  streamio-ffmpeg (~> 3.0)
+  telegram-bot-ruby (~> 1.0)
+  vcr (~> 6.1)
 
 BUNDLED WITH
    2.4.10

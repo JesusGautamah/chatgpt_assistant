@@ -6,14 +6,18 @@
 
 This Ruby gem provides an easy way to initialize a client for Telegram and Discord bots using the ChatGPT API, audio transcription, IBM Cloud Text to Speech, and AWS Polly, creating an assistant that can answer questions in text and voice and have a conversation with the user.
 
+#### Discord Voice Bot temporary disabled due connection issues
+#### Telegram voice messages are working fine
 #### Languages supported currently: en, pt
+
+#### Registration and Account Confirmation only on telegram, sign in with the same credentials on discord after registering on telegram.
 
 Other contributions are welcome too!
 Remember to give a star to this repo if you like it!
 ## Requirements
 
 - Ruby > 2.6.0 - for the gem who can create bots projects in your machine
-- Ruby 3.2.2 - inside the docker contianer or for run the bots in your machine
+- Ruby 3.2.2 - inside the docker container or run the bots in your machine
 - Docker
 - Docker Compose
 - PostgreSQL
@@ -93,14 +97,13 @@ After starting the Docker Compose services, you can use the features of the gem 
 The discord commands prefix can be changed in the .env file.
 The default prefix is !!
 
-- dgpt!start - shows the welcome message
-- dgpt!help - shows the help message
-- dgpt!login email:password - logs in the user. Remember to use private messages to register or login and share a server with right permissions with the bot to message it.
-- dgpt!register email:password - registers a new user, email is not verfied yet, so you can use any email, the password is encrypted with bcrypt and stored in the database with salt.
-- dgpt!list - lists the user created chatbots
-- dgpt!sl_chat CHAT TITLE - starts a chat with the chatbot with the given title
-- dgpt!new_chat CHAT TITLE - creates a new chatbot with the given title
-- dgpt!ask TEXT - sends a text to the chatbot
+- !!start - shows the welcome message
+- !!help - shows the help message
+- !!login email:password - logs in the user. Remember to use private messages to register or login and share a server with right permissions with the bot to message it.
+- !!list - lists the user created chatbots
+- !!sl_chat CHAT TITLE - starts a chat with the chatbot with the given title
+- !!new_chat CHAT TITLE - creates a new chatbot with the given title
+- !!ask TEXT - sends a text to the chatbot
 
 ## Telegram Bot Commands
 
@@ -108,18 +111,12 @@ The default prefix is !!
 - /help - shows the help message
 - login/email:password - logs in the user. Remember to use private messages to register or login.
 - register/email:password - registers a new user, email is not verfied yet, so you can use any email, the password is encrypted with bcrypt and stored in the database with salt. Remember to use private messages to register or login.
+- confirm/* name:token - confirms the user account. Remember to use private messages to register or login
 - list - lists the user created chatbots
 - sl_chat/CHAT TITLE - starts a chat with the chatbot with the given title
 - new_chat/CHAT TITLE - creates a new chatbot with the given title
 - TEXT - sends a text to the chatbot
 - VOICE_MESSAGE or AUDIO FILE - sends a voice message to the chatbot and returns the response in voice
-
-## Recommended Actions runner
-
-You can run Github Actions workflows locally using [act](https://github.com/nektos/act)
-
-We recommend Act installation to run Github Actions workflows locally
-as we use it to deploy the bot in a server via ssh.
 
 ## Contributing
 
@@ -139,7 +136,7 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/JesusG
 [![Activity map](https://images.repography.com/33522702/JesusGautamah/chatgpt_assistant/recent-activity/y6ZDduNWHwPzbnUFsmdGrJ99Q1vyEKGOBWFOBvzGjnM/1rZM2QrF0__3eUfUXFe6jDraYjHvypniTqDWhCequ-U_map.svg)](https://github.com/JesusGautamah/chatgpt_assistant/commits)
 
 ## Contributors
-  - [Jesus Gautamah](https://github.com/JesusGautamah) 
+  - [Jesus Gautamah](https://github.com/JesusGautamah)
 
 ## License
 

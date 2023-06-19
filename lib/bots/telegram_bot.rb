@@ -17,6 +17,8 @@ module ChatgptAssistant
       end
     rescue StandardError => e
       Error.create(message: e.message, backtrace: e.backtrace)
+      bot.logger.info(e.message)
+      e.backtrace.each { |line| bot.logger.info(line) }
       retry
     end
 
@@ -58,25 +60,27 @@ module ChatgptAssistant
 
       def hist_event
         raise UserNotLoggedInError if user.nil?
+        raise AccountNotVerifiedError unless user.active?
         raise NoChatSelectedError if user.current_chat.nil?
         raise NoMessagesFoundedError if user.current_chat.messages.count.zero?
 
         user.chat_history.each do |m|
           send_message m, msg.chat.id
         end
-      rescue NoChatSelectedError, UserNotLoggedInError, NoMessagesFoundedError => e
+      rescue NoChatSelectedError, UserNotLoggedInError, NoMessagesFoundedError, AccountNotVerifiedError => e
         send_message e.message, msg.chat.id
       end
 
       def list_event
         raise UserNotLoggedInError if user.nil?
+        raise AccountNotVerifiedError unless user.active?
         raise NoChatsFoundedError if user.chats.count.zero?
 
         send_message common_messages[:chat_list], msg.chat.id
         chats_str = ""
         user.chats.each_with_index { |c, i| chats_str += "Chat #{i + 1} - #{c.title}\n" }
         send_message chats_str, msg.chat.id
-      rescue NoChatsFoundedError, UserNotLoggedInError => e
+      rescue NoChatsFoundedError, UserNotLoggedInError, AccountNotVerifiedError => e
         send_message e.message, msg.chat.id
       end
 
@@ -86,19 +90,36 @@ module ChatgptAssistant
         return select_chat_event if msg.text.include?("sl_chat/")
         return telegram_chat_event unless telegram_actions?
 
+ \
         raise InvalidCommandError
       rescue InvalidCommandError => e
         send_message e.message, msg.chat.id
       end
 
       def auth_event?
-        msg.text.include?("login/") || msg.text.include?("register/") || msg.text.include?("sign_out/")
+        msg.text.include?("login/") || msg.text.include?("register/") || msg.text.include?("sign_out/") || msg.text.include?("confirm/* ")
       end
 
       def auth_events
         return login_event if msg.text.include?("login/")
         return register_event if msg.text.include?("register/")
         return sign_out_event if msg.text.include?("sign_out/")
+        return confirm_account_event if msg.text.include?("confirm/* ")
+      end
+
+      def confirm_account_event
+        raise UserNotLoggedInError if user.nil?
+
+        user_info = msg.text.split("/* ").last
+        name, token = user_info.split(":")
+        send_message "#{name} - #{token}", msg.chat.id
+        if user.name == name && user.confirm_account(token)
+          send_message success_messages[:account_confirmed], msg.chat.id
+        else
+          send_message error_messages[:account_not_confirmed], msg.chat.id
+        end
+      rescue UserNotLoggedInError => e
+        send_message e.message, msg.chat.id
       end
 
       def login_event
@@ -124,9 +145,10 @@ module ChatgptAssistant
         raise UserLoggedInError if user
 
         email, password = user_info.split(":")
+        name = msg.from.first_name || "Anonymous"
         raise NoRegisterInfoError if email.nil? || password.nil?
 
-        RegisterJob.perform_async(email, password, visitor.telegram_id)
+        RegisterJob.perform_async(email, password, name, visitor.telegram_id)
       rescue NoRegisterInfoError, UserLoggedInError => e
         send_message e.message, msg.chat.id
       end
@@ -142,14 +164,16 @@ module ChatgptAssistant
 
       def new_chat_event
         raise UserNotLoggedInError if user.nil?
+        raise AccountNotVerifiedError unless user.active?
 
         NewChatJob.perform_async(msg.text.split("/").last, user.id, msg.chat.id)
-      rescue UserNotLoggedInError => e
+      rescue UserNotLoggedInError, AccountNotVerifiedError => e
         send_message e.message, msg.chat.id
       end
 
       def select_chat_event
         raise UserNotLoggedInError if user.nil?
+        raise AccountNotVerifiedError unless user.active?
 
         title = msg.text.split("/").last
         chat = user.chat_by_title(title)
@@ -158,12 +182,13 @@ module ChatgptAssistant
         raise ChatNotFoundError unless user.update(current_chat_id: chat.id)
 
         send_message success_messages[:chat_selected], msg.chat.id
-      rescue UserNotLoggedInError, ChatNotFoundError => e
+      rescue UserNotLoggedInError, ChatNotFoundError, AccountNotVerifiedError => e
         send_message e.message, msg.chat.id
       end
 
       def audio_event
         raise UserNotLoggedInError if user.nil?
+        raise AccountNotVerifiedError unless user.active?
         raise NoChatSelectedError if user.current_chat.nil?
 
         user_audio = transcribe_file(telegram_audio_url)
@@ -173,7 +198,7 @@ module ChatgptAssistant
         ai_response = telegram_process_ai_voice(user_audio[:file])
         telegram_send_voice_message(voice: ai_response[:voice], text: ai_response[:text])
         delete_file ai_response[:voice]
-      rescue UserNotLoggedInError, NoChatSelectedError, MessageNotSavedError => e
+      rescue UserNotLoggedInError, NoChatSelectedError, MessageNotSavedError, AccountNotVerifiedError => e
         send_message e.message, msg.chat.id
       end
   end
