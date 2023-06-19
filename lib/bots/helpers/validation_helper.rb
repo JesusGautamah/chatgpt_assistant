@@ -5,8 +5,9 @@ module ChatgptAssistant
   module ValidationHelper
     def valid_for_list_action?
       not_logged_in_message if user.nil?
-      chat_not_found_message if user.chats.count.zero?
-      !user.nil? && user.chats.count.positive?
+      not_verified_message unless user.active?
+      chat_not_found_message if user.chats.count.zero? && user.active?
+      !user.nil? && user.active? && user.chats.count.positive?
     end
 
     def chat_if_exists

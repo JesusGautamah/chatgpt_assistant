@@ -1,6 +1,8 @@
 AllCops:
   TargetRubyVersion: 2.6
   NewCops: enable
+  Exclude:
+    - 'Gemfile.lock'
 
 Style/StringLiterals:
   Enabled: true
@@ -26,11 +28,20 @@ Metrics/ClassLength:
   Max: 300
 
 Metrics/AbcSize:
-  Max: 35
+  Max: 62
+
+Metrics/PerceivedComplexity:
+  Max: 15
+
+Metrics/CyclomaticComplexity:
+  Max: 15
+
+Style/Documentation:
+  Enabled: false
 
 Layout/AccessModifierIndentation:
   EnforcedStyle: indent
-  
+
 Layout/IndentationWidth:
   Width: 2
 

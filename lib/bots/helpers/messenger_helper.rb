@@ -95,6 +95,11 @@ module ChatgptAssistant
       evnt.respond success_messages[:chat_created] if evnt.present?
     end
 
+    def not_verified_message
+      bot.api&.send_message(chat_id: msg.chat.id, text: error_messages[:account_not_verified]) if bot.respond_to?(:api)
+      evnt&.respond(error_messages[:account_not_verified])
+    end
+
     def not_logged_in_message
       bot.api&.send_message(chat_id: msg.chat.id, text: error_messages[:user_not_logged_in]) if bot.respond_to?(:api)
       evnt&.respond(error_messages[:user_not_logged_in])

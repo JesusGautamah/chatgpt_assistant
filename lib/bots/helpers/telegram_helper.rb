@@ -8,11 +8,19 @@ module ChatgptAssistant
     end
 
     def bot
-      @bot ||= Telegram::Bot::Client.new(telegram_token)
+      @bot ||= Telegram::Bot::Client.new(telegram_token, logger: Logger.new($stderr))
     end
 
     def telegram_chat_event
-      user ? chat_if_exists : not_logged_in_message
+      if user
+        raise AccountNotVerifiedError unless user.active?
+
+        chat_if_exists
+      else
+        not_logged_in_message
+      end
+    rescue AccountNotVerifiedError
+      not_verified_message
     end
 
     def telegram_user_create(visitor_id, email, password)

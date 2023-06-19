@@ -208,6 +208,15 @@ module ChatgptAssistant
     include LoadError
   end
 
+  # Account Not Verified Error
+  class AccountNotVerifiedError < StandardError
+    def initialize(message = load_error_context[:account_not_verified])
+      super(message)
+    end
+
+    include LoadError
+  end
+
   # Something Went Wrong Error
   class SomethingWentWrongError < StandardError
     def initialize(message = load_error_context[:something_went_wrong])

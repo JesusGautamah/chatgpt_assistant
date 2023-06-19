@@ -4,6 +4,7 @@
 require "rspec/core/rake_task"
 require "lucy_dockerunner"
 require "awesome_chatgpt_actors"
+require "dotenv/load"
 
 RSpec::Core::RakeTask.new(:spec)
 

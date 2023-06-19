@@ -2,6 +2,7 @@
 
 require "active_record"
 require "active_model"
+require "action_mailer"
 require_relative "migrations"
 require "fileutils"
 
@@ -30,7 +31,9 @@ module ChatgptAssistant
 
     attr_reader :openai_api_key, :telegram_token, :discord_token, :ibm_api_key, :ibm_url,
                 :aws_access_key_id, :aws_secret_access_key, :aws_region, :mode, :language,
-                :discord_client_id, :discord_public_key, :env_type, :discord_prefix
+                :discord_client_id, :discord_public_key, :env_type, :discord_prefix,
+                :smtp_address, :smtp_port, :smtp_domain, :smtp_user_name, :smtp_password,
+                :smtp_authentication, :smtp_enable_starttls_auto
 
     def db_connection
       ActiveRecord::Base.establish_connection(
