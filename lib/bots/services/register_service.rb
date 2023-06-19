@@ -19,10 +19,6 @@ module ChatgptAssistant
       @user.save ? success_message : error_message
     rescue UserAlreadyExistsError, WrongEmailError, WrongPasswordError => e
       telegram_async.send_message(e.message, @chat_id)
-    rescue StandardError => e
-      telegram_async.send_message(e.message, @chat_id) if ENV["ENV_TYPE"] == "development"
-      backtrace = e.backtrace.join(" \n ")
-      telegram_async.send_message(backtrace, @chat_id) if ENV["ENV_TYPE"] == "development"
     end
 
     private

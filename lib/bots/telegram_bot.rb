@@ -17,8 +17,6 @@ module ChatgptAssistant
       end
     rescue StandardError => e
       Error.create(message: e.message, backtrace: e.backtrace)
-      bot.logger.info(e.message)
-      e.backtrace.each { |line| bot.logger.info(line) }
       retry
     end
 
