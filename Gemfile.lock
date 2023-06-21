@@ -111,7 +111,7 @@ GEM
       railties (>= 5.0.0)
     faker (2.23.0)
       i18n (>= 1.8.11, < 2)
-    faraday (2.7.6)
+    faraday (2.7.7)
       faraday-net_http (>= 2.0, < 3.1)
       ruby2_keywords (>= 0.0.4)
     faraday-multipart (1.0.4)
@@ -322,7 +322,6 @@ PLATFORMS
 
 DEPENDENCIES
   actionmailer (~> 6.1)
-  actionpack (~> 6.1)
   activemodel (~> 6.1)
   activerecord (~> 6.1)
   activerecord-import (~> 1.4)
