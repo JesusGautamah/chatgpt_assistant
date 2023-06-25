@@ -12,8 +12,6 @@ module ChatgptAssistant
       new_access = find_user(email: email)
       return "user not found" unless new_access
 
-      hash = new_access.password_hash
-      salt = new_access.password_salt
       user.valid_password?(password) ? telegram_user_access(visitor_access, new_access) : "wrong password"
     end
 
