@@ -21,6 +21,11 @@ module Bots
         response = chatter.chat(message.content, chat.id, error_messages[:something_went_wrong])
         send_message response
       end
+
+      def send_message(text)
+        messages = parse_message(text, 2000)
+        messages.each { |m| evnt.respond m }
+      end
     end
   end
 end

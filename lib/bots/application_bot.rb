@@ -2,11 +2,8 @@
 
 # helpers
 require_relative "helpers/messenger_helper"
-require_relative "helpers/authentication_helper"
-require_relative "helpers/visit_helper"
 require_relative "helpers/audio_helper"
 require_relative "helpers/search_helper"
-require_relative "helpers/validation_helper"
 require_relative "helpers/file_helper"
 
 # jobs
@@ -23,11 +20,8 @@ module ChatgptAssistant
   # This class is responsible to contain the shared attributes and methods
   class ApplicationBot
     include MessengerHelper
-    include AuthenticationHelper
-    include VisitHelper
     include AudioHelper
     include SearchHelper
-    include ValidationHelper
     include FileHelper
 
     def initialize(config)

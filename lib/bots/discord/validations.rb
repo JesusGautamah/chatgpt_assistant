@@ -26,9 +26,9 @@ module Bots
       end
 
       def valid_for_list_action?
-        not_logged_in_message if user.nil?
-        not_verified_message unless user.active?
-        chat_not_found_message if user.chats.count.zero? && user.active?
+        evnt.respond(error_messages[:user_not_logged_in]) if user.nil?
+        evnt.respond(error_messages[:account_not_verified]) unless user.active?
+        evnt.respond(error_messages[:chat_not_found]) if user.chats.count.zero? && user.active?
         !user.nil? && user.active? && user.chats.count.positive?
       end
     end

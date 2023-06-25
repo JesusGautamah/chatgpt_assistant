@@ -28,6 +28,9 @@ module ChatgptAssistant
 
     private
 
+      attr_reader :message
+      attr_accessor :evnt, :user, :chats, :chat
+
       include Bots::Discord::Bot
       include Bots::Discord::Auth
       include Bots::Discord::Actions
@@ -35,8 +38,5 @@ module ChatgptAssistant
       include Bots::Discord::Events
       include Bots::Discord::VoiceActions
       include Bots::Discord::VoiceCheckers
-
-      attr_reader :message
-      attr_accessor :evnt, :user, :chats, :chat
   end
 end

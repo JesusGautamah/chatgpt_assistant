@@ -92,6 +92,11 @@ module Bots
 
         chat.save ? chat_created_message(chat) : send_message(error_messages[:chat_creation])
       end
+
+      def discord_created(chat)
+        evnt.respond "Intructions sended to actor:\n#{chat.prompt}" unless chat.actor.nil?
+        evnt.respond success_messages[:chat_created] if evnt.present?
+      end
     end
   end
 end
