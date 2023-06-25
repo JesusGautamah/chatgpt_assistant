@@ -17,7 +17,7 @@ module ChatgptAssistant
       @response = request(message)
       @json = JSON.parse(response.body)
 
-      return no_response_error if json["choices"].empty?
+      return no_response_error if json["choices"]&.empty?
       return bot_offline_error if response.status != 200
 
       text = json["choices"][0]["message"]["content"]
