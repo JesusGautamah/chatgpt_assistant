@@ -13,16 +13,5 @@ module ChatgptAssistant
         visitor
       end
     end
-
-    def discord_visited?(user_id)
-      return unless evnt
-
-      visitor = Visitor.find_by(discord_id: user_id, name: evnt.user.name)
-      if visitor.nil?
-        Visitor.create(discord_id: user_id, name: evnt.user.name)
-      else
-        visitor
-      end
-    end
   end
 end

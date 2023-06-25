@@ -16,24 +16,7 @@ module ChatgptAssistant
     end
 
     def visitor_user?
-      visitor&.tel_user.nil? && visitor&.dis_user.nil?
-    end
-
-    def discord_voice_bot_disconnected?
-      user && evnt.user.voice_channel && !evnt.voice && !chat.nil?
-    end
-
-    def discord_voice_bot_connected?
-      user && evnt.user.voice_channel && evnt.voice && !chat.nil?
-    end
-
-    def discord_next_action?
-      return true if evnt.channel.type != 1 && evnt.channel.name != "ai-spaces"
-
-      %w[login register start help new_chat sl_chat ask list hist connect disconnect speak].each do |action|
-        return true if evnt.message.content.include?("#{discord_prefix}#{action}")
-      end
-      false
+      visitor&.tel_user.nil? # && visitor&.dis_user.nil?
     end
   end
 end

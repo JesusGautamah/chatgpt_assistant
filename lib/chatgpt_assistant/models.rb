@@ -49,6 +49,10 @@ class User < ActiveRecord::Base
     BCrypt::Engine.hash_secret(JSON.parse(confirmation.to_json), password_salt)
   end
 
+  def valid_password?(password)
+    BCrypt::Engine.hash_secret(password, password_salt) == password_hash
+  end
+
   def confirm_account(hash)
     confirmation = { email: email, password_hash: password_hash, time: created_at }
     secret = BCrypt::Engine.hash_secret(JSON.parse(confirmation.to_json), password_salt)

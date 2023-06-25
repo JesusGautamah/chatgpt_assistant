@@ -1,7 +1,12 @@
 # frozen_string_literal: true
 
-require_relative "helpers/discord_helper"
-require_relative "helpers/discord_voice_helper"
+require_relative "discord/bot"
+require_relative "discord/auth"
+require_relative "discord/actions"
+require_relative "discord/chat_actions"
+require_relative "discord/events"
+require_relative "discord/voice_actions"
+require_relative "discord/voice_checkers"
 
 module ChatgptAssistant
   # This class is responsible to handle the discord bot
@@ -15,162 +20,23 @@ module ChatgptAssistant
       new_chat_event
       sl_chat_event
       ask_event
+      voice_connect_event
+      voice_disconnect_event
       private_message_event
       bot_init
     end
 
     private
 
-      include DiscordHelper
-      include DiscordVoiceHelper
+      include Bots::Discord::Bot
+      include Bots::Discord::Auth
+      include Bots::Discord::Actions
+      include Bots::Discord::ChatActions
+      include Bots::Discord::Events
+      include Bots::Discord::VoiceActions
+      include Bots::Discord::VoiceCheckers
 
       attr_reader :message
       attr_accessor :evnt, :user, :chats, :chat
-
-      def start_event
-        bot.command :start do |event|
-          @evnt = event
-          @user = event.user
-          start_action
-          "Ok"
-        end
-      end
-
-      def login_event
-        bot.command :login do |event|
-          @message = event.message.content.split[1]
-          @evnt = event
-          message.nil? ? event.respond(common_messages[:login]) : login_action
-          "OK"
-        end
-      end
-
-      def list_event
-        bot.command :list do |event|
-          @evnt = event
-          @user = find_user(discord_id: event.user.id)
-          list_action if valid_for_list_action?
-          "OK"
-        end
-      end
-
-      def hist_event
-        bot.command :hist do |event|
-          @evnt = event
-          @user = find_user(discord_id: event.user.id)
-          @chat = user.current_chat
-          event.respond error_messages[:chat_not_found] if chat.nil? && user
-          hist_action if user && chat
-          "OK"
-        end
-      end
-
-      def help_event
-        bot.command :help do |event|
-          @evnt = event
-          help_action
-          "OK"
-        end
-      end
-
-      def new_chat_event
-        bot.command :new_chat do |event|
-          @evnt = event
-          @user = find_user(discord_id: event.user.id)
-          event.respond error_messages[:user_not_logged_in] if user.nil?
-          event.respond error_messages[:account_not_verified] if user && !user.active?
-          create_chat_action if user&.active?
-          "OK"
-        end
-      end
-
-      def sl_chat_event
-        bot.command :sl_chat do |event|
-          @evnt = event
-          chat_to_select = event.message.content.split[1..].join(" ")
-          @user = find_user(discord_id: event.user.id)
-          event.respond error_messages[:user_not_logged_in] if user.nil?
-          event.respond error_messages[:account_not_verified] if user && !user.active?
-          sl_chat_action(chat_to_select) if user&.active?
-          "OK"
-        end
-      end
-
-      def ask_event
-        bot.command :ask do |event|
-          @evnt = event
-          @message = event.message.content.split[1..].join(" ")
-          @user = find_user(discord_id: event.user.id)
-          event.respond error_messages[:user_not_logged_in] if user.nil?
-          event.respond error_messages[:account_not_verified] if user && !user.active?
-          ask_action if user&.active?
-          "OK"
-        end
-      end
-
-      def voice_connect_event
-        bot.command :connect do |event|
-          @evnt = event
-          @user = find_user(discord_id: event.user.id)
-          if user && !user.active?
-            event.respond error_messages[:account_not_verified]
-          elsif user&.current_chat_id.nil?
-            event.respond error_messages[:no_chat_selected]
-          elsif user&.current_chat_id
-            @chat = Chat.where(id: user.current_chat_id).last
-            voice_connect_checker_action
-            voice_connection_checker_action
-            bot.voice_connect(event.user.voice_channel)
-          else
-            event.respond error_messages[:user_not_logged_in]
-          end
-          "OK"
-        end
-      end
-
-      def disconnect_event
-        bot.command :disconnect do |event|
-          @evnt = event
-          @user = find_user(discord_id: event.user.id)
-          disconnect_checker_action
-          disconnect_action if user && event.user.voice_channel && event.voice
-          "OK"
-        end
-      end
-
-      def speak_event
-        bot.command :speak do |event|
-          @evnt = event
-          @message = event.message.content.split[1..].join(" ")
-          @user = find_user(discord_id: event.user.id)
-          @chat = user.current_chat
-          speak_connect_checker_action
-          speak_connection_checker_action
-          ask_to_speak_action if user && event.user.voice_channel && event.voice && !chat.nil?
-          "OK"
-        end
-      end
-
-      def private_message_event
-        bot.message do |event|
-          @evnt = event
-          @visitor = discord_visited?(@evnt.user.id)
-          next if discord_next_action?
-
-          @message = event.message.content
-          @user = find_user(discord_id: event.user.id)
-          @chat = user.current_chat if user
-          private_message_action if user && !chat.nil?
-          "OK"
-        end
-      end
-
-      def bot_init
-        at_exit { bot.stop }
-        bot.run
-      rescue StandardError => e
-        Error.create(message: e.message, backtrace: e.backtrace)
-        retry
-      end
   end
 end
