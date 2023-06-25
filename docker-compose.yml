@@ -25,6 +25,8 @@ services:
       - .env
     depends_on:
       - db
+      - redis
+      - sidekiq
   discord:
     build: .
     command: bash -c "exe/chatgpt_bot discord"
@@ -36,6 +38,8 @@ services:
       - .env
     depends_on:
       - db
+      - redis
+      - sidekiq
   sidekiq:
     build: .
     command: bash -c "exe/chatgpt_bot sidekiq"

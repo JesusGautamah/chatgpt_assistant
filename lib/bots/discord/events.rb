@@ -24,7 +24,6 @@ module Bots
       def list_event
         bot.command :list do |event|
           @evnt = event
-          @user = find_user(discord_id: event.user.id)
           list_action if valid_for_list_action?
           "OK"
         end
@@ -33,7 +32,6 @@ module Bots
       def hist_event
         bot.command :hist do |event|
           @evnt = event
-          @user = find_user(discord_id: event.user.id)
           @chat = user.current_chat
           event.respond error_messages[:chat_not_found] if chat.nil? && user
           hist_action if user && chat
@@ -52,7 +50,6 @@ module Bots
       def new_chat_event
         bot.command :new_chat do |event|
           @evnt = event
-          @user = find_user(discord_id: event.user.id)
           event.respond error_messages[:user_not_logged_in] if user.nil?
           event.respond error_messages[:account_not_verified] if user && !user.active?
           create_chat_action if user&.active?
@@ -64,7 +61,6 @@ module Bots
         bot.command :sl_chat do |event|
           @evnt = event
           chat_to_select = event.message.content.split[1..].join(" ")
-          @user = find_user(discord_id: event.user.id)
           event.respond error_messages[:user_not_logged_in] if user.nil?
           event.respond error_messages[:account_not_verified] if user && !user.active?
           sl_chat_action(chat_to_select) if user&.active?
@@ -76,7 +72,6 @@ module Bots
         bot.command :ask do |event|
           @evnt = event
           @message = event.message.content.split[1..].join(" ")
-          @user = find_user(discord_id: event.user.id)
           event.respond error_messages[:user_not_logged_in] if user.nil?
           event.respond error_messages[:account_not_verified] if user && !user.active?
           ask_action if user&.active?
@@ -87,7 +82,6 @@ module Bots
       def voice_connect_event
         bot.command :connect do |event|
           @evnt = event
-          @user = find_user(discord_id: event.user.id)
           if user && !user.active?
             event.respond error_messages[:account_not_verified]
           elsif user&.current_chat_id.nil?
@@ -107,7 +101,6 @@ module Bots
       def voice_disconnect_event
         bot.command :disconnect do |event|
           @evnt = event
-          @user = find_user(discord_id: event.user.id)
           disconnect_checker_action
           disconnect_action if user && event.user.voice_channel && event.voice
           "OK"
@@ -118,7 +111,6 @@ module Bots
         bot.command :speak do |event|
           @evnt = event
           @message = event.message.content.split[1..].join(" ")
-          @user = find_user(discord_id: event.user.id)
           @chat = user.current_chat
           speak_connect_checker_action
           speak_connection_checker_action
@@ -134,7 +126,6 @@ module Bots
           next if discord_next_action?
 
           @message = event.message.content
-          @user = find_user(discord_id: event.user.id)
           @chat = user.current_chat if user
           private_message_action if user && !chat.nil?
           "OK"

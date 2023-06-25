@@ -11,6 +11,10 @@ module Bots
         )
       end
 
+      def user
+        @user = find_user(discord_id: evnt.user.id)
+      end
+
       def bot_init
         at_exit { bot.stop }
         bot.run
