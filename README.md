@@ -59,7 +59,7 @@ Make sure to run bundle before using the Lucy Dockerunner rake tasks.
 
 Then, edit the .env_sample file to include the necessary credentials and rename it to .env. Run bundle install to install the necessary dependencies.
 
-Remember to edit docker-compose.prod.yml when deploying to production.
+Include `LUCY_SU=sudo` in your .env if u run docker compose with sudo
 
 ## Migrate your database
 ```bash
