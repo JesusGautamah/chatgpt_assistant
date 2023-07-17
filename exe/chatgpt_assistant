@@ -26,7 +26,7 @@ gem_dir = Gem::Specification.find_by_name("chatgpt_assistant").gem_dir
   `cp #{gem_dir}/#{file} #{path}`
 end
 
-%w[docker-compose.yml docker-compose.prod.yml Dockerfile LICENSE LICENSE.txt].each do |file|
+%w[docker-compose.yml Dockerfile LICENSE LICENSE.txt].each do |file|
   `cp #{gem_dir}/#{file} #{path}`
 end
 
