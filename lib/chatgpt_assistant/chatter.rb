@@ -57,7 +57,8 @@ module ChatgptAssistant
       end
 
       def request_params(message)
-        messages = Message.where(chat_id: chat_id).order(id: :asc).last(10)
+        messages_from_chat = Message.where(chat_id: chat_id)
+        messages = messages_from_chat.order(id: :asc).last(10)
         messages = if messages.empty?
                      [{ role: "user", content: message }]
                    else
@@ -66,6 +67,13 @@ module ChatgptAssistant
                          content: mess.content }
                      end
                    end
+
+        first_message = messages_from_chat.order(id: :asc).first
+        system_message = first_message if first_message&.role == "system"
+        if system_message && Message.where(chat_id: chat_id).count > 10
+          messages.unshift({ role: system_message.role,
+                             content: system_message.content })
+        end
         {
           model: "gpt-3.5-turbo",
           messages: messages,
