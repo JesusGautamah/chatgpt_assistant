@@ -46,7 +46,7 @@ module ChatgptAssistant
           msg.text.include?("login/") || msg.text.include?("register/") || msg.text.include?("sign_out/") || msg.text.include?("confirm/* ")
         end
 
-        def user_confirmed?
+        def user_confirmed?(name, token)
           user.name == name && user.confirm_account(token)
         end
       end

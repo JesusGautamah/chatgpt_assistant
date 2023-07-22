@@ -39,7 +39,7 @@ module ChatgptAssistant
           user_info = msg.text.split("/* ").last
           name, token = user_info.split(":")
           send_message "#{name} - #{token}", msg.chat.id
-          if user_confirmed?
+          if user_confirmed?(name, token)
             send_message success_messages[:account_confirmed], msg.chat.id
           else
             send_message error_messages[:account_not_confirmed], msg.chat.id
