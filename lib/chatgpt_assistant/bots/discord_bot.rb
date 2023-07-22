@@ -7,7 +7,7 @@ require_relative "discord/chat_actions"
 require_relative "discord/events"
 require_relative "discord/voice_actions"
 require_relative "discord/voice_checkers"
-
+require_relative "discord/validations"
 module ChatgptAssistant
   # This class is responsible to handle the discord bot
   class DiscordBot < ApplicationBot
@@ -29,7 +29,7 @@ module ChatgptAssistant
     private
 
       attr_reader :message
-      attr_accessor :evnt, :user, :chats, :chat
+      attr_accessor :evnt, :chats, :chat
 
       include Bots::Discord::Bot
       include Bots::Discord::Auth
@@ -38,5 +38,6 @@ module ChatgptAssistant
       include Bots::Discord::Events
       include Bots::Discord::VoiceActions
       include Bots::Discord::VoiceCheckers
+      include Bots::Discord::Validations
   end
 end
