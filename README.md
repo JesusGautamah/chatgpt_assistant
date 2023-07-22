@@ -6,8 +6,6 @@
 
 This Ruby gem provides an easy way to initialize a client for Telegram and Discord bots using the ChatGPT API, audio transcription, IBM Cloud Text to Speech, and AWS Polly, creating an assistant that can answer questions in text and voice and have a conversation with the user.
 
-#### Discord Voice Bot temporary disabled due connection issues
-#### Telegram voice messages are working fine
 #### Languages supported currently: en, pt
 
 #### Registration and Account Confirmation are avaiable on telegram only, sign in with the same credentials on discord after registering on telegram.
