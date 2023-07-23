@@ -4,14 +4,19 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Ruby Version](https://img.shields.io/badge/Ruby-2.6.0%2B-blue.svg)](https://www.ruby-lang.org/en/)
 
-This Ruby gem provides an easy way to initialize a client for Telegram and Discord bots using the ChatGPT API, audio transcription, IBM Cloud Text to Speech, and AWS Polly, creating an assistant that can answer questions in text and voice and have a conversation with the user.
+This Ruby gem provides an easy way to initialize a client for Telegram and Discord bots using the ChatGPT API, audio transcription, Text to Speech, creating an assistant that can answer questions in text and voice and have a conversation with the user.
+
+#### Voice messages on telegram only - discord voice bot is not available and not planned to be implemented anymore
+##### Discord voice bot is been replaced by a voice assistant local packege to act like google assistant, alexa, siri, cortana, etc. The voice assistant is been developed to linux and android, but it can be ported to other platforms in the future.
+
+#### Speech to Text services - OpenAI Audio Transcription
+##### More services will be added in the future
+#### Text to Speech services - IBM Watson, AWS Polly, Azure Text to Speech
 
 #### Languages supported currently: en, pt
 
 #### Registration and Account Confirmation are avaiable on telegram only, sign in with the same credentials on discord after registering on telegram.
 
-Other contributions are welcome too!
-Remember to give a star to this repo if you like it!
 ## Requirements
 
 - Ruby > 2.6.0 - for the gem who can create bots projects in your machine
