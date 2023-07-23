@@ -16,6 +16,7 @@
 /voice/ibm*
 /voice/polly*
 /voice/aws*
+/voice/azure*
 /db_data
 /db_data/*
 /chatgpt_assistant.code-workspace
