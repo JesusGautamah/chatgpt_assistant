@@ -104,6 +104,7 @@ module ChatgptAssistant
           ai_response = telegram_process_ai_voice(user_audio[:file])
           telegram_send_voice_message(voice: ai_response[:voice], text: ai_response[:text])
           delete_file ai_response[:voice]
+          delete_file user_audio[:file]
         rescue UserNotLoggedInError, NoChatSelectedError, MessageNotCreatedError, AccountNotVerifiedError => e
           send_message e.message, msg.chat.id
         end

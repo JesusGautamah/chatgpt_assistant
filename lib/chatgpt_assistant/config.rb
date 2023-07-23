@@ -27,11 +27,14 @@ module ChatgptAssistant
       @aws_secret_access_key = ENV.fetch("AWS_SECRET_ACCESS_KEY", nil)
       @aws_region = ENV.fetch("AWS_REGION", nil)
       @discord_prefix = ENV.fetch("DISCORD_PREFIX", nil)
+      @azure_speech_url = ENV.fetch("AZURE_SPEECH_URL", nil)
+      @azure_speech_key = ENV.fetch("AZURE_SPEECH_KEY", nil)
     end
 
     attr_reader :openai_api_key, :telegram_token, :discord_token, :ibm_api_key, :ibm_url,
                 :aws_access_key_id, :aws_secret_access_key, :aws_region, :mode, :language,
                 :discord_client_id, :discord_public_key, :env_type, :discord_prefix,
+                :azure_speech_url, :azure_speech_key,
                 :smtp_address, :smtp_port, :smtp_domain, :smtp_user_name, :smtp_password,
                 :smtp_authentication, :smtp_enable_starttls_auto
 
