@@ -48,7 +48,7 @@ gem "sidekiq", "~> 7.0"
 
 gem "sidekiq-scheduler", "~> 5.0"
 
-gem "activerecord-import", "~> 1.4"
+gem "activerecord-import", "~> 1.5"
 
 gem "pg", "~> 1.5"
 
