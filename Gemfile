@@ -58,7 +58,7 @@ gem "lucy_dockerunner", "~> 0.2"
 
 gem "ibm_watson", "~> 2.2"
 
-gem "aws-sdk-polly", "~> 1.72"
+gem "aws-sdk-polly", "~> 1.76"
 
 gem "awesome_chatgpt_actors", "~> 0.1"
 
